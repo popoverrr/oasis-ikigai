@@ -1,5 +1,5 @@
 /*!
- * petals.js — лепестки сакуры OASIS IKIGAI (Canvas 2D, без зависимостей, ES-модуль).
+ * petals.js v2.1 — лепестки OASIS IKIGAI (Canvas 2D, без зависимостей, ES-модуль). Палитра v2.1: белые лепестки + цвета целей.
  *
  *   import { attach, burst } from '/assets/js/petals.js';
  *   const ctrl = attach(document.querySelector('.hero__petals'));   // фон hero поверх видео
@@ -7,7 +7,7 @@
  *   burst(innerWidth / 2, innerHeight * .4, { count: 36, spread: 1.6 }); // экран «Заказ принят»
  *
  * Лепесток — настоящая форма с выемкой на кончике, радиальный градиент от светлого основания
- * к розовой кромке, прожилка, лицевая и оборотная стороны (оборот насыщеннее), 3D-переворот
+ * к более плотной кромке, прожилка, лицевая и оборотная стороны (оборот насыщеннее), 3D-переворот
  * через масштаб по осям + яркость, три слоя глубины (дальний мелкий и медленный, ближний крупный,
  * размытый и быстрый), ветер порывами, реакция на скорость скролла и на курсор (десктоп).
  * Спрайты рендерятся один раз → кадр = N × drawImage, держит 60 fps на слабых телефонах.
@@ -20,12 +20,20 @@ const DPR = () => Math.min(window.devicePixelRatio || 1, 2);
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const frozen = () => /[?&]freeze=1\b/.test(location.search);
 
-// Палитра по умолчанию: основание (почти белое) → тело → кромка. Оборот — на ступень насыщеннее.
+// Палитра v2.1: розового нет. Основные лепестки — белые (как снег из лепестков поверх видео с сакурой).
 const PALETTE = {
-  front: [[255, 246, 249], [250, 200, 217], [238, 146, 181]],
-  back:  [[252, 228, 236], [244, 172, 199], [224, 118, 160]],
-  vein:  'rgba(206,104,146,.55)',
+  front: [[255, 255, 255], [248, 248, 248], [226, 226, 226]],
+  back:  [[242, 242, 242], [228, 228, 228], [204, 204, 204]],
+  vein:  'rgba(160,160,160,.5)',
 };
+const hex = h => { h = h.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); };
+const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+/** Палитра лепестков из цвета цели: burst(x, y, { palette: paletteFrom('#FFD60A') }) */
+export function paletteFrom(color) {
+  const c = hex(color), w = [255, 255, 255], k = [0, 0, 0];
+  return { front: [mix(c, w, .55), mix(c, w, .2), c], back: [mix(c, w, .35), c, mix(c, k, .18)], vein: 'rgba(0,0,0,.25)' };
+}
+export const PALETTE_GREEN = paletteFrom('#00BD00');
 
 function petalPath(L, w) {
   const p = new Path2D(), W = L * w;

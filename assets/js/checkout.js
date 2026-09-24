@@ -2,7 +2,7 @@
 import { cart } from './cart.js';
 import { config, str, product, fmt, money, plural, fetchProducts, sum } from './data.js';
 import { toast, h, icon } from './ui.js';
-import { burst } from './petals.js';
+import { burst, paletteFrom, PALETTE_GREEN } from './petals.js';
 import { buildWa, normalizePhone } from './wa.js';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -134,7 +134,9 @@ function render() {
   $('[data-free-sticker]').hidden = !free;
   if (free && freeWasReached === false) {
     const r = $('[data-free-fill]').getBoundingClientRect();
-    burst(r.right - 10, r.top, { count: 14, spread: .9 });
+    // бесплатная доставка достигнута — один раз зелёно-жёлтый салют
+    burst(r.right - 10, r.top, { count: 8, spread: .9, palette: PALETTE_GREEN });
+    burst(r.right - 10, r.top, { count: 7, spread: .9, palette: paletteFrom('#FFD60A') });
   }
   freeWasReached = free;
 }

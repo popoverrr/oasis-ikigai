@@ -1,0 +1,133 @@
+/* goals-fx.css — плитки целей OASIS IKIGAI v2.1: цвет цели + анимация по смыслу слова.
+   Разметка плитки (PHP-партиал):
+     <a class="goal goal--{key}[ goal--wide]" href="/oasis-ikigai/shop/{slug}">
+       <div class="fx"><?php include "fx/svg/{key}.svg.html" ?></div>
+       [только для beauty: <i class="sheen"></i>]
+       <span class="k">{kanji}</span><b>{title}</b><small>{subtitle}</small>
+     </a>
+   key: beauty | energy | sleep | immunity | balance | longevity | detox | vitamins | eyes
+   Требует токены --c-{key}, --black, --white, --green, --f, --f-jp (brief/06_BRIGHT_V2.md § 2).
+   Поведение (класс is-live только на экране, is-burst при появлении/наведении/нажатии) — goals-fx.js. */
+/* ===== ПЛИТКИ ЦЕЛЕЙ: цвет цели + анимация по смыслу слова ===== */
+.goals{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:30px}
+.goal{--c:var(--green);position:relative;overflow:hidden;isolation:isolate;min-height:176px;padding:14px 16px 16px;background:var(--c);color:var(--black);display:flex;flex-direction:column;justify-content:flex-end;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.goal--wide{grid-column:span 2}
+.goal .k{position:absolute;left:16px;top:13px;font:700 30px/1 var(--f-jp)}
+.goal b{font:500 21px/1.1 var(--f);position:relative}
+.goal small{display:block;margin-top:4px;font-size:12.5px;line-height:1.35;color:var(--black);position:relative;max-width:20ch}
+.goal .fx{position:absolute;top:-2%;right:-3%;width:66%;height:94%;z-index:-1;pointer-events:none}
+.goal--wide .fx{width:46%;right:-1%}
+.goal .fx svg{width:100%;height:100%;overflow:visible}
+.goal .sheen{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.6) 48%,transparent 61%);transform:translateX(-130%);animation:sheen 4.2s cubic-bezier(.6,0,.2,1) infinite}
+.goal:not(.is-live) .fx, .goal:not(.is-live) .fx *, .goal:not(.is-live) .sheen{animation-play-state:paused!important}
+@media (hover:hover){.goal:hover{transform:translateY(-4px)}}
+.goal:active{transform:scale(.98)}
+.goal--beauty{--c:var(--c-beauty)}.goal--energy{--c:var(--c-energy)}.goal--sleep{--c:var(--c-sleep)}
+.goal--immunity{--c:var(--c-immunity)}.goal--balance{--c:var(--c-balance)}.goal--longevity{--c:var(--c-longevity)}
+.goal--detox{--c:var(--c-detox)}.goal--vitamins{--c:var(--c-vitamins)}.goal--eyes{--c:var(--c-eyes)}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes sheen{0%,55%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+
+/* Краса 美 — сияние: вращающиеся лучи, ореол, вспыхивающие искры, глянцевый блик */
+.b-rays{animation:spin 28s linear infinite}
+.b-halo{animation:halo 2.8s cubic-bezier(.2,.7,.3,1) infinite}
+.b-sp{transform:scale(0);animation:spark 2.4s ease-in-out infinite}
+.b-sp1{animation-duration:3.2s}.b-sp2{animation-delay:.5s}.b-sp3{animation-delay:1.1s}.b-sp4{animation-delay:1.7s}.b-sp5{animation-delay:2.1s}
+@keyframes halo{0%{transform:scale(.8);opacity:1}100%{transform:scale(1.9);opacity:0}}
+@keyframes spark{0%,100%{transform:scale(0) rotate(0)}40%{transform:scale(1) rotate(45deg)}70%{transform:scale(.85) rotate(70deg)}}
+.is-burst .b-sp{animation:spark-b .9s cubic-bezier(.2,.8,.2,1)}
+.is-burst .b-rays{animation:spin 1.2s cubic-bezier(.2,.8,.2,1)}
+.is-burst .sheen{animation:sheen .9s cubic-bezier(.6,0,.2,1)}
+@keyframes spark-b{0%{transform:scale(0) rotate(0)}50%{transform:scale(1.7) rotate(60deg)}100%{transform:scale(1) rotate(90deg)}}
+
+/* Енергія 力 — разряд: молния бьёт в ритме пульса, импульсные кольца, линии скорости */
+.e-bolt{animation:strike 1.8s cubic-bezier(.3,1.6,.5,1) infinite}
+.e-flash{stroke-dasharray:18 82;opacity:0;animation:flash 1.8s linear infinite}
+.e-ring{opacity:0;animation:ring 1.8s cubic-bezier(.1,.7,.3,1) infinite}
+.e-r2{animation-delay:.18s}.e-r3{animation-delay:.36s}
+.e-ln{opacity:0;animation:speed .9s linear infinite}
+.e-l2{animation-delay:.2s}.e-l3{animation-delay:.45s}.e-l4{animation-delay:.65s}
+@keyframes strike{0%,100%{transform:scale(1)}8%{transform:scale(1.15) rotate(-3deg)}16%{transform:scale(.96)}24%{transform:scale(1.06)}34%{transform:scale(1)}}
+@keyframes flash{0%{stroke-dashoffset:100;opacity:1}40%{stroke-dashoffset:0;opacity:1}41%,100%{opacity:0}}
+@keyframes ring{0%{transform:scale(.6);opacity:1}100%{transform:scale(2.3);opacity:0}}
+@keyframes speed{0%{transform:translateX(40px);opacity:0}20%{opacity:1}100%{transform:translateX(-50px);opacity:0}}
+.goal--energy.is-burst{animation:jolt .4s steps(2) 1}
+.is-burst .e-ring{animation-duration:.7s}
+@keyframes jolt{0%,100%{translate:0 0}25%{translate:2px -1px}50%{translate:-2px 1px}75%{translate:1px 1px}}
+
+/* Сон 眠 — ночь: месяц-колыбель покачивается, звёзды мерцают, всё «дышит» 6 с, падающая звезда */
+.goal--sleep .fx{animation:breathe 6s ease-in-out infinite}
+.s-moon{animation:rock 6s ease-in-out infinite alternate}
+.s-tw{animation:tw 2.6s ease-in-out infinite}
+.s-t2{animation-duration:1.9s;animation-delay:.4s}.s-t3{animation-duration:3.3s;animation-delay:1s}.s-t4{animation-duration:2.2s;animation-delay:.7s}.s-t5{animation-duration:2.9s;animation-delay:1.6s}
+.s-shoot{stroke-dasharray:30 70;stroke-dashoffset:100;opacity:0;animation:shoot 7s ease-in infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes rock{from{transform:rotate(-9deg)}to{transform:rotate(9deg)}}
+@keyframes tw{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.1)}}
+@keyframes shoot{0%,78%{stroke-dashoffset:100;opacity:0}80%{opacity:1}92%{stroke-dashoffset:-30;opacity:0}100%{opacity:0}}
+.is-burst .s-tw{animation:tw .5s ease-in-out 2}
+.is-burst .s-shoot{animation:shoot-b .8s ease-in 1}
+@keyframes shoot-b{0%{stroke-dashoffset:100;opacity:1}100%{stroke-dashoffset:-30;opacity:0}}
+
+/* Імунітет 守 — защита: шестигранный щит сканирует контур, силовой импульс, частицы отскакивают */
+.i-hex{stroke-dasharray:22 8;animation:scan 3s linear infinite}
+.i-ping{animation:ping 2.2s cubic-bezier(.1,.7,.3,1) infinite}
+.i-core{animation:core 2.2s ease-in-out infinite}
+.i-p{opacity:0;animation:deflect 2.2s cubic-bezier(.5,0,.2,1) infinite}
+.i-p1{--dx:40px;--dy:28px}.i-p2{--dx:-34px;--dy:30px;animation-delay:.55s}.i-p3{--dx:-34px;--dy:-34px;animation-delay:1.1s}.i-p4{--dx:38px;--dy:-38px;animation-delay:1.65s}
+@keyframes scan{to{stroke-dashoffset:-100}}
+@keyframes ping{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.5);opacity:0}}
+@keyframes core{0%,100%{transform:scale(1)}10%{transform:scale(1.3)}25%{transform:scale(1)}}
+@keyframes deflect{0%{transform:translate(0,0);opacity:0}15%{opacity:1}45%{transform:translate(var(--dx),var(--dy))}100%{transform:translate(calc(var(--dx) * -.3),calc(var(--dy) * -.3));opacity:0}}
+.is-burst .i-ping{animation-duration:.6s}.is-burst .i-core{animation-duration:.6s}
+
+/* Баланс 調和 — камни дзен: верхний качнулся и успокоился (затухающие колебания), круги на воде */
+.bl-top{animation:wobble 4.5s cubic-bezier(.4,0,.2,1) infinite}
+.bl-mid{animation:wobble2 4.5s cubic-bezier(.4,0,.2,1) infinite}
+.bl-rip{opacity:0;animation:rip 4.5s ease-out infinite}.bl-r2{animation-delay:.6s}
+.bl-dot{animation:float 4.5s ease-in-out infinite}
+@keyframes wobble{0%{transform:rotate(0)}8%{transform:rotate(9deg)}18%{transform:rotate(-6deg)}28%{transform:rotate(3.5deg)}38%{transform:rotate(-1.8deg)}48%{transform:rotate(.8deg)}58%,100%{transform:rotate(0)}}
+@keyframes wobble2{0%{transform:rotate(0)}10%{transform:rotate(-2.5deg)}22%{transform:rotate(1.6deg)}34%{transform:rotate(-.8deg)}46%,100%{transform:rotate(0)}}
+@keyframes rip{0%,40%{transform:scale(.5);opacity:0}45%{opacity:1}100%{transform:scale(2.4);opacity:0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.is-burst .bl-top{animation:wobble 1.6s cubic-bezier(.4,0,.2,1)}
+
+/* Довголіття 長寿 — годичные кольца растут из центра */
+.l-ring{opacity:0;animation:grow 7.5s cubic-bezier(.2,.6,.3,1) infinite}
+.l-r2{animation-delay:1.5s}.l-r3{animation-delay:3s}.l-r4{animation-delay:4.5s}.l-r5{animation-delay:6s}
+@keyframes grow{0%{transform:scale(.08);opacity:0}10%{opacity:1}100%{transform:scale(1.25);opacity:0}}
+
+/* Детокс 清 — очищение: пузырьки поднимаются, волна течёт */
+.d-b{opacity:0;animation:rise 5s linear infinite}
+.d-sway{animation:sway 2.2s ease-in-out infinite alternate}
+.d-wave{animation:wave 3s linear infinite}
+@keyframes rise{0%{transform:translateY(0);opacity:0}10%,85%{opacity:1}100%{transform:translateY(-175px);opacity:0}}
+@keyframes sway{from{transform:translateX(-5px)}to{transform:translateX(5px)}}
+@keyframes wave{to{transform:translateX(-50px)}}
+
+/* Вітаміни 健康 — капсулы падают, пружинят, вокруг вспыхивают гранулы */
+.v-c{opacity:0;animation:drop 3.6s cubic-bezier(.5,0,.5,1) infinite}.v-c2{animation-delay:.35s}
+.v-g{transform:scale(0);animation:pop 3.6s ease-out infinite}
+.v-g1{animation-delay:1.1s}.v-g2{animation-delay:1.2s}.v-g3{animation-delay:1.3s}.v-g4{animation-delay:1.45s}.v-g5{animation-delay:1.55s}
+@keyframes drop{0%{transform:translateY(-170px) rotate(-60deg);opacity:0}8%{opacity:1}30%{transform:translateY(0) rotate(0)}34%{transform:translateY(0) scale(1.1,.82)}40%{transform:translateY(-22px) rotate(8deg)}48%{transform:translateY(0) rotate(0)}53%{transform:translateY(-6px)}58%,86%{transform:translateY(0);opacity:1}100%{transform:translateY(0);opacity:0}}
+@keyframes pop{0%,100%{transform:scale(0)}8%{transform:scale(1.3)}20%{transform:scale(1)}40%{transform:scale(0)}}
+
+/* Вітаміни для очей 眼 — фокус: зрачок сужается и расширяется, скобки фокуса «защёлкиваются», моргание */
+.y-pupil{animation:dilate 4.8s ease-in-out infinite}
+.y-eye{animation:blink 4.8s ease-in-out infinite}
+.y-focus{opacity:0;animation:focus 4.8s cubic-bezier(.2,1.4,.4,1) infinite}
+@keyframes dilate{0%,100%{transform:scale(1)}45%,55%{transform:scale(.55)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}93%{transform:scaleY(.06)}96%{transform:scaleY(1)}}
+@keyframes focus{0%,40%{transform:scale(1.25);opacity:0}52%{transform:scale(1);opacity:1}85%{opacity:1}100%{transform:scale(1);opacity:0}}
+
+@media (prefers-reduced-motion:reduce){
+  .goal .fx,.goal .fx *,.goal .sheen{animation:none!important}
+  .b-sp,.v-g{transform:scale(1)}.e-ring,.l-ring,.bl-rip,.y-focus,.v-c,.d-b,.i-p{opacity:.6}
+}
+
+/* десктоп */
+@media (min-width:1024px){
+  .goals{grid-template-columns:repeat(3,1fr);gap:14px}.goal{min-height:236px;padding:24px}.goal b{font-size:27px}.goal small{font-size:14px}
+  .goal .k{font-size:40px;left:24px;top:22px}.goal--wide{grid-column:auto}.goal--wide .fx,.goal .fx{width:62%;right:-4%}
+}

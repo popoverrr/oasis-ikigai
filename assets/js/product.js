@@ -43,7 +43,7 @@ function stickyBar(id, p) {
         h('button', { type: 'button', 'aria-label': str.decrease, 'data-bar-dec': '' }, icon('minus', 12, 12)),
         h('output', { 'aria-live': 'polite', text: String(q) }),
         h('button', { type: 'button', 'aria-label': str.increase, 'data-bar-inc': '' }, icon('plus', 12, 12)))
-      : h('button', { class: 'btn btn--gold', type: 'button', 'data-bar-add': '' }, h('span', { text: str.add }));
+      : h('button', { class: 'btn btn--green', type: 'button', 'data-bar-add': '' }, h('span', { text: str.add }));
     el.replaceChildren(info, right);
   };
   bar.addEventListener('click', e => {

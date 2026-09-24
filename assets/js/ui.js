@@ -1,7 +1,7 @@
 // Общий интерфейс: шапка, меню-шторка, поиск, языки, тосты, «+»/степперы, обране, аккордеоны, появление при скролле, панель корзины
 import { cart, MAX_QTY } from './cart.js';
 import { config, str, product, fmt, money, sum, center, fetchProducts, isReduced } from './data.js';
-import { attach, burst } from './petals.js';
+import { attach, burst, paletteFrom, PALETTE_GREEN } from './petals.js';
 
 export const $ = (s, r = document) => r.querySelector(s);
 export const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -120,7 +120,7 @@ function initLang() {
 // ── Кнопка «+» ↔ степпер ─────────────────────────────────
 function addControl(el, name) {
   if (el.dataset.style === 'big') {
-    const btn = h('button', { class: 'btn btn--gold btn--block', type: 'button', 'data-add': '' }, h('span', { text: str.add }));
+    const btn = h('button', { class: 'btn btn--green btn--block', type: 'button', 'data-add': '' }, h('span', { text: str.add }));
     return btn;
   }
   return h('button', { class: 'add', type: 'button', 'data-add': '', 'aria-label': fmt(str.addLabel, { name }) }, icon('plus', 14, 14));
@@ -170,7 +170,7 @@ export function flyToCart(from) {
   const pic = h('img', { src: img.currentSrc || img.src, alt: '' });
   outer.append(pic);
   Object.assign(outer.style, { position: 'fixed', left: a.x - size / 2 + 'px', top: a.y - size / 2 + 'px', width: size + 'px', height: size + 'px', zIndex: 95, pointerEvents: 'none' });
-  Object.assign(pic.style, { width: '100%', height: '100%', objectFit: 'cover', boxShadow: '0 0 0 1px #B39765' });
+  Object.assign(pic.style, { width: '100%', height: '100%', objectFit: 'cover', boxShadow: '0 0 0 2px #00BD00' });
   document.body.append(outer);
   const dx = b.x - a.x, dy = b.y - a.y, dur = 700;
   outer.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${dx}px)` }], { duration: dur, easing: 'cubic-bezier(.3,.1,.3,1)', fill: 'forwards' });
@@ -192,8 +192,10 @@ export function addWithFx(btn, id, n = 1) {
   const before = cart.count();
   cart.add(id, n);
   btn.classList.remove('is-stamp'); void btn.offsetWidth; btn.classList.add('is-stamp');
-  const c = center(btn);
-  burst(c.x, c.y, { count: fine ? 10 : 8, spread: .8, scale: .8 });
+  // салют в цвете основной цели товара + зелёный бренда (brief/06 § 6)
+  const c = center(btn), hex = btn.closest('[data-goal-color]')?.dataset.goalColor;
+  burst(c.x, c.y, { count: 8, spread: .8, scale: .8, palette: hex ? paletteFrom(hex) : PALETTE_GREEN });
+  burst(c.x, c.y, { count: 5, spread: .7, scale: .8, palette: PALETTE_GREEN });
   flyToCart(btn);
   if (isReduced) bumpCounts();
   const bar = $('[data-cartbar]');
@@ -239,7 +241,7 @@ function initWish() {
     if (!b) return;
     e.preventDefault();
     const on = wish.toggle(b.dataset.wish);
-    if (on) { const c = center(b); burst(c.x, c.y, { count: 6, spread: .6, scale: .7 }); }
+    if (on) { const c = center(b); burst(c.x, c.y, { count: 6, spread: .6, scale: .7, palette: PALETTE_GREEN }); }
     toast(on ? str.wishAdded : str.wishRemoved);
   });
   addEventListener('storage', e => { if (e.key === WKEY) renderWish(); });

@@ -1,7 +1,9 @@
 // Точка входа: общий интерфейс + модуль страницы. Без библиотек: CSS, IntersectionObserver, WAAPI, petals.js
 import { init as initUI } from './ui.js';
+import { initGoals } from './goals-fx.js';
 
 initUI();
+initGoals();   // плитки целей: анимация только на экране, «всплеск» при появлении, наведении и нажатии
 
 const pages = {
   home: () => import('./home.js'),

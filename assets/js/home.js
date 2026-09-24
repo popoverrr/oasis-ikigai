@@ -1,7 +1,7 @@
 // Главная: хореография hero (постер → видео → лепестки → заголовок по словам), звук, квиз «Знайдіть своє IKIGAI»
 import { cart } from './cart.js';
 import { str, isReduced } from './data.js';
-import { attach, burst } from './petals.js';
+import { attach, burst, paletteFrom } from './petals.js';
 import { $, $$, toast, splitWords, center } from './ui.js';
 
 function hero() {
@@ -57,7 +57,7 @@ function quiz() {
       if (show(tile.dataset.quizGoal)) {
         e.preventDefault();
         const c = center(tile);
-        burst(c.x, c.y, { count: 10, spread: .9 });
+        burst(c.x, c.y, { count: 10, spread: .9, palette: tile.dataset.goalColor ? paletteFrom(tile.dataset.goalColor) : undefined });
       }
       return;
     }
