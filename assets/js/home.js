@@ -1,84 +1,64 @@
-// Главная: хореография hero (постер → видео → лепестки → заголовок по словам), звук, квиз «Знайдіть своє IKIGAI»
-import { cart } from './cart.js';
-import { str, isReduced } from './data.js';
-import { attach, burst, paletteFrom } from './petals.js';
-import { $, $$, toast, splitWords, center } from './ui.js';
+// Главная v5: хореография hero (постер → видео → розовые лепестки → заголовок по словам), страховка появления текста,
+// панель корзины скрыта, пока виден первый экран, карусель журнала со стрелками и линией прогресса (brief/08 §§ 3, 8)
+import { isReduced } from './data.js';
+import { attach, paletteFrom } from './petals.js';
+import { $, splitWords } from './ui.js';
 
 function hero() {
   const hero = $('[data-hero]');
   if (!hero) return;
   const title = $('.hero__h1', hero);
   if (title && !isReduced) splitWords(title);
-  requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add('is-in')));
+  hero.classList.add('is-in');
+  // страховка: через 1,5 с после загрузки всё содержимое видно принудительно (в превью текст иногда оставался невидимым)
+  const done = () => setTimeout(() => hero.classList.add('is-done'), 1500);
+  if (document.readyState === 'complete') done(); else addEventListener('load', done, { once: true });
+
+  // пока первый экран виден на 30 % и больше, панель корзины не закрывает кнопку
+  new IntersectionObserver(([e]) => document.body.classList.toggle('hero-on', e.intersectionRatio >= .3), { threshold: [0, .3, .6, 1] }).observe(hero);
 
   const canvas = $('[data-petals]', hero);
   if (canvas) {
-    const go = () => attach(canvas);
+    const go = () => attach(canvas, { palette: paletteFrom('#FF2D87') });
     if (isReduced) go(); else setTimeout(go, 350);
   }
 
-  const video = $('[data-hero-video]', hero), sound = $('[data-sound]', hero);
+  const video = $('[data-hero-video]', hero);
   const saveData = navigator.connection?.saveData;
   if (!video || isReduced || saveData) return;
   video.preload = 'auto';
-  video.addEventListener('playing', () => { video.classList.add('is-playing'); if (sound) sound.hidden = false; }, { once: true });
+  video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
   const play = () => video.play().catch(() => {});
   if (document.readyState === 'complete') play(); else addEventListener('load', play, { once: true });
   // вне экрана — пауза (экономим батарею), вернулись — продолжаем
   new IntersectionObserver(([e]) => (e.isIntersecting ? play() : video.pause())).observe(hero);
-  sound?.addEventListener('click', () => {
-    video.muted = !video.muted;
-    if (!video.muted) { video.volume = .6; play(); }
-    sound.setAttribute('aria-pressed', video.muted ? 'false' : 'true');
-    sound.setAttribute('aria-label', video.muted ? str.soundOn : str.soundOff);
-  });
 }
 
-function quiz() {
-  const box = $('[data-quiz]');
-  if (!box) return;
-  const tiles = $('[data-quiz-tiles]', box);
-  const show = slug => {
-    let found = false;
-    for (const r of $$('[data-quiz-res]', box)) {
-      const on = r.dataset.quizRes === slug;
-      r.hidden = !on;
-      found ||= on;
-    }
-    if (!found) return false;
-    tiles.hidden = true;
-    const res = $(`[data-quiz-res="${CSS.escape(slug)}"]`, box);
-    res.scrollIntoView({ behavior: isReduced ? 'auto' : 'smooth', block: 'start' });
-    return true;
-  };
-  box.addEventListener('click', e => {
-    const tile = e.target.closest('[data-quiz-goal]');
-    if (tile) {
-      if (show(tile.dataset.quizGoal)) {
-        e.preventDefault();
-        const c = center(tile);
-        burst(c.x, c.y, { count: 10, spread: .9, palette: tile.dataset.goalColor ? paletteFrom(tile.dataset.goalColor) : undefined });
+function carousels() {
+  for (const box of document.querySelectorAll('[data-carousel]')) {
+    const track = $('[data-carousel-track]', box), bar = $('[data-carousel-bar]', box);
+    const prev = $('[data-carousel-prev]', box), next = $('[data-carousel-next]', box);
+    if (!track) continue;
+    const step = () => (track.firstElementChild?.getBoundingClientRect().width || track.clientWidth) + parseFloat(getComputedStyle(track).columnGap || 0);
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      if (bar) {
+        bar.style.setProperty('--w', `${Math.min(100, (track.clientWidth / track.scrollWidth) * 100)}%`);
+        bar.style.setProperty('--x', `${(track.scrollLeft / Math.max(1, track.clientWidth)) * 100}%`);
       }
-      return;
-    }
-    if (e.target.closest('[data-quiz-again]')) {
-      for (const r of $$('[data-quiz-res]', box)) r.hidden = true;
-      tiles.hidden = false;
-      tiles.scrollIntoView({ behavior: isReduced ? 'auto' : 'smooth', block: 'center' });
-      return;
-    }
-    const all = e.target.closest('[data-quiz-add]');
-    if (all) {
-      const ids = all.dataset.quizAdd.split(',').map(Number).filter(Boolean);
-      for (const id of ids) if (!cart.qty(id)) cart.add(id, 1);
-      const c = center(all);
-      burst(c.x, c.y, { count: 18, spread: 1.2 });
-      toast(str.added);
-    }
-  });
+      if (prev) prev.disabled = track.scrollLeft <= 2;
+      if (next) next.disabled = track.scrollLeft >= max - 2;
+    };
+    const go = dir => track.scrollBy({ left: dir * step(), behavior: isReduced ? 'auto' : 'smooth' });
+    prev?.addEventListener('click', () => go(-1));
+    next?.addEventListener('click', () => go(1));
+    track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
 }
 
 export default function () {
   hero();
-  quiz();
+  carousels();
 }

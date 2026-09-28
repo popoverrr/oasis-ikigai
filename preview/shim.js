@@ -1,6 +1,6 @@
 // Превью на GitHub Pages: без PHP-сервера. Подменяет ответы сервера в браузере:
 // каталог (фильтры, сортировка, поиск, «Показати ще») и «Обране» — из preview/catalog-*.json, товары для корзины — из preview/products-*.json,
-// заказ не отправляется (показывается пример экрана «Замовлення прийнято»), WhatsApp не открывается.
+// заказ не отправляется (показывается пример экрана «Замовлення прийнято»), WhatsApp и Telegram не открываются.
 (() => {
   const BASE = "/oasis-ikigai";
   const ORDER = "OI-1001";
@@ -22,9 +22,11 @@
   // как ProductRepo::search на сервере
   function search(all, goal, q) {
     const list = (q.get('brand') || '').split(',').filter(Boolean), cats = (q.get('category') || '').split(',').filter(Boolean);
+    const aud = (q.get('audience') || '').split(',').filter(Boolean);   // товар без аудитории — «для всіх», виден всегда
     const min = +q.get('min') || 0, max = +q.get('max') || 0, stock = !!q.get('stock');
     const words = (q.get('q') || '').toLowerCase().split(/\s+/).filter(Boolean).slice(0, 5);
     const items = all.filter(p => (!goal || p.goals.includes(goal)) && (!list.length || list.includes(p.brand)) && (!cats.length || cats.includes(p.category))
+      && (!aud.length || !(p.audience || []).length || p.audience.some(a => aud.includes(a)))
       && (!min || p.price >= min) && (!max || p.price <= max) && (!stock || p.stock !== 'out_of_stock') && words.every(w => p.search.includes(w)));
     const out = p => (p.stock === 'out_of_stock' ? 1 : 0);
     const by = {
@@ -82,7 +84,7 @@
     // модуль каталога подгружается отдельно — ждём, пока он повесит обработчики
     for (let i = 0; i < 100 && !form.dataset.ready; i++) await new Promise(r => setTimeout(r, 50));
     for (const [k, v] of q) {
-      if (k === 'brand' || k === 'category') {
+      if (k === 'brand' || k === 'category' || k === 'audience') {
         for (const s of v.split(',')) { const box = form.querySelector(`input[name="${k}[]"][value="${CSS.escape(s)}"]`); if (box) box.checked = true; }
       } else if (form.elements[k]) {
         const el = form.elements[k];
@@ -93,15 +95,15 @@
   });
 
   const msg = {
-    uk: 'Це превʼю сайту: перехід у WhatsApp вимкнено. На справжньому сайті тут відкриється чат із менеджером.',
-    ru: 'Это превью сайта: переход в WhatsApp отключён. На настоящем сайте здесь откроется чат с менеджером.',
-    en: 'This is a site preview: WhatsApp is disabled here. On the live site this opens a chat with the manager.',
+    uk: 'Це превʼю сайту: перехід у {app} вимкнено. На справжньому сайті тут відкриється чат із менеджером.',
+    ru: 'Это превью сайта: переход в {app} отключён. На настоящем сайте здесь откроется чат с менеджером.',
+    en: 'This is a site preview: {app} is disabled here. On the live site this opens a chat with the manager.',
   };
   document.addEventListener('click', e => {
-    const a = e.target.closest && e.target.closest('a[href*="wa.me"], a[href$="#whatsapp"], [data-wa-link]');
+    const a = e.target.closest && e.target.closest('a[href*="wa.me"], a[href*="t.me/"], a[href$="#whatsapp"], [data-wa-link]');
     if (!a) return;
     e.preventDefault();
     e.stopPropagation();
-    alert(msg[lang] || msg.uk);
+    alert((msg[lang] || msg.uk).replace('{app}', /t\.me\//.test(a.getAttribute('href') || '') ? 'Telegram' : 'WhatsApp'));
   }, true);
 })();

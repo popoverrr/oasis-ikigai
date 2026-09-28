@@ -1,7 +1,8 @@
-// Общий интерфейс: шапка, меню-шторка, поиск, языки, тосты, «+»/степперы, обране, аккордеоны, появление при скролле, панель корзины
+// Общий интерфейс: шапка, меню-шторка, поиск, языки (плашка выбора при первом входе), чат, тосты, «+»/степперы, обране, аккордеоны, появление при скролле, панель корзины
 import { cart, MAX_QTY } from './cart.js';
 import { config, str, product, fmt, money, sum, center, fetchProducts, isReduced } from './data.js';
-import { attach, burst, paletteFrom, PALETTE_GREEN } from './petals.js';
+import { attach, burst, PALETTE_PINK } from './petals.js';
+import { sfx } from './sound.js';
 
 export const $ = (s, r = document) => r.querySelector(s);
 export const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -54,6 +55,7 @@ function initHeader() {
     ticking = false;
     const y = scrollY;
     hdr.classList.toggle('is-solid', y > 24);
+    document.documentElement.classList.toggle('is-top', y <= 40);   // таблетка языка под логотипом видна только наверху
     const busy = document.documentElement.classList.contains('menu-open') || !$('[data-search]').hidden;
     if (!busy && y > 320 && y > lastY + 4) hdr.classList.add('is-hidden');
     else if (y < lastY - 4 || y <= 320) hdr.classList.remove('is-hidden');
@@ -110,17 +112,82 @@ function initSearch() {
 }
 
 // ── Языки: cookie запоминает выбор ────────────────────────
+const LANG_COOKIE = 'oi_lang';
+const setLangCookie = l => { document.cookie = `${LANG_COOKIE}=${l};max-age=31536000;path=/;samesite=lax`; };
 function initLang() {
   document.addEventListener('click', e => {
     const a = e.target.closest('[data-lang-link]');
-    if (a) document.cookie = `lang=${a.dataset.langLink};max-age=31536000;path=/;samesite=lax`;
+    if (a) setLangCookie(a.dataset.langLink);
+  });
+  if (!new RegExp(`(^|; )${LANG_COOKIE}=`).test(document.cookie)) setTimeout(langPicker, 600);
+}
+
+// Плашка выбора языка при первом входе (brief/08 § 2): рисует только JS, страница под ней индексируется как обычно.
+// Выбор → cookie на год и та же страница на выбранном языке; крестик, фон или Esc → cookie с текущим языком.
+function langPicker() {
+  const P = config.picker;
+  if (!P || document.querySelector('.lp')) return;
+  const guess = (navigator.language || '').slice(0, 2).toLowerCase();
+  const likely = P.langs.some(l => l.code === guess) ? guess : config.lang;
+  const prev = document.activeElement;
+  const box = h('div', { class: 'lp', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'lp-t' },
+    h('div', { class: 'lp__card' },
+      h('button', { class: 'icon-btn lp__x', type: 'button', 'aria-label': P.close, 'data-lp-close': '' }, icon('close', 20, 20)),
+      h('p', { class: 'lp__t', id: 'lp-t', text: P.titles.join(' · ') }),
+      h('div', { class: 'lp__btns' }, ...P.langs.map(l => h('a', {
+        class: 'lp__b' + (l.code === likely ? ' is-likely' : ''), href: l.href, hreflang: l.code, lang: l.code, 'data-lang-link': l.code,
+        'aria-current': l.code === config.lang ? 'true' : null,
+      }, h('span', { text: l.name }), l.code === config.lang ? icon('check', 18, 18) : null))),
+      h('p', { class: 'lp__note', text: P.note })));
+  const close = () => {
+    setLangCookie(config.lang);
+    box.classList.add('is-out');
+    setTimeout(() => box.remove(), isReduced ? 0 : 240);
+    document.documentElement.classList.remove('lp-open');
+    prev?.focus?.({ preventScroll: true });
+  };
+  box.addEventListener('click', e => {
+    if (e.target === box || e.target.closest('[data-lp-close]')) { close(); return; }
+    const a = e.target.closest('[data-lang-link]');
+    if (a && a.dataset.langLink === config.lang) { e.preventDefault(); close(); }
+  });
+  box.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); close(); }
+    if (e.key === 'Tab') {
+      const f = $$('a[href], button', box), first = f[0], last = f.at(-1);
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  document.body.append(box);
+  document.documentElement.classList.add('lp-open');
+  $('.lp__b.is-likely', box)?.focus({ preventScroll: true });
+}
+
+// ── Чат: розовая кнопка → карточка с WhatsApp и Telegram (brief/08 § 10) ──
+function initChat() {
+  const root = $('[data-chat]');
+  if (!root) return;
+  const btn = $('[data-chat-open]', root), card = $('[data-chat-card]', root);
+  const toggle = (open = card.hidden) => {
+    card.hidden = !open;
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    root.classList.toggle('is-open', open);
+    if (open) $('a[href]', card)?.focus({ preventScroll: true });
+  };
+  btn.addEventListener('click', () => toggle());
+  $('[data-chat-close]', root)?.addEventListener('click', () => { toggle(false); btn.focus(); });
+  root.addEventListener('keydown', e => { if (e.key === 'Escape' && !card.hidden) { toggle(false); btn.focus(); } });
+  document.addEventListener('click', e => {
+    if (e.target.closest('[data-chat-ask]')) { e.preventDefault(); toggle(true); return; }
+    if (!card.hidden && !root.contains(e.target)) toggle(false);
   });
 }
 
 // ── Кнопка «+» ↔ степпер ─────────────────────────────────
 function addControl(el, name) {
   if (el.dataset.style === 'big') {
-    const btn = h('button', { class: 'btn btn--green btn--block', type: 'button', 'data-add': '' }, h('span', { text: str.add }));
+    const btn = h('button', { class: 'btn btn--pink btn--block', type: 'button', 'data-add': '' }, h('span', { text: str.add }));
     return btn;
   }
   return h('button', { class: 'add', type: 'button', 'data-add': '', 'aria-label': fmt(str.addLabel, { name }) }, icon('plus', 14, 14));
@@ -170,7 +237,7 @@ export function flyToCart(from) {
   const pic = h('img', { src: img.currentSrc || img.src, alt: '' });
   outer.append(pic);
   Object.assign(outer.style, { position: 'fixed', left: a.x - size / 2 + 'px', top: a.y - size / 2 + 'px', width: size + 'px', height: size + 'px', zIndex: 95, pointerEvents: 'none' });
-  Object.assign(pic.style, { width: '100%', height: '100%', objectFit: 'cover', boxShadow: '0 0 0 2px #00BD00' });
+  Object.assign(pic.style, { width: '100%', height: '100%', objectFit: 'cover', boxShadow: '0 0 0 2px #FF2D87' });
   document.body.append(outer);
   const dx = b.x - a.x, dy = b.y - a.y, dur = 700;
   outer.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${dx}px)` }], { duration: dur, easing: 'cubic-bezier(.3,.1,.3,1)', fill: 'forwards' });
@@ -191,11 +258,11 @@ export function addWithFx(btn, id, n = 1) {
   if (cart.qty(id) >= MAX_QTY) { toast(str.max); return false; }
   const before = cart.count();
   cart.add(id, n);
+  sfx('add');
   btn.classList.remove('is-stamp'); void btn.offsetWidth; btn.classList.add('is-stamp');
-  // салют в цвете основной цели товара + зелёный бренда (brief/06 § 6)
-  const c = center(btn), hex = btn.closest('[data-goal-color]')?.dataset.goalColor;
-  burst(c.x, c.y, { count: 8, spread: .8, scale: .8, palette: hex ? paletteFrom(hex) : PALETTE_GREEN });
-  burst(c.x, c.y, { count: 5, spread: .7, scale: .8, palette: PALETTE_GREEN });
+  // салют розовыми лепестками сакуры (brief/08 § 1)
+  const c = center(btn);
+  burst(c.x, c.y, { count: 12, spread: .8, scale: .8, palette: PALETTE_PINK });
   flyToCart(btn);
   if (isReduced) bumpCounts();
   const bar = $('[data-cartbar]');
@@ -241,7 +308,7 @@ function initWish() {
     if (!b) return;
     e.preventDefault();
     const on = wish.toggle(b.dataset.wish);
-    if (on) { const c = center(b); burst(c.x, c.y, { count: 6, spread: .6, scale: .7, palette: PALETTE_GREEN }); }
+    if (on) { const c = center(b); burst(c.x, c.y, { count: 6, spread: .6, scale: .7, palette: PALETTE_PINK }); }
     toast(on ? str.wishAdded : str.wishRemoved);
   });
   addEventListener('storage', e => { if (e.key === WKEY) renderWish(); });
@@ -354,6 +421,7 @@ export function init() {
   initMenu();
   initSearch();
   initLang();
+  initChat();
   initBuy();
   initWish();
   initAcc();

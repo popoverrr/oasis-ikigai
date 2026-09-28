@@ -1,4 +1,4 @@
-// Каталог: шторка фильтров (мобайл), мгновенное применение фильтров/сортировки/поиска без перезагрузки (?partial=1), «Показати ще»
+// Каталог: «Знайдіть своє IKIGAI» (мини-плитки целей — переход на /shop/{цель} с текущими фильтрами), «Для кого», шторка фильтров (мобайл), мгновенное применение фильтров/сортировки/поиска без перезагрузки (?partial=1), «Показати ще»
 import { $, $$, initReveal, renderCartUI, renderWish } from './ui.js';
 
 export default function () {
@@ -27,6 +27,8 @@ export default function () {
     if (fd.get('q')?.trim()) p.set('q', fd.get('q').trim());
     if (brand.length) p.set('brand', brand.join(','));
     if (cat.length) p.set('category', cat.join(','));
+    const aud = fd.getAll('audience[]');
+    if (aud.length) p.set('audience', aud.join(','));
     for (const k of ['min', 'max']) if (+fd.get(k) > 0) p.set(k, fd.get(k));
     if (fd.get('stock')) p.set('stock', '1');
     if (fd.get('sort') && fd.get('sort') !== 'recommended') p.set('sort', fd.get('sort'));
@@ -79,6 +81,13 @@ export default function () {
   });
   form.addEventListener('submit', e => {
     e.preventDefault();
+    // мини-плитка цели: другая страница каталога (/shop/{цель}) с теми же фильтрами, чистым адресом
+    const goalBtn = e.submitter?.closest('[data-goal-filter]');
+    if (goalBtn) {
+      const p = query();
+      location.assign(goalBtn.getAttribute('formaction') + (p.toString() ? '?' + p : '') + '#ikigai');
+      return;
+    }
     load(query(), { push: true });
     if (!desktop.matches) close();
     document.activeElement?.blur?.();

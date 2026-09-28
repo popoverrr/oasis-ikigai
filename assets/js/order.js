@@ -1,6 +1,7 @@
 // Экран «Замовлення прийнято»: штамп ханко ありがとう, салют лепестков, QR-код ссылки WhatsApp на десктопе
 import { attach, burst, paletteFrom } from './petals.js';
 import { isReduced } from './data.js';
+import { sfx } from './sound.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 
@@ -9,13 +10,14 @@ export default async function () {
   if (!root) return;
 
   $('[data-done-seal]', root)?.classList.add('is-stamped');
+  sfx('success');
   const cv = $('[data-petals]', root);
   if (cv) attach(cv, { count: w => (w < 700 ? 16 : 32), interactive: false });
   if (!isReduced) {
-    // большой салют: 45 лепестков во всех 9 цветах целей (по 5 на цвет)
+    // большой салют: 45 розовых лепестков сакуры из девяти точек (brief/08 § 1)
     const top = Math.max(0, $('.hdr')?.getBoundingClientRect().bottom || 0);
-    const colors = ['#FFD60A', '#FF6A13', '#FF4A3D', '#B4F000', '#00BD00', '#00D1C1', '#19B5FE', '#4F6BFF', '#8B5CFF'];
-    colors.forEach((hex, i) => setTimeout(() => burst(innerWidth * (.2 + (i % 3) * .3), top + 120 + (i % 2) * 30, { count: 5, spread: 1.4, palette: paletteFrom(hex) }), 380 + i * 70));
+    const pink = paletteFrom('#FF2D87'), light = paletteFrom('#FF5AA0');
+    for (let i = 0; i < 9; i++) setTimeout(() => burst(innerWidth * (.2 + (i % 3) * .3), top + 120 + (i % 2) * 30, { count: 5, spread: 1.4, palette: i % 2 ? light : pink }), 380 + i * 70);
   }
 
   // QR-код wa.me на десктопе (локальная библиотека qrcode-generator, MIT)

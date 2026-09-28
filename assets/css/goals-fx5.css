@@ -1,0 +1,208 @@
+/* goals-fx5.css — плитки целей OASIS IKIGAI v5 «современная Япония»
+   Премиальные насыщенные градиенты (глубокий тон → яркий), лёгкое зерно, много воздуха.
+   В каждой плитке — наглядная спокойная сцена из света и стекла, которая показывает смысл цели:
+   Сон — месяц и звёзды, Енергія — восходящее солнце, Краса — жемчужная капля и круги сияния,
+   Імунітет — прозрачная защитная сфера, Баланс — две сферы в равновесии, Довголіття — росток,
+   Детокс — чистая вода и пузырьки, Вітаміни — капсула, Для очей — линза, которая фокусируется.
+   Никаких иероглифов, узоров и иконок. Движение медленное (6–20 с), только transform/opacity.
+   Разметка:
+     <a class="goal goal--{key}[ goal--wide|goal--mini|goal--hero]" href="…">
+       <div class="scene" aria-hidden="true"><?php include "partials/scenes/{key}.html" ?></div>
+       <b>{title}</b><small>{subtitle}</small>
+     </a>
+   Поведение: goals-fx5.js ставит .is-live (плитка на экране → сцена движется) и .is-in (первое появление). */
+
+.goal{--c1:#1E1463;--c2:#7B61FF;position:relative;overflow:hidden;isolation:isolate;min-height:196px;padding:16px;
+  display:flex;flex-direction:column;justify-content:flex-end;color:#fff;border-radius:18px;
+  background:radial-gradient(125% 95% at 88% 8%,var(--c2) 0%,var(--c1) 72%);
+  transition:transform .7s cubic-bezier(.2,.8,.2,1),box-shadow .7s}
+.goal::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.09;mix-blend-mode:overlay;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+.goal b{font:500 21px/1.1 var(--f);position:relative;letter-spacing:-.005em}
+.goal small{display:block;margin-top:5px;font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.86);position:relative;max-width:18ch}
+@media (hover:hover){.goal:hover{transform:translateY(-3px);box-shadow:0 18px 40px -18px var(--c2)}}
+.goal--wide{grid-column:span 2}
+.goals{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* премиальные насыщенные пары: глубокий тон (под текстом) → яркий (у сцены) */
+.goal--beauty{--c1:#8E0A4E;--c2:#FF3D8B}     /* фуксия → сакура */
+.goal--energy{--c1:#A84800;--c2:#FFC53D}     /* янтарь → утреннее солнце */
+.goal--sleep{--c1:#1A1260;--c2:#7B61FF}      /* полночь → фиалковый */
+.goal--immunity{--c1:#7E0A1D;--c2:#FF4D5A}   /* рубин → алый */
+.goal--balance{--c1:#004A58;--c2:#1FD1D9}    /* глубокая лагуна → бирюза */
+.goal--longevity{--c1:#0A1C72;--c2:#4C7BFF}  /* сапфир → кобальт */
+.goal--detox{--c1:#005486;--c2:#33C4FF}      /* океан → чистая вода */
+.goal--vitamins{--c1:#A82C00;--c2:#FF8A2A}   /* терракота → мандарин */
+.goal--eyes{--c1:#45107A;--c2:#C05BFF}       /* аметист → орхидея */
+
+/* сцена — справа сверху; размеры внутри в cqw (от ширины сцены) */
+.goal .scene{position:absolute;top:0;right:0;width:84%;height:74%;z-index:-1;pointer-events:none;container-type:inline-size}
+.goal--wide .scene{width:52%;height:100%}
+.scene *{position:absolute;box-sizing:border-box}
+.goal:not(.is-live) .scene,.goal:not(.is-live) .scene *{animation-play-state:paused!important}
+.scene .halo{border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.55) 0%,rgba(255,255,255,.18) 38%,rgba(255,255,255,0) 70%)}
+@keyframes floaty{from{transform:translateY(0)}to{transform:translateY(-6%)}}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rise{from{transform:translateY(38%);opacity:0}to{transform:none;opacity:1}}
+@keyframes ripple{0%{transform:scale(.25);opacity:0}15%{opacity:.8}100%{transform:scale(1.35);opacity:0}}
+@keyframes drift{from{transform:translateX(-12%)}to{transform:translateX(12%)}}
+.goal .scene>*{opacity:0}
+.goal.is-in .scene>*{animation:rise 2.2s cubic-bezier(.2,.7,.2,1) both}
+.goal.is-in .scene>.after{animation:none;opacity:1}
+
+/* 眠 Сон — месяц медленно поднимается и парит, мягкий ореол, мерцают звёзды, плывёт дымка */
+.sleep-halo{width:80cqw;height:80cqw;right:-4%;top:-14%}
+.sleep-moon{width:38cqw;height:38cqw;right:16%;top:8%;border-radius:50%;box-shadow:inset -9.5cqw 3.8cqw 0 0 #FFF6E6;filter:drop-shadow(0 0 5cqw rgba(255,255,255,.45))}
+.goal.is-in .sleep-moon{animation:rise 2.6s cubic-bezier(.2,.7,.2,1) both,floaty 8s 2.6s ease-in-out infinite alternate}
+.goal.is-in .sleep-halo{animation:rise 2.6s both,breathe 8s 2.6s ease-in-out infinite}
+.sleep-stars i{width:1.4cqw;height:1.4cqw;border-radius:50%;background:#fff;box-shadow:0 0 2cqw #fff;animation:tw 5s ease-in-out infinite}
+.sleep-stars{inset:0}
+.sleep-stars i:nth-child(1){left:10%;top:18%}.sleep-stars i:nth-child(2){left:30%;top:6%;animation-delay:-1.5s;animation-duration:6.5s}
+.sleep-stars i:nth-child(3){left:88%;top:62%;animation-delay:-3s}.sleep-stars i:nth-child(4){left:22%;top:52%;animation-delay:-2.2s;animation-duration:7s}
+.sleep-stars i:nth-child(5){left:58%;top:74%;animation-delay:-.8s;animation-duration:5.5s;width:1cqw;height:1cqw}
+.sleep-mist{width:120cqw;height:18cqw;left:-20%;bottom:6%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,.22),rgba(255,255,255,0) 70%)}
+.goal.is-in .sleep-mist{animation:rise 2.6s both,drift 18s 2.6s ease-in-out infinite alternate}
+
+/* 力 Енергія — солнце встаёт над горизонтом, очень медленно вращаются лучи, свет «дышит» */
+.energy-rays{width:120cqw;height:120cqw;right:-26%;top:-30%;border-radius:50%;
+  background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.2) 0deg 4deg,rgba(255,255,255,0) 4deg 18deg);
+  -webkit-mask:radial-gradient(circle,#000 18%,transparent 62%);mask:radial-gradient(circle,#000 18%,transparent 62%)}
+.goal.is-in .energy-rays{animation:rise 2.4s both,spin 90s 2.4s linear infinite}
+.energy-sun{width:48cqw;height:48cqw;right:14%;top:14%;border-radius:50%;
+  background:radial-gradient(circle at 45% 40%,#fff 0%,#FFF4CC 38%,rgba(255,236,170,.6) 60%,rgba(255,236,170,0) 72%)}
+.goal.is-in .energy-sun{animation:rise 3s cubic-bezier(.2,.7,.2,1) both,breathe 6s 3s ease-in-out infinite}
+.energy-line{left:0;right:0;top:78%;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.7),rgba(255,255,255,0))}
+
+/* 美 Краса — жемчужная капля парит, под ней расходятся мягкие круги сияния, иногда скользит блик */
+.beauty-pearl{width:34cqw;height:34cqw;right:30%;top:10%;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,#fff 0 9%,rgba(255,255,255,.9) 16%,rgba(255,226,238,.62) 42%,rgba(255,160,200,.3) 66%,rgba(255,160,200,0) 71%);
+  box-shadow:0 5cqw 8cqw -3cqw rgba(80,0,40,.45)}
+.goal.is-in .beauty-pearl{animation:rise 2.4s both,floaty 7s 2.4s ease-in-out infinite alternate}
+.beauty-rip{inset:0}
+.beauty-rip i{left:4%;top:56%;width:92%;height:24cqw;border-radius:50%;border:1.5px solid rgba(255,255,255,.7);opacity:0;animation:ripple 7.5s cubic-bezier(.2,.6,.3,1) infinite}
+.beauty-rip i:nth-child(2){animation-delay:2.5s}.beauty-rip i:nth-child(3){animation-delay:5s}
+.beauty-sheen{inset:-20%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.2) 50%,transparent 60%);transform:translateX(-80%)}
+.goal.is-in .beauty-sheen{opacity:1;animation:sheen 11s 3s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes sheen{0%,70%{transform:translateX(-80%)}100%{transform:translateX(80%)}}
+
+/* 守 Імунітет — прозрачная защитная сфера с тёплым ядром; частицы подплывают и мягко отходят */
+.imm-sphere{width:62cqw;height:62cqw;right:12%;top:4%;border-radius:50%;border:1.5px solid rgba(255,255,255,.65);
+  background:radial-gradient(circle at 32% 26%,rgba(255,255,255,.42),rgba(255,255,255,.08) 42%,rgba(255,255,255,0) 62%);
+  box-shadow:inset 0 0 7cqw rgba(255,255,255,.28),0 0 9cqw rgba(255,255,255,.16)}
+.goal.is-in .imm-sphere{animation:rise 2.4s both,breathe 9s 2.4s ease-in-out infinite}
+.imm-core{width:20cqw;height:20cqw;right:33%;top:25%;border-radius:50%;background:radial-gradient(circle,#fff 0%,rgba(255,220,220,.75) 35%,rgba(255,220,220,0) 70%)}
+.goal.is-in .imm-core{animation:rise 2.4s both,breathe 5s 2.4s ease-in-out infinite}
+.imm-dots{inset:0}
+.imm-dots i{width:2.2cqw;height:2.2cqw;border-radius:50%;background:#fff;opacity:0;animation:repel 9s ease-in-out infinite}
+.imm-dots i:nth-child(1){left:2%;top:20%;--dx:14cqw;--dy:6cqw}
+.imm-dots i:nth-child(2){left:94%;top:8%;--dx:-12cqw;--dy:8cqw;animation-delay:-3s}
+.imm-dots i:nth-child(3){left:90%;top:84%;--dx:-12cqw;--dy:-9cqw;animation-delay:-6s}
+.imm-dots i:nth-child(4){left:8%;top:78%;--dx:13cqw;--dy:-8cqw;animation-delay:-4.5s}
+@keyframes repel{0%{transform:translate(0,0);opacity:0}20%{opacity:.9}50%{transform:translate(var(--dx),var(--dy));opacity:.9}100%{transform:translate(calc(var(--dx) * -.2),calc(var(--dy) * -.2));opacity:0}}
+
+/* 調和 Баланс — две сферы медленно кружат друг вокруг друга над тонкой линией равновесия */
+.bal-line{left:12%;right:12%;top:78%;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0))}
+.bal-pivot{width:2.4cqw;height:2.4cqw;left:calc(50% - 1.2cqw);top:calc(78% - 1.2cqw);border-radius:50%;background:#fff}
+.bal-orbit{left:52%;top:42%;width:0;height:0}
+.bal-x{animation:ox 12s ease-in-out infinite alternate}
+.bal-y{animation:oy 12s ease-in-out -6s infinite alternate}
+.bal-x.b2{animation-delay:-12s}.bal-y.b2{animation-delay:-18s}
+@keyframes ox{from{transform:translateX(-26cqw)}to{transform:translateX(26cqw)}}
+@keyframes oy{from{transform:translateY(-8cqw) scale(.82)}to{transform:translateY(8cqw) scale(1.1)}}
+.bal-orb{width:28cqw;height:28cqw;left:-14cqw;top:-14cqw;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,#fff 0 10%,rgba(255,255,255,.75) 22%,rgba(255,255,255,.2) 58%,rgba(255,255,255,0) 71%)}
+.bal-orb.o2{width:19cqw;height:19cqw;left:-9.5cqw;top:-9.5cqw;background:none;border:1.5px solid rgba(255,255,255,.85);box-shadow:inset 0 0 4cqw rgba(255,255,255,.3)}
+
+/* 長寿 Довголіття — росток медленно вырастает, листья раскрываются и покачиваются, за ним тёплый свет */
+.long-halo{width:70cqw;height:70cqw;right:4%;top:-8%}
+.goal.is-in .long-halo{animation:rise 2.4s both,breathe 10s 2.4s ease-in-out infinite}
+.long-sprout{left:26%;top:2%;width:60cqw;height:78cqw;overflow:visible}
+.long-sprout path{fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round}
+.long-sprout .stem{stroke-dasharray:1;stroke-dashoffset:1}
+.goal.is-in .long-sprout{animation:none;opacity:1}
+.goal.is-in .long-sprout .stem{animation:grow 3.2s .3s cubic-bezier(.3,.6,.3,1) forwards}
+.long-sprout .leaf{fill:rgba(255,255,255,.88);stroke:none;transform-box:fill-box;transform:scale(0)}
+.long-sprout .l1{transform-origin:100% 100%}.long-sprout .l2{transform-origin:0 100%}
+.goal.is-in .long-sprout .l1{animation:unfold 1.8s 2.6s cubic-bezier(.2,.8,.2,1) forwards,sway 7s 4.4s ease-in-out infinite alternate}
+.goal.is-in .long-sprout .l2{animation:unfold 1.8s 3.1s cubic-bezier(.2,.8,.2,1) forwards,sway 8s 4.9s ease-in-out infinite alternate-reverse}
+@keyframes grow{to{stroke-dashoffset:0}}
+@keyframes unfold{to{transform:scale(1)}}
+@keyframes sway{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1) rotate(3deg)}}
+.long-ground{left:10%;right:10%;top:84%;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.6),rgba(255,255,255,0))}
+
+/* 清 Детокс — прозрачная вода: течёт мягкая волна, поднимаются пузырьки */
+.det-water{left:-30%;right:-10%;top:42%;bottom:-30%;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 70%);-webkit-mask:linear-gradient(90deg,transparent,#000 40%);mask:linear-gradient(90deg,transparent,#000 40%)}
+.det-wave{left:-30%;top:36%;width:260cqw;height:14cqw;overflow:visible;-webkit-mask:linear-gradient(90deg,transparent,#000 12%);mask:linear-gradient(90deg,transparent,#000 12%)}
+.det-wave path{fill:none;stroke:rgba(255,255,255,.8);stroke-width:1.4}
+.goal.is-in .det-wave{animation:rise 2.2s both,flow 16s 2.2s linear infinite}
+@keyframes flow{from{transform:translateX(0)}to{transform:translateX(-100cqw)}}
+.det-bub{inset:0}
+.det-bub i{bottom:-6%;border-radius:50%;border:1.3px solid rgba(255,255,255,.85);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.5),rgba(255,255,255,0) 60%);opacity:0;animation:bub 9s linear infinite}
+.det-bub i:nth-child(1){left:18%;width:7cqw;height:7cqw}
+.det-bub i:nth-child(2){left:42%;width:3cqw;height:3cqw;animation-delay:-2.5s;animation-duration:11s}
+.det-bub i:nth-child(3){left:64%;width:9cqw;height:9cqw;animation-delay:-5s;animation-duration:10s}
+.det-bub i:nth-child(4){left:80%;width:3.5cqw;height:3.5cqw;animation-delay:-7s}
+.det-bub i:nth-child(5){left:30%;width:2.5cqw;height:2.5cqw;animation-delay:-4s;animation-duration:12s}
+@keyframes bub{0%{transform:translate(0,0);opacity:0}12%{opacity:.9}70%{opacity:.9}100%{transform:translate(2cqw,-62cqw);opacity:0}}
+
+/* 健康 Вітаміни — глянцевая капсула парит и едва поворачивается, рядом плавают мелкие гранулы */
+.vit-shadow{width:44cqw;height:7cqw;right:24%;top:80%;border-radius:50%;background:radial-gradient(ellipse,rgba(60,10,0,.35),rgba(60,10,0,0) 70%)}
+.goal.is-in .vit-shadow{animation:rise 2.4s both,shadow 7s 2.4s ease-in-out infinite alternate}
+@keyframes shadow{from{transform:scale(1);opacity:.9}to{transform:scale(.8);opacity:.55}}
+.vit-cap{width:54cqw;height:21cqw;right:18%;top:28%;border-radius:11cqw;overflow:hidden;transform:rotate(-24deg);
+  box-shadow:0 4cqw 7cqw -3cqw rgba(60,10,0,.45)}
+.vit-cap::before{content:"";position:absolute;left:0;top:0;bottom:0;width:50%;background:linear-gradient(180deg,#fff 0%,#F6F6F6 55%,#E6E6E6 100%)}
+.vit-cap::after{content:"";position:absolute;right:0;top:0;bottom:0;width:50%;background:linear-gradient(180deg,rgba(255,255,255,.75) 0%,rgba(255,255,255,.35) 55%,rgba(255,255,255,.2) 100%)}
+.vit-cap i{left:8%;right:8%;top:14%;height:22%;border-radius:4cqw;background:rgba(255,255,255,.75);z-index:2}
+.goal.is-in .vit-cap{animation:caprise 2.4s cubic-bezier(.2,.7,.2,1) both,capfloat 7s 2.4s ease-in-out infinite alternate}
+@keyframes caprise{from{transform:rotate(-24deg) translateY(30%);opacity:0}to{transform:rotate(-24deg);opacity:1}}
+@keyframes capfloat{from{transform:rotate(-24deg) translateY(0)}to{transform:rotate(-18deg) translateY(-5cqw)}}
+.vit-gr{inset:0}
+.vit-gr i{border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0 20%,rgba(255,255,255,.55) 45%,rgba(255,255,255,0) 72%);animation:floaty 6s ease-in-out infinite alternate}
+.vit-gr i:nth-child(1){left:12%;top:20%;width:9cqw;height:9cqw}
+.vit-gr i:nth-child(2){left:82%;top:16%;width:5cqw;height:5cqw;animation-delay:-2s;animation-duration:7.5s}
+.vit-gr i:nth-child(3){left:76%;top:66%;width:6cqw;height:6cqw;animation-delay:-4s;animation-duration:8s}
+
+/* 眼 Для очей — стеклянная линза: зрачок спокойно фокусируется, по стеклу скользит блик */
+.eye-halo{width:86cqw;height:86cqw;right:0;top:-18%}
+.eye-ring{width:62cqw;height:62cqw;right:12%;top:2%;border-radius:50%;border:1.5px solid rgba(255,255,255,.8);
+  background:radial-gradient(circle,rgba(255,255,255,.1) 0%,rgba(255,255,255,.04) 60%,rgba(255,255,255,0) 70%)}
+.eye-iris{width:38cqw;height:38cqw;right:24%;top:14%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,0) 30%,rgba(255,255,255,.35) 31%,rgba(255,255,255,.12) 62%,rgba(255,255,255,0) 72%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
+.eye-pupil{width:15cqw;height:15cqw;right:35.5%;top:25.5%;border-radius:50%;background:radial-gradient(circle at 60% 60%,#170826,#2A0E45 70%)}
+.goal.is-in .eye-pupil{animation:rise 2.4s both,dilate 8s 2.4s ease-in-out infinite}
+@keyframes dilate{0%,100%{transform:scale(1)}50%{transform:scale(.72)}}
+.eye-glint{width:5cqw;height:5cqw;right:34%;top:22%;border-radius:50%;background:#fff;box-shadow:0 0 3cqw #fff}
+.goal.is-in .eye-halo{animation:rise 2.4s both,breathe 8s 2.4s ease-in-out infinite}
+
+/* мини-плитка (фильтр в каталоге): сцена неподвижна, выбранная — белая рамка и галочка */
+.goal--mini{min-height:112px;width:132px;flex:0 0 132px;padding:10px 12px;border-radius:14px;scroll-snap-align:start}
+.goal--mini b{font-size:15px}.goal--mini small{display:none}
+.goal--mini .scene{width:78%;height:82%}
+.goal--mini .scene *{animation:none!important}.goal--mini .scene>*{opacity:1}
+.goal--mini .long-sprout .stem{stroke-dashoffset:0}.goal--mini .long-sprout .leaf{transform:scale(1)}
+.goal--mini[aria-pressed="true"]{box-shadow:inset 0 0 0 2.5px #fff}
+.goal--mini[aria-pressed="true"]::before{content:"";position:absolute;left:10px;top:10px;width:18px;height:18px;border-radius:50%;z-index:2;
+  background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M5 9.2l2.6 2.6L13 6.4' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") center/18px no-repeat}
+.goal-filter{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+.goal-filter::-webkit-scrollbar{display:none}
+
+/* шапка страницы цели */
+.goal--hero{min-height:300px;padding:24px;border-radius:22px}.goal--hero b{font-size:36px;font-weight:300}.goal--hero small{font-size:15px;max-width:30ch}
+.goal--hero .scene{width:60%;height:100%}
+
+@media (min-width:1024px){
+  .goals{grid-template-columns:repeat(3,1fr);gap:16px}
+  .goal{min-height:270px;padding:26px;border-radius:22px}.goal b{font-size:27px}.goal small{font-size:14px}
+  .goal--wide{grid-column:auto}
+  .goal .scene,.goal--wide .scene{width:58%;height:84%;right:2%;top:2%}
+  .goal--mini{min-height:124px;width:152px;flex-basis:152px}
+  .goal--hero{min-height:380px;padding:40px}.goal--hero b{font-size:52px}.goal--hero .scene{width:46%}
+}
+@media (prefers-reduced-motion:reduce){
+  .goal .scene *,.goal .scene{animation:none!important}.goal .scene>*{opacity:1}
+  .long-sprout .stem{stroke-dashoffset:0}.long-sprout .leaf{transform:scale(1)}
+}
