@@ -512,6 +512,12 @@ html.lp-open{overflow:hidden}
 @keyframes lp-pop{from{opacity:0;transform:translateY(16px) scale(.98)}}
 @media (min-width:768px){.lp{align-items:center}.lp__card{width:min(460px,calc(100% - 40px));padding:32px 32px 28px;animation-name:lp-pop}}
 
+/* горизонтальные ленты (новинки, бестселлеры, журнал, мини-плитки целей, галерея товара): только горизонтальная прокрутка.
+   Без этого на телефоне лента прокручивалась ещё и по вертикали на 20–24 px (сдвиг анимации появления у карточек за краем) —
+   палец «цеплялся» за ленту и страница листалась рывками. Внутри лент карточки проявляются без сдвига. */
+.prods--rail,.posts--rail,.goal-filter,.gallery__track{overflow-y:hidden;overscroll-behavior-x:contain}
+.js .prods--rail [data-reveal-item]:not(.is-in),.js .posts--rail [data-reveal-item]:not(.is-in){transform:none}
+
 /* появление при скролле (только с JS) */
 .js [data-reveal]:not(.is-in),.js [data-reveal-item]:not(.is-in){opacity:0;transform:translateY(24px)}
 .js [data-reveal],.js [data-reveal-item]{transition:opacity .8s ease,transform .9s var(--ease);transition-delay:var(--d,0s)}
