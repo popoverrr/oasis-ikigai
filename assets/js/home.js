@@ -1,7 +1,6 @@
-// Главная v5: хореография hero (постер → видео → розовые лепестки → заголовок по словам), страховка появления текста,
+// Главная: хореография hero (постер → видео под размер экрана → заголовок по словам), страховка появления текста,
 // панель корзины скрыта, пока виден первый экран, карусель журнала со стрелками и линией прогресса (brief/08 §§ 3, 8)
 import { isReduced } from './data.js';
-import { attach } from './petals.js';
 import { $, splitWords } from './ui.js';
 import { onLeave } from './page.js';
 
@@ -20,29 +19,27 @@ function hero(root) {
   const on = new IntersectionObserver(([e]) => document.body.classList.toggle('hero-on', e.intersectionRatio >= .3), { threshold: [0, .3, .6, 1] });
   on.observe(hero);
 
-  const canvas = $('[data-petals]', hero);
-  let petals = null, gone = false;
-  if (canvas) {
-    // v8: над видео с сакурой — белые лепестки (палитра по умолчанию)
-    const go = () => { if (!gone) petals = attach(canvas); };
-    if (isReduced) go(); else setTimeout(go, 350);
-  }
   onLeave(() => {
-    gone = true;
     clearTimeout(timer);
     removeEventListener('load', done);
     on.disconnect();
     document.body.classList.remove('hero-on');
-    petals?.destroy();
   });
 
+  // v9 (brief/12 § 1): бамбук в солнечном свете — файл под экран выбирается один раз: вертикальный для телефона,
+  // 2560 для больших и ретина-экранов, 1920 для остальных. Лепестков над первым экраном больше нет.
   const video = $('[data-hero-video]', hero);
   const saveData = navigator.connection?.saveData;
   if (!video || isReduced || saveData) return;
+  const portrait = matchMedia('(max-width: 1023px) and (orientation: portrait)').matches;
+  const big = matchMedia('(min-width: 1600px), (min-width: 1200px) and (min-resolution: 2dppx)').matches;
+  video.src = portrait ? video.dataset.srcPortrait : big ? video.dataset.srcQhd : video.dataset.srcHd;
   video.preload = 'auto';
   video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
   const play = () => video.play().catch(() => {});
   if (document.readyState === 'complete') play(); else addEventListener('load', play, { once: true });
+  // ушли со страницы — видео не должно продолжать грузиться
+  onLeave(() => { video.pause(); video.removeAttribute('src'); video.load(); });
   // вне экрана — пауза (экономим батарею), вернулись — продолжаем
   const vis = new IntersectionObserver(([e]) => (e.isIntersecting ? play() : video.pause()));
   vis.observe(hero);

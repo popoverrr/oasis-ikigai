@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon" href="/oasis-ikigai/apple-touch-icon.png">
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-300.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tm2rdg">
+<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tm2tju">
 <link rel="stylesheet" href="/oasis-ikigai/assets/css/goals-fx5.css?v=tm2qqz">
 <script src="/oasis-ikigai/assets/js/boot.js?v=tm2bp4"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","@id":"https://popoverrr.github.io/oasis-ikigai/#org","name":"OASIS IKIGAI","url":"https://popoverrr.github.io/oasis-ikigai/","logo":"https://popoverrr.github.io/oasis-ikigai/assets/img/apple-touch-icon.png","sameAs":["https://instagram.com/oasis_ikigai","https://t.me/oasis_ikigai_dev"]}</script>
@@ -94,14 +94,14 @@
 </div>
 <main id="main" tabindex="-1" data-page="home" data-nav="" data-header-over="1">
 <section class="hero" data-hero>
-  <picture class="hero__poster">
-    <source media="(min-width: 1024px)" srcset="/oasis-ikigai/assets/media/hero-poster-1920.webp">
-    <img src="/oasis-ikigai/assets/media/hero-poster-1080.webp" alt="" width="1080" height="1080" fetchpriority="high">
+    <picture class="hero__poster">
+    <source media="(min-width: 1024px), (orientation: landscape)" srcset="/oasis-ikigai/assets/media/hero-poster-1920.webp">
+    <img src="/oasis-ikigai/assets/media/hero-poster-1080.webp" alt="" width="1080" height="1920" fetchpriority="high">
   </picture>
-  <video class="hero__video" muted loop playsinline preload="none" poster="/oasis-ikigai/assets/media/hero-poster-1080.webp" data-hero-video aria-hidden="true">
-    <source src="/oasis-ikigai/assets/media/hero.mp4" type="video/mp4">
-  </video>
-  <canvas class="hero__petals" aria-hidden="true" data-petals></canvas>
+  <video class="hero__video" muted loop playsinline preload="none" aria-hidden="true" data-hero-video
+         data-src-portrait="/oasis-ikigai/assets/media/hero-portrait.mp4"
+         data-src-hd="/oasis-ikigai/assets/media/hero-1920.mp4"
+         data-src-qhd="/oasis-ikigai/assets/media/hero-2560.mp4"></video>
   <button class="sound" type="button" aria-pressed="true" data-music-toggle data-label-on="Turn music on" data-label-off="Turn music off" aria-label="Turn music off"><svg class="icon i-off" width="16" height="16" aria-hidden="true" focusable="false"><use href="#i-sound-off"/></svg><svg class="icon i-on" width="16" height="16" aria-hidden="true" focusable="false"><use href="#i-sound-on"/></svg></button>  <div class="hero__in">
     <h1 class="hero__h1">The best self-care ritual starts <em>here</em>.</h1>
     <p class="lead" data-hero-step>Japanese vitamins, supplements and care.</p>
