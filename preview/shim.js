@@ -1,5 +1,5 @@
 // Превью на GitHub Pages: без PHP-сервера. Подменяет ответы сервера в браузере:
-// каталог (фильтры, сортировка, поиск, «Показати ще») и «Обране» — из preview/catalog-*.json, товары для корзины — из preview/products-*.json,
+// каталог (фильтры, сортировка, поиск, «Показати ще»; и после мягких переходов v7) и «Обране» — из preview/catalog-*.json, товары для корзины — из preview/products-*.json,
 // заказ не отправляется (показывается пример экрана «Замовлення прийнято»), WhatsApp и Telegram не открываются.
 (() => {
   const BASE = "/oasis-ikigai";
@@ -76,8 +76,9 @@
     return orig(input, init);
   };
 
-  // каталог открыт со строкой поиска или фильтрами в адресе (поиск из шапки, «Показати ще» без JS) — применяем их в браузере
-  addEventListener('load', async () => {
+  // каталог открыт со строкой поиска или фильтрами в адресе (поиск из шапки, «Показати ще» без JS) — применяем их в браузере;
+  // с v7 то же после мягкого перехода (событие oi:page): статичная страница приходит без фильтров
+  const applyFromUrl = async () => {
     const form = document.querySelector('[data-filters]');
     const q = new URLSearchParams(location.search);
     if (!form || ![...q.keys()].length) return;
@@ -92,7 +93,9 @@
       }
     }
     form.dispatchEvent(new Event('change', { bubbles: true }));
-  });
+  };
+  addEventListener('load', applyFromUrl);
+  addEventListener('oi:page', applyFromUrl);
 
   const msg = {
     uk: 'Це превʼю сайту: перехід у {app} вимкнено. На справжньому сайті тут відкриється чат із менеджером.',

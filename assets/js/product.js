@@ -2,6 +2,7 @@
 import { cart, MAX_QTY } from './cart.js';
 import { str, product, money, fmt, isReduced } from './data.js';
 import { $, $$, addWithFx, setCartbarOverride, toast, h, icon } from './ui.js';
+import { onLeave } from './page.js';
 
 function gallery() {
   const g = $('[data-gallery]'), track = g && $('[data-gallery-track]', g);
@@ -19,6 +20,7 @@ function gallery() {
   };
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.intersectionRatio > .6) mark(slides.indexOf(e.target)); }), { root: track, threshold: [.6] });
   slides.forEach(s => io.observe(s));
+  onLeave(() => io.disconnect());
   g.addEventListener('click', e => { const d = e.target.closest('[data-gallery-dot]'); if (d) go(+d.dataset.galleryDot); });
   track.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
@@ -46,31 +48,34 @@ function stickyBar(id, p) {
       : h('button', { class: 'btn btn--pink', type: 'button', 'data-bar-add': '' }, h('span', { text: str.add }));
     el.replaceChildren(info, right);
   };
-  bar.addEventListener('click', e => {
+  const onBar = e => {
     if (bar.dataset.mode !== 'product') return;
     const add = e.target.closest('[data-bar-add]');
     if (add) addWithFx(add, id, 1);
     if (e.target.closest('[data-bar-inc]')) { if (cart.qty(id) >= MAX_QTY) toast(str.max); else cart.set(id, cart.qty(id) + 1); }
     if (e.target.closest('[data-bar-dec]')) cart.set(id, cart.qty(id) - 1);
-  });
+  };
+  bar.addEventListener('click', onBar);   // панель корзины живёт между страницами — слушатель снимается при уходе
   const original = [...bar.cloneNode(true).childNodes];
   let overriding = false;
-  new IntersectionObserver(([en]) => {
+  const restore = () => {
+    bar.dataset.mode = 'cart';
+    bar.replaceChildren(...original.map(n => n.cloneNode(true)));
+    if (cart.count() === 0) bar.hidden = true;
+    setCartbarOverride(null);
+  };
+  const io = new IntersectionObserver(([en]) => {
     const away = !en.isIntersecting && en.boundingClientRect.top < 0 && innerWidth < 900;
     if (away && !overriding) { overriding = true; setCartbarOverride(render); }
-    if (!away && overriding) {
-      overriding = false;
-      bar.dataset.mode = 'cart';
-      bar.replaceChildren(...original.map(n => n.cloneNode(true)));
-      if (cart.count() === 0) bar.hidden = true;
-      setCartbarOverride(null);
-    }
-  }).observe(buy);
+    if (!away && overriding) { overriding = false; restore(); }
+  });
+  io.observe(buy);
+  onLeave(() => { io.disconnect(); bar.removeEventListener('click', onBar); if (overriding) { overriding = false; restore(); } });
 }
 
-export default async function () {
+export default async function (root = document) {
   gallery();
-  const page = $('[data-product-page]');
+  const page = $('[data-product-page]', root);
   if (!page) return;
   const id = +page.dataset.productPage, p = product(id);
   if (!p) return;

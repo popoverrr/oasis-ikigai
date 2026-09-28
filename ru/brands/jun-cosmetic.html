@@ -25,8 +25,8 @@
 <link rel="apple-touch-icon" href="/oasis-ikigai/apple-touch-icon.png">
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-300.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tm2d1k">
-<link rel="stylesheet" href="/oasis-ikigai/assets/css/goals-fx5.css?v=tm2b23">
+<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tm2j0u">
+<link rel="stylesheet" href="/oasis-ikigai/assets/css/goals-fx5.css?v=tm2euz">
 <script src="/oasis-ikigai/assets/js/boot.js?v=tm2bp4"></script>
 </head>
 <body class="" data-page="">
@@ -58,7 +58,7 @@
   <button class="icon-btn hdr__menu" type="button" aria-controls="menu" aria-expanded="false" aria-label="Открыть меню" data-menu-open><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-menu"/></svg></button>
   <a class="logo" href="/oasis-ikigai/ru/" aria-label="OASIS IKIGAI — на главную"><b>OASIS IKIGAI</b></a>
   <nav class="hdr__nav" aria-label="Основная навигация">
-    <a href="/oasis-ikigai/ru/shop">Каталог</a><a href="/oasis-ikigai/ru/brands" aria-current="page">Бренды</a><a href="/oasis-ikigai/ru/journal">Журнал</a><a href="/oasis-ikigai/ru/about">О нас</a>  </nav>
+    <a href="/oasis-ikigai/ru/shop" data-nav-key="shop">Каталог</a><a href="/oasis-ikigai/ru/brands" data-nav-key="brands" aria-current="page">Бренды</a><a href="/oasis-ikigai/ru/journal" data-nav-key="journal">Журнал</a><a href="/oasis-ikigai/ru/about" data-nav-key="about">О нас</a>  </nav>
   <div class="hdr__tools">
     <button class="icon-btn hdr__search" type="button" aria-label="Поиск" data-search-open><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-search"/></svg></button>
     <a class="icon-btn hdr__wish" href="/oasis-ikigai/ru/wishlist" aria-label="Избранное"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-heart"/></svg><span class="count" data-wish-count hidden>0</span></a>
@@ -88,10 +88,9 @@
           <a href="/oasis-ikigai/ru/faq" style="--i:6"><span class="menu__label">Вопросы и ответы</span><span class="menu__jp" lang="ja" aria-hidden="true">問答</span></a>
       </nav>
   <div class="menu__foot">
-    <button class="menu__sound" type="button" aria-pressed="false" data-music data-music-text hidden><svg class="icon i-off" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-off"/></svg><svg class="icon i-on" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-on"/></svg><span>Включить музыку</span></button>
-    <a class="btn btn--pink" href="https://wa.me/380000000000" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg>Написать в WhatsApp</a>    <a class="menu__ig" href="https://instagram.com/oasis_ikigai" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-ig"/></svg>Instagram</a>  </div>
+    <button class="menu__sound" type="button" aria-pressed="true" data-music-toggle data-music-text data-label-on="Включить музыку" data-label-off="Выключить музыку" aria-label="Выключить музыку"><svg class="icon i-off" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-off"/></svg><svg class="icon i-on" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-on"/></svg><span data-music-label>Выключить музыку</span></button>    <a class="btn btn--pink" href="https://wa.me/380000000000" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg>Написать в WhatsApp</a>    <a class="menu__ig" href="https://instagram.com/oasis_ikigai" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-ig"/></svg>Instagram</a>  </div>
 </div>
-<main id="main" tabindex="-1">
+<main id="main" tabindex="-1" data-page="" data-nav="brands">
 <section class="phead">
   <div class="wrap">
     <nav class="crumbs" aria-label="Навигационная цепочка"><a href="/oasis-ikigai/ru/">Главная</a><span aria-hidden="true">/</span><a href="/oasis-ikigai/ru/brands">Бренды</a><span aria-hidden="true">/</span><span aria-current="page">Jun Cosmetic</span></nav>
@@ -117,6 +116,7 @@
     <p><a class="link" href="/oasis-ikigai/ru/brands">Бренды<svg class="arrow" width="28" height="10" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a></p>
   </div>
 </section>
+<script type="application/json" id="oi-products">[{"id":67,"slug":"jun-medicated-horse-oil-cream","name":"Medicated Horse Oil Cream","brand":"Jun Cosmetic","pack":"70 ml jar","price":750,"old_price":null,"stock":"in_stock","img":"/oasis-ikigai/uploads/p/jun-medicated-horse-oil-cream/3f378147-480.webp","url":"/oasis-ikigai/ru/product/jun-medicated-horse-oil-cream"}]</script>
 </main>
 <footer class="ftr">
   <div class="wrap">
@@ -160,9 +160,9 @@
   </div>
   <button class="chat__btn" type="button" aria-expanded="false" aria-controls="chat-card" aria-label="Чат" data-chat-open><svg class="icon" width="26" height="26" aria-hidden="true" focusable="false"><use href="#i-chat"/></svg></button>
 </div>
+<button class="music" type="button" data-music-toggle data-label-on="Включить музыку" data-label-off="Выключить музыку" aria-pressed="true" aria-label="Выключить музыку"><span class="music__eq" aria-hidden="true"><i></i><i></i><i></i></span><svg class="icon music__off" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-off"/></svg></button>
 <div class="toasts" data-toasts role="status" aria-live="polite"></div>
-<script type="application/json" id="oi-config">{"lang":"ru","prefix":"/oasis-ikigai/ru","defaultLang":"uk","freeFrom":2000,"wa":"380000000000","cartUrl":"/oasis-ikigai/ru/cart","shopUrl":"/oasis-ikigai/ru/shop","media":{"ambient":"","tap":"","add":"","success":""},"picker":{"titles":["Оберіть мову","Выберите язык","Choose your language"],"note":"Сменить язык можно в любой момент — кнопка под логотипом.","close":"Закрыть","langs":[{"code":"uk","name":"Українська","href":"/oasis-ikigai/brands/jun-cosmetic"},{"code":"ru","name":"Русский","href":"/oasis-ikigai/ru/brands/jun-cosmetic"},{"code":"en","name":"English","href":"/oasis-ikigai/en/brands/jun-cosmetic"}]},"str":{"added":"Добавлено в корзину","removed":"Товар удалён","undo":"Вернуть","unavailable":"Этот товар больше недоступен и убран из корзины","priceChanged":"Цена обновлена","linkCopied":"Ссылка скопирована","copyManual":"Скопируйте ссылку вручную","storageOff":"Браузер не сохраняет корзину — не закрывайте вкладку до оформления.","cartBar":"Корзина · {n}","barCta":"Оформить","add":"В корзину","addShort":"Добавить","inCart":"В корзине","addLabel":"Добавить в корзину: {name}","qtyLabel":"Количество: {name}","decrease":"Уменьшить количество","increase":"Увеличить количество","qtyNow":"В корзине: {n}","a11yCart":"Корзина, товаров: {n}","soldOut":"Нет в наличии","preorder":"Под заказ","close":"Закрыть","max":"Максимум 99 шт. одного товара","wishAdded":"Добавлено в избранное","wishRemoved":"Убрано из избранного","musicOn":"Включить музыку","musicOff":"Выключить музыку"}}</script>
-<script type="application/json" id="oi-products">[{"id":67,"slug":"jun-medicated-horse-oil-cream","name":"Medicated Horse Oil Cream","brand":"Jun Cosmetic","pack":"70 ml jar","price":750,"old_price":null,"stock":"in_stock","img":"/oasis-ikigai/uploads/p/jun-medicated-horse-oil-cream/3f378147-480.webp","url":"/oasis-ikigai/ru/product/jun-medicated-horse-oil-cream"}]</script>
-<script type="module" src="/oasis-ikigai/assets/js/app.js?v=tm2bp4"></script>
+<script type="application/json" id="oi-config">{"lang":"ru","prefix":"/oasis-ikigai/ru","defaultLang":"uk","freeFrom":2000,"wa":"380000000000","cartUrl":"/oasis-ikigai/ru/cart","shopUrl":"/oasis-ikigai/ru/shop","media":{"ambient":"/oasis-ikigai/assets/audio/ambient.mp3","tap":"","add":"","success":"","resume":true},"softnav":true,"adminPath":"admin","picker":{"titles":["Оберіть мову","Выберите язык","Choose your language"],"note":"Сменить язык можно в любой момент — кнопка под логотипом.","close":"Закрыть","langs":[{"code":"uk","name":"Українська","href":"/oasis-ikigai/brands/jun-cosmetic"},{"code":"ru","name":"Русский","href":"/oasis-ikigai/ru/brands/jun-cosmetic"},{"code":"en","name":"English","href":"/oasis-ikigai/en/brands/jun-cosmetic"}]},"str":{"added":"Добавлено в корзину","removed":"Товар удалён","undo":"Вернуть","unavailable":"Этот товар больше недоступен и убран из корзины","priceChanged":"Цена обновлена","linkCopied":"Ссылка скопирована","copyManual":"Скопируйте ссылку вручную","storageOff":"Браузер не сохраняет корзину — не закрывайте вкладку до оформления.","cartBar":"Корзина · {n}","barCta":"Оформить","add":"В корзину","addShort":"Добавить","inCart":"В корзине","addLabel":"Добавить в корзину: {name}","qtyLabel":"Количество: {name}","decrease":"Уменьшить количество","increase":"Увеличить количество","qtyNow":"В корзине: {n}","a11yCart":"Корзина, товаров: {n}","soldOut":"Нет в наличии","preorder":"Под заказ","close":"Закрыть","max":"Максимум 99 шт. одного товара","wishAdded":"Добавлено в избранное","wishRemoved":"Убрано из избранного","musicOn":"Включить музыку","musicOff":"Выключить музыку"}}</script>
+<script type="module" src="/oasis-ikigai/assets/js/app.js?v=tm2grj"></script>
 </body>
 </html>

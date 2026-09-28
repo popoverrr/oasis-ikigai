@@ -3,6 +3,7 @@ import { cart, MAX_QTY } from './cart.js';
 import { config, str, product, fmt, money, sum, center, fetchProducts, isReduced } from './data.js';
 import { attach, burst, PALETTE_PINK } from './petals.js';
 import { sfx } from './sound.js';
+import { onLeave } from './page.js';
 
 export const $ = (s, r = document) => r.querySelector(s);
 export const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -237,7 +238,7 @@ export function flyToCart(from) {
   const pic = h('img', { src: img.currentSrc || img.src, alt: '' });
   outer.append(pic);
   Object.assign(outer.style, { position: 'fixed', left: a.x - size / 2 + 'px', top: a.y - size / 2 + 'px', width: size + 'px', height: size + 'px', zIndex: 95, pointerEvents: 'none' });
-  Object.assign(pic.style, { width: '100%', height: '100%', objectFit: 'cover', boxShadow: '0 0 0 2px #FF2D87' });
+  Object.assign(pic.style, { width: '100%', height: '100%', objectFit: 'cover', boxShadow: '0 0 0 2px #F2418C' });
   document.body.append(outer);
   const dx = b.x - a.x, dy = b.y - a.y, dur = 700;
   outer.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${dx}px)` }], { duration: dur, easing: 'cubic-bezier(.3,.1,.3,1)', fill: 'forwards' });
@@ -364,12 +365,29 @@ export function initReveal(root = document) {
     });
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
   for (const el of els) io.observe(el);
+  onLeave(() => io.disconnect());
 }
 
 // ── Лепестки в секциях (кроме hero — там свой запуск) ──────
-function initPetals() {
-  const list = $$('[data-petals]:not(.hero__petals)');
-  if (list.length) idle(() => list.forEach(c => attach(c, { count: w => (w < 700 ? 14 : 26), interactive: false })));
+export function initPetals(root = document) {
+  const list = $$('[data-petals]:not(.hero__petals)', root);
+  if (!list.length) return;
+  let gone = false;
+  const fx = [];
+  onLeave(() => { gone = true; fx.forEach(f => f.destroy()); });
+  idle(() => { if (!gone) list.forEach(c => fx.push(attach(c, { count: w => (w < 700 ? 14 : 26), interactive: false }))); });
+}
+
+/** После мягкого перехода: прозрачная шапка над видео только на главной, активный пункт меню (данные — на новом <main>) */
+export function syncChrome(root) {
+  const hdr = $('[data-hdr]');
+  if (hdr) {
+    hdr.classList.toggle('hdr--over', root.dataset.headerOver === '1');
+    hdr.classList.remove('is-hidden');
+  }
+  for (const a of $$('[data-nav-key]')) {
+    if (a.dataset.navKey === root.dataset.nav) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  }
 }
 
 // ── Счётчик в шапке и плавающая панель ────────────────────
@@ -410,7 +428,7 @@ export function renderCartUI() {
       $('[data-cartbar-label]', bar).textContent = fmt(str.cartBar, { n }).replace(/\s*·\s*\d+$/, '');
       $('[data-cartbar-sum]', bar).textContent = total != null ? money(total) : '';
     }
-    document.body.classList.toggle('has-cartbar', !bar.hidden);
+    document.body.classList.toggle('has-cartbar', !bar.hidden && !document.body.classList.contains('no-cartbar'));
   }
 }
 
@@ -425,8 +443,6 @@ export function init() {
   initBuy();
   initWish();
   initAcc();
-  initReveal();
-  initPetals();
   renderCartUI();
   cart.subscribe(renderCartUI);
   if (!cart.storageOk()) toast(str.storageOff, { timeout: 5000 });

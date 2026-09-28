@@ -25,8 +25,8 @@
 <link rel="apple-touch-icon" href="/oasis-ikigai/apple-touch-icon.png">
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-300.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tm2d1k">
-<link rel="stylesheet" href="/oasis-ikigai/assets/css/goals-fx5.css?v=tm2b23">
+<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tm2j0u">
+<link rel="stylesheet" href="/oasis-ikigai/assets/css/goals-fx5.css?v=tm2euz">
 <script src="/oasis-ikigai/assets/js/boot.js?v=tm2bp4"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to build a daily wellness ritual","datePublished":"2026-08-04","inLanguage":"en","image":"https://popoverrr.github.io/oasis-ikigai/uploads/j/how-to-build-a-daily-wellness-ritual-960.jpg"}</script>
 </head>
@@ -59,7 +59,7 @@
   <button class="icon-btn hdr__menu" type="button" aria-controls="menu" aria-expanded="false" aria-label="Open menu" data-menu-open><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-menu"/></svg></button>
   <a class="logo" href="/oasis-ikigai/en/" aria-label="OASIS IKIGAI — home"><b>OASIS IKIGAI</b></a>
   <nav class="hdr__nav" aria-label="Main navigation">
-    <a href="/oasis-ikigai/en/shop">Shop</a><a href="/oasis-ikigai/en/brands">Brands</a><a href="/oasis-ikigai/en/journal" aria-current="page">Journal</a><a href="/oasis-ikigai/en/about">About</a>  </nav>
+    <a href="/oasis-ikigai/en/shop" data-nav-key="shop">Shop</a><a href="/oasis-ikigai/en/brands" data-nav-key="brands">Brands</a><a href="/oasis-ikigai/en/journal" data-nav-key="journal" aria-current="page">Journal</a><a href="/oasis-ikigai/en/about" data-nav-key="about">About</a>  </nav>
   <div class="hdr__tools">
     <button class="icon-btn hdr__search" type="button" aria-label="Search" data-search-open><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-search"/></svg></button>
     <a class="icon-btn hdr__wish" href="/oasis-ikigai/en/wishlist" aria-label="Wishlist"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-heart"/></svg><span class="count" data-wish-count hidden>0</span></a>
@@ -89,10 +89,9 @@
           <a href="/oasis-ikigai/en/faq" style="--i:6"><span class="menu__label">FAQ</span><span class="menu__jp" lang="ja" aria-hidden="true">問答</span></a>
       </nav>
   <div class="menu__foot">
-    <button class="menu__sound" type="button" aria-pressed="false" data-music data-music-text hidden><svg class="icon i-off" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-off"/></svg><svg class="icon i-on" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-on"/></svg><span>Turn music on</span></button>
-    <a class="btn btn--pink" href="https://wa.me/380000000000" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg>Message us on WhatsApp</a>    <a class="menu__ig" href="https://instagram.com/oasis_ikigai" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-ig"/></svg>Instagram</a>  </div>
+    <button class="menu__sound" type="button" aria-pressed="true" data-music-toggle data-music-text data-label-on="Turn music on" data-label-off="Turn music off" aria-label="Turn music off"><svg class="icon i-off" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-off"/></svg><svg class="icon i-on" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-on"/></svg><span data-music-label>Turn music off</span></button>    <a class="btn btn--pink" href="https://wa.me/380000000000" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg>Message us on WhatsApp</a>    <a class="menu__ig" href="https://instagram.com/oasis_ikigai" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-ig"/></svg>Instagram</a>  </div>
 </div>
-<main id="main" tabindex="-1">
+<main id="main" tabindex="-1" data-page="" data-nav="journal">
 <article class="article white">
   <header class="phead white article__head">
     <div class="wrap">
@@ -137,6 +136,7 @@
 </div>
   </div>
 </section>
+<script type="application/json" id="oi-products">[]</script>
 </main>
 <footer class="ftr">
   <div class="wrap">
@@ -180,9 +180,9 @@
   </div>
   <button class="chat__btn" type="button" aria-expanded="false" aria-controls="chat-card" aria-label="Chat" data-chat-open><svg class="icon" width="26" height="26" aria-hidden="true" focusable="false"><use href="#i-chat"/></svg></button>
 </div>
+<button class="music" type="button" data-music-toggle data-label-on="Turn music on" data-label-off="Turn music off" aria-pressed="true" aria-label="Turn music off"><span class="music__eq" aria-hidden="true"><i></i><i></i><i></i></span><svg class="icon music__off" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-off"/></svg></button>
 <div class="toasts" data-toasts role="status" aria-live="polite"></div>
-<script type="application/json" id="oi-config">{"lang":"en","prefix":"/oasis-ikigai/en","defaultLang":"uk","freeFrom":2000,"wa":"380000000000","cartUrl":"/oasis-ikigai/en/cart","shopUrl":"/oasis-ikigai/en/shop","media":{"ambient":"","tap":"","add":"","success":""},"picker":{"titles":["Оберіть мову","Выберите язык","Choose your language"],"note":"You can switch any time using the button under the logo.","close":"Close","langs":[{"code":"uk","name":"Українська","href":"/oasis-ikigai/journal/how-to-build-a-daily-wellness-ritual"},{"code":"ru","name":"Русский","href":"/oasis-ikigai/ru/journal/how-to-build-a-daily-wellness-ritual"},{"code":"en","name":"English","href":"/oasis-ikigai/en/journal/how-to-build-a-daily-wellness-ritual"}]},"str":{"added":"Added to cart","removed":"Item removed","undo":"Undo","unavailable":"This item is no longer available and was removed","priceChanged":"Price updated","linkCopied":"Link copied","copyManual":"Copy the link manually","storageOff":"Your browser won\u0027t keep the cart — keep this tab open until checkout.","cartBar":"Cart · {n}","barCta":"Checkout","add":"Add to cart","addShort":"Add","inCart":"In cart","addLabel":"Add to cart: {name}","qtyLabel":"Quantity: {name}","decrease":"Decrease quantity","increase":"Increase quantity","qtyNow":"In cart: {n}","a11yCart":"Cart, items: {n}","soldOut":"Out of stock","preorder":"On request","close":"Close","max":"Maximum 99 of one item","wishAdded":"Saved to wishlist","wishRemoved":"Removed from wishlist","musicOn":"Turn music on","musicOff":"Turn music off"}}</script>
-<script type="application/json" id="oi-products">[]</script>
-<script type="module" src="/oasis-ikigai/assets/js/app.js?v=tm2bp4"></script>
+<script type="application/json" id="oi-config">{"lang":"en","prefix":"/oasis-ikigai/en","defaultLang":"uk","freeFrom":2000,"wa":"380000000000","cartUrl":"/oasis-ikigai/en/cart","shopUrl":"/oasis-ikigai/en/shop","media":{"ambient":"/oasis-ikigai/assets/audio/ambient.mp3","tap":"","add":"","success":"","resume":true},"softnav":true,"adminPath":"admin","picker":{"titles":["Оберіть мову","Выберите язык","Choose your language"],"note":"You can switch any time using the button under the logo.","close":"Close","langs":[{"code":"uk","name":"Українська","href":"/oasis-ikigai/journal/how-to-build-a-daily-wellness-ritual"},{"code":"ru","name":"Русский","href":"/oasis-ikigai/ru/journal/how-to-build-a-daily-wellness-ritual"},{"code":"en","name":"English","href":"/oasis-ikigai/en/journal/how-to-build-a-daily-wellness-ritual"}]},"str":{"added":"Added to cart","removed":"Item removed","undo":"Undo","unavailable":"This item is no longer available and was removed","priceChanged":"Price updated","linkCopied":"Link copied","copyManual":"Copy the link manually","storageOff":"Your browser won\u0027t keep the cart — keep this tab open until checkout.","cartBar":"Cart · {n}","barCta":"Checkout","add":"Add to cart","addShort":"Add","inCart":"In cart","addLabel":"Add to cart: {name}","qtyLabel":"Quantity: {name}","decrease":"Decrease quantity","increase":"Increase quantity","qtyNow":"In cart: {n}","a11yCart":"Cart, items: {n}","soldOut":"Out of stock","preorder":"On request","close":"Close","max":"Maximum 99 of one item","wishAdded":"Saved to wishlist","wishRemoved":"Removed from wishlist","musicOn":"Turn music on","musicOff":"Turn music off"}}</script>
+<script type="module" src="/oasis-ikigai/assets/js/app.js?v=tm2grj"></script>
 </body>
 </html>

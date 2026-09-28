@@ -1,9 +1,10 @@
 // Обране: id из localStorage → карточки рендерит сервер (/wishlist?partial=1&ids=…), те же, что в каталоге
 import { config } from './data.js';
 import { $, wish, initReveal, renderCartUI, renderWish } from './ui.js';
+import { onLeave } from './page.js';
 
-export default function () {
-  const box = $('[data-wishlist]'), empty = $('[data-wishlist-empty]');
+export default function (root = document) {
+  const box = $('[data-wishlist]', root), empty = $('[data-wishlist-empty]', root);
   if (!box) return;
   const load = async () => {
     const ids = wish.ids();
@@ -19,9 +20,11 @@ export default function () {
   };
   load();
   // сняли сердечко прямо на странице «Обране» — карточка уходит
-  document.addEventListener('oi:wish', e => {
+  const off = e => {
     if (e.detail.on) return;
     box.querySelector(`.card[data-product="${e.detail.id}"]`)?.remove();
     empty.hidden = box.children.length > 0;
-  });
+  };
+  document.addEventListener('oi:wish', off);
+  onLeave(() => document.removeEventListener('oi:wish', off));
 }

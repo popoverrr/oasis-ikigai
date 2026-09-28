@@ -3,25 +3,37 @@
 import { isReduced } from './data.js';
 import { attach, paletteFrom } from './petals.js';
 import { $, splitWords } from './ui.js';
+import { onLeave } from './page.js';
 
-function hero() {
-  const hero = $('[data-hero]');
+function hero(root) {
+  const hero = $('[data-hero]', root);
   if (!hero) return;
   const title = $('.hero__h1', hero);
   if (title && !isReduced) splitWords(title);
   hero.classList.add('is-in');
   // страховка: через 1,5 с после загрузки всё содержимое видно принудительно (в превью текст иногда оставался невидимым)
-  const done = () => setTimeout(() => hero.classList.add('is-done'), 1500);
+  let timer = 0;
+  const done = () => { timer = setTimeout(() => hero.classList.add('is-done'), 1500); };
   if (document.readyState === 'complete') done(); else addEventListener('load', done, { once: true });
 
   // пока первый экран виден на 30 % и больше, панель корзины не закрывает кнопку
-  new IntersectionObserver(([e]) => document.body.classList.toggle('hero-on', e.intersectionRatio >= .3), { threshold: [0, .3, .6, 1] }).observe(hero);
+  const on = new IntersectionObserver(([e]) => document.body.classList.toggle('hero-on', e.intersectionRatio >= .3), { threshold: [0, .3, .6, 1] });
+  on.observe(hero);
 
   const canvas = $('[data-petals]', hero);
+  let petals = null, gone = false;
   if (canvas) {
-    const go = () => attach(canvas, { palette: paletteFrom('#FF2D87') });
+    const go = () => { if (!gone) petals = attach(canvas, { palette: paletteFrom('#F2418C') }); };
     if (isReduced) go(); else setTimeout(go, 350);
   }
+  onLeave(() => {
+    gone = true;
+    clearTimeout(timer);
+    removeEventListener('load', done);
+    on.disconnect();
+    document.body.classList.remove('hero-on');
+    petals?.destroy();
+  });
 
   const video = $('[data-hero-video]', hero);
   const saveData = navigator.connection?.saveData;
@@ -31,11 +43,13 @@ function hero() {
   const play = () => video.play().catch(() => {});
   if (document.readyState === 'complete') play(); else addEventListener('load', play, { once: true });
   // вне экрана — пауза (экономим батарею), вернулись — продолжаем
-  new IntersectionObserver(([e]) => (e.isIntersecting ? play() : video.pause())).observe(hero);
+  const vis = new IntersectionObserver(([e]) => (e.isIntersecting ? play() : video.pause()));
+  vis.observe(hero);
+  onLeave(() => { vis.disconnect(); removeEventListener('load', play); video.pause(); });
 }
 
-function carousels() {
-  for (const box of document.querySelectorAll('[data-carousel]')) {
+function carousels(root) {
+  for (const box of root.querySelectorAll('[data-carousel]')) {
     const track = $('[data-carousel-track]', box), bar = $('[data-carousel-bar]', box);
     const prev = $('[data-carousel-prev]', box), next = $('[data-carousel-next]', box);
     if (!track) continue;
@@ -54,11 +68,12 @@ function carousels() {
     next?.addEventListener('click', () => go(1));
     track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
     addEventListener('resize', update);
+    onLeave(() => removeEventListener('resize', update));
     update();
   }
 }
 
-export default function () {
-  hero();
-  carousels();
+export default function (root = document) {
+  hero(root);
+  carousels(root);
 }

@@ -28,12 +28,12 @@ const PALETTE = {
 };
 const hex = h => { h = h.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); };
 const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
-/** Палитра лепестков из цвета: burst(x, y, { palette: paletteFrom('#FF2D87') }) */
+/** Палитра лепестков из цвета: burst(x, y, { palette: paletteFrom('#F2418C') }) */
 export function paletteFrom(color) {
   const c = hex(color), w = [255, 255, 255], k = [0, 0, 0];
   return { front: [mix(c, w, .55), mix(c, w, .2), c], back: [mix(c, w, .35), c, mix(c, k, .18)], vein: 'rgba(0,0,0,.25)' };
 }
-export const PALETTE_PINK = paletteFrom('#FF2D87');
+export const PALETTE_PINK = paletteFrom('#F2418C');
 
 function petalPath(L, w) {
   const p = new Path2D(), W = L * w;

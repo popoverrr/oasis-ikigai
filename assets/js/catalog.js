@@ -1,8 +1,9 @@
 // Каталог: «Знайдіть своє IKIGAI» (мини-плитки целей — переход на /shop/{цель} с текущими фильтрами), «Для кого», шторка фильтров (мобайл), мгновенное применение фильтров/сортировки/поиска без перезагрузки (?partial=1), «Показати ще»
 import { $, $$, initReveal, renderCartUI, renderWish } from './ui.js';
+import { onLeave } from './page.js';
 
-export default function () {
-  const form = $('[data-filters]'), res = $('[data-results]'), panel = $('[data-filters-panel]');
+export default function (root = document) {
+  const form = $('[data-filters]', root), res = $('[data-results]', root), panel = $('[data-filters-panel]', root);
   if (!form || !res) return;
   const openBtn = $('[data-filters-open]'), count = $('[data-count]'), apply = $('[data-filters-apply]');
   const desktop = matchMedia('(min-width: 1024px)');
@@ -85,7 +86,8 @@ export default function () {
     const goalBtn = e.submitter?.closest('[data-goal-filter]');
     if (goalBtn) {
       const p = query();
-      location.assign(goalBtn.getAttribute('formaction') + (p.toString() ? '?' + p : '') + '#ikigai');
+      const url = goalBtn.getAttribute('formaction') + (p.toString() ? '?' + p : '') + '#ikigai';
+      if (window.__oiSoftnav) window.__oiSoftnav.go(url); else location.assign(url);
       return;
     }
     load(query(), { push: true });
@@ -106,6 +108,11 @@ export default function () {
     const page = +(new URL(more.href).searchParams.get('page') || 2);
     load(query({ page }), { append: true });
   });
-  addEventListener('popstate', () => location.reload());
+  // «назад»/«вперёд» по фильтрам: при мягких переходах страницу перезагружает softnav, без них — полная перезагрузка
+  if (!window.__oiSoftnav) {
+    const back = () => location.reload();
+    addEventListener('popstate', back);
+    onLeave(() => removeEventListener('popstate', back));
+  }
   form.dataset.ready = '1';   // каталог готов принимать изменения фильтров (нужно статичному превью)
 }

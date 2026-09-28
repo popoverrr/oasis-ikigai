@@ -13,6 +13,13 @@ try {
   for (const p of JSON.parse(sessionStorage.getItem(SS) || '[]')) if (!products.has(p.id)) products.set(p.id, p);
 } catch { /* приватный режим */ }
 
+/** Товары новой страницы после мягкого перехода: JSON #oi-products лежит внутри её <main> */
+export function addProducts(root) {
+  try {
+    for (const p of JSON.parse(root.querySelector('#oi-products')?.textContent || '[]')) products.set(p.id, p);
+  } catch { /* битый JSON — товары догрузятся через /api/products */ }
+}
+
 export const product = id => products.get(+id);
 export const allProducts = () => [...products.values()];
 export const isReduced = matchMedia('(prefers-reduced-motion: reduce)').matches || /[?&]freeze=1/.test(location.search);

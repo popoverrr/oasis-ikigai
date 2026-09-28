@@ -4,6 +4,7 @@ import { config, str, product, fmt, money, plural, fetchProducts, sum } from './
 import { toast, h, icon } from './ui.js';
 import { burst, PALETTE_PINK } from './petals.js';
 import { buildWa, normalizePhone } from './wa.js';
+import { onLeave } from './page.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -282,6 +283,8 @@ async function toSuccess(res, clearIds = null) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const main = doc.querySelector('main');
     if (!main) throw new Error('no main');
+    // как мягкий переход: корзина убирает за собой, экран заказа запускается через initPage (app.js)
+    dispatchEvent(new CustomEvent('oi:leave', { detail: { root: document.querySelector('main') } }));
     document.querySelector('main').replaceWith(document.importNode(main, true));
     // ссылки языков в шапке — тоже с экрана заказа (с ?t=), а не с корзины
     for (const a of doc.querySelectorAll('[data-lang-link]')) {
@@ -292,7 +295,7 @@ async function toSuccess(res, clearIds = null) {
     document.body.dataset.page = 'order';
     scrollTo(0, 0);
     swapped = true;
-    (await import('./order.js')).default();
+    dispatchEvent(new CustomEvent('oi:page', { detail: { root: document.querySelector('main') } }));
   } catch { /* покажем SSR-версию ниже */ }
   if (coarse && res.wa_url) {
     // мобильные: сразу в WhatsApp (переход по https-ссылке не блокируется попап-блокером)
@@ -397,7 +400,7 @@ export default async function () {
     b.hidden = false;
     b.addEventListener('click', () => navigator.share({ title: C.shareTitle, url: shareUrl() }).catch(() => {}));
   }
-  cart.subscribe(render);
+  onLeave(cart.subscribe(render));   // отписка при уходе со страницы корзины (мягкий переход)
   await sharedFromUrl();
   await refresh();
 }

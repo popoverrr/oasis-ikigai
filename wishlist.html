@@ -24,8 +24,8 @@
 <link rel="apple-touch-icon" href="/oasis-ikigai/apple-touch-icon.png">
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-300.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tm2d1k">
-<link rel="stylesheet" href="/oasis-ikigai/assets/css/goals-fx5.css?v=tm2b23">
+<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tm2j0u">
+<link rel="stylesheet" href="/oasis-ikigai/assets/css/goals-fx5.css?v=tm2euz">
 <script src="/oasis-ikigai/assets/js/boot.js?v=tm2bp4"></script>
 </head>
 <body class="" data-page="wishlist">
@@ -57,7 +57,7 @@
   <button class="icon-btn hdr__menu" type="button" aria-controls="menu" aria-expanded="false" aria-label="Відкрити меню" data-menu-open><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-menu"/></svg></button>
   <a class="logo" href="/oasis-ikigai/" aria-label="OASIS IKIGAI — на головну"><b>OASIS IKIGAI</b></a>
   <nav class="hdr__nav" aria-label="Основна навігація">
-    <a href="/oasis-ikigai/shop">Каталог</a><a href="/oasis-ikigai/brands">Бренди</a><a href="/oasis-ikigai/journal">Журнал</a><a href="/oasis-ikigai/about">Про нас</a>  </nav>
+    <a href="/oasis-ikigai/shop" data-nav-key="shop">Каталог</a><a href="/oasis-ikigai/brands" data-nav-key="brands">Бренди</a><a href="/oasis-ikigai/journal" data-nav-key="journal">Журнал</a><a href="/oasis-ikigai/about" data-nav-key="about">Про нас</a>  </nav>
   <div class="hdr__tools">
     <button class="icon-btn hdr__search" type="button" aria-label="Пошук" data-search-open><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-search"/></svg></button>
     <a class="icon-btn hdr__wish" href="/oasis-ikigai/wishlist" aria-label="Обране"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-heart"/></svg><span class="count" data-wish-count hidden>0</span></a>
@@ -87,10 +87,9 @@
           <a href="/oasis-ikigai/faq" style="--i:6"><span class="menu__label">Питання та відповіді</span><span class="menu__jp" lang="ja" aria-hidden="true">問答</span></a>
       </nav>
   <div class="menu__foot">
-    <button class="menu__sound" type="button" aria-pressed="false" data-music data-music-text hidden><svg class="icon i-off" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-off"/></svg><svg class="icon i-on" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-on"/></svg><span>Увімкнути музику</span></button>
-    <a class="btn btn--pink" href="https://wa.me/380000000000" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg>Написати у WhatsApp</a>    <a class="menu__ig" href="https://instagram.com/oasis_ikigai" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-ig"/></svg>Instagram</a>  </div>
+    <button class="menu__sound" type="button" aria-pressed="true" data-music-toggle data-music-text data-label-on="Увімкнути музику" data-label-off="Вимкнути музику" aria-label="Вимкнути музику"><svg class="icon i-off" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-off"/></svg><svg class="icon i-on" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-on"/></svg><span data-music-label>Вимкнути музику</span></button>    <a class="btn btn--pink" href="https://wa.me/380000000000" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg>Написати у WhatsApp</a>    <a class="menu__ig" href="https://instagram.com/oasis_ikigai" target="_blank" rel="noopener"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-ig"/></svg>Instagram</a>  </div>
 </div>
-<main id="main" tabindex="-1">
+<main id="main" tabindex="-1" data-page="wishlist" data-nav="">
 <section class="phead">
   <div class="wrap">
     <nav class="crumbs" aria-label="Навігаційний ланцюжок"><a href="/oasis-ikigai/">Головна</a><span aria-hidden="true">/</span><span aria-current="page">Обране</span></nav>
@@ -104,6 +103,7 @@
     <noscript><p class="lead2">Щоб оформити замовлення, увімкніть JavaScript або напишіть нам у WhatsApp.</p></noscript>
   </div>
 </section>
+<script type="application/json" id="oi-products">[]</script>
 </main>
 <footer class="ftr">
   <div class="wrap">
@@ -147,9 +147,9 @@
   </div>
   <button class="chat__btn" type="button" aria-expanded="false" aria-controls="chat-card" aria-label="Чат" data-chat-open><svg class="icon" width="26" height="26" aria-hidden="true" focusable="false"><use href="#i-chat"/></svg></button>
 </div>
+<button class="music" type="button" data-music-toggle data-label-on="Увімкнути музику" data-label-off="Вимкнути музику" aria-pressed="true" aria-label="Вимкнути музику"><span class="music__eq" aria-hidden="true"><i></i><i></i><i></i></span><svg class="icon music__off" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-sound-off"/></svg></button>
 <div class="toasts" data-toasts role="status" aria-live="polite"></div>
-<script type="application/json" id="oi-config">{"lang":"uk","prefix":"/oasis-ikigai","defaultLang":"uk","freeFrom":2000,"wa":"380000000000","cartUrl":"/oasis-ikigai/cart","shopUrl":"/oasis-ikigai/shop","media":{"ambient":"","tap":"","add":"","success":""},"picker":{"titles":["Оберіть мову","Выберите язык","Choose your language"],"note":"Змінити мову можна будь-коли — кнопка під логотипом.","close":"Закрити","langs":[{"code":"uk","name":"Українська","href":"/oasis-ikigai/wishlist"},{"code":"ru","name":"Русский","href":"/oasis-ikigai/ru/wishlist"},{"code":"en","name":"English","href":"/oasis-ikigai/en/wishlist"}]},"str":{"added":"Додано до кошика","removed":"Товар видалено","undo":"Повернути","unavailable":"Цей товар більше недоступний і прибраний з кошика","priceChanged":"Ціну оновлено","linkCopied":"Посилання скопійовано","copyManual":"Скопіюйте посилання вручну","storageOff":"Браузер не зберігає кошик — не закривайте вкладку до оформлення.","cartBar":"Кошик · {n}","barCta":"Оформити","add":"До кошика","addShort":"Додати","inCart":"У кошику","addLabel":"Додати до кошика: {name}","qtyLabel":"Кількість: {name}","decrease":"Зменшити кількість","increase":"Збільшити кількість","qtyNow":"У кошику: {n}","a11yCart":"Кошик, товарів: {n}","soldOut":"Немає в наявності","preorder":"Під замовлення","close":"Закрити","max":"Максимум 99 шт. одного товару","wishAdded":"Додано в обране","wishRemoved":"Прибрано з обраного","musicOn":"Увімкнути музику","musicOff":"Вимкнути музику"}}</script>
-<script type="application/json" id="oi-products">[]</script>
-<script type="module" src="/oasis-ikigai/assets/js/app.js?v=tm2bp4"></script>
+<script type="application/json" id="oi-config">{"lang":"uk","prefix":"/oasis-ikigai","defaultLang":"uk","freeFrom":2000,"wa":"380000000000","cartUrl":"/oasis-ikigai/cart","shopUrl":"/oasis-ikigai/shop","media":{"ambient":"/oasis-ikigai/assets/audio/ambient.mp3","tap":"","add":"","success":"","resume":true},"softnav":true,"adminPath":"admin","picker":{"titles":["Оберіть мову","Выберите язык","Choose your language"],"note":"Змінити мову можна будь-коли — кнопка під логотипом.","close":"Закрити","langs":[{"code":"uk","name":"Українська","href":"/oasis-ikigai/wishlist"},{"code":"ru","name":"Русский","href":"/oasis-ikigai/ru/wishlist"},{"code":"en","name":"English","href":"/oasis-ikigai/en/wishlist"}]},"str":{"added":"Додано до кошика","removed":"Товар видалено","undo":"Повернути","unavailable":"Цей товар більше недоступний і прибраний з кошика","priceChanged":"Ціну оновлено","linkCopied":"Посилання скопійовано","copyManual":"Скопіюйте посилання вручну","storageOff":"Браузер не зберігає кошик — не закривайте вкладку до оформлення.","cartBar":"Кошик · {n}","barCta":"Оформити","add":"До кошика","addShort":"Додати","inCart":"У кошику","addLabel":"Додати до кошика: {name}","qtyLabel":"Кількість: {name}","decrease":"Зменшити кількість","increase":"Збільшити кількість","qtyNow":"У кошику: {n}","a11yCart":"Кошик, товарів: {n}","soldOut":"Немає в наявності","preorder":"Під замовлення","close":"Закрити","max":"Максимум 99 шт. одного товару","wishAdded":"Додано в обране","wishRemoved":"Прибрано з обраного","musicOn":"Увімкнути музику","musicOff":"Вимкнути музику"}}</script>
+<script type="module" src="/oasis-ikigai/assets/js/app.js?v=tm2grj"></script>
 </body>
 </html>

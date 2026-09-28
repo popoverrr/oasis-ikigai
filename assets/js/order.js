@@ -2,6 +2,7 @@
 import { attach, burst, paletteFrom } from './petals.js';
 import { isReduced } from './data.js';
 import { sfx } from './sound.js';
+import { onLeave } from './page.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 
@@ -12,11 +13,11 @@ export default async function () {
   $('[data-done-seal]', root)?.classList.add('is-stamped');
   sfx('success');
   const cv = $('[data-petals]', root);
-  if (cv) attach(cv, { count: w => (w < 700 ? 16 : 32), interactive: false });
+  if (cv) { const fx = attach(cv, { count: w => (w < 700 ? 16 : 32), interactive: false }); onLeave(() => fx.destroy()); }
   if (!isReduced) {
     // большой салют: 45 розовых лепестков сакуры из девяти точек (brief/08 § 1)
     const top = Math.max(0, $('.hdr')?.getBoundingClientRect().bottom || 0);
-    const pink = paletteFrom('#FF2D87'), light = paletteFrom('#FF5AA0');
+    const pink = paletteFrom('#F2418C'), light = paletteFrom('#F5649F');
     for (let i = 0; i < 9; i++) setTimeout(() => burst(innerWidth * (.2 + (i % 3) * .3), top + 120 + (i % 2) * 30, { count: 5, spread: 1.4, palette: i % 2 ? light : pink }), 380 + i * 70);
   }
 
