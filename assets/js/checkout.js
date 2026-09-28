@@ -2,7 +2,7 @@
 import { cart } from './cart.js';
 import { config, str, product, fmt, money, plural, fetchProducts, sum } from './data.js';
 import { toast, h, icon } from './ui.js';
-import { burst, PALETTE_PINK } from './petals.js';
+import { burst, PALETTE_ACCENT } from './petals.js';
 import { buildWa, normalizePhone } from './wa.js';
 import { onLeave } from './page.js';
 
@@ -136,7 +136,7 @@ function render() {
   if (free && freeWasReached === false) {
     const r = $('[data-free-fill]').getBoundingClientRect();
     // бесплатная доставка достигнута — один раз розовый салют
-    burst(r.right - 10, r.top, { count: 14, spread: .9, palette: PALETTE_PINK });
+    burst(r.right - 10, r.top, { count: 14, spread: .9, palette: PALETTE_ACCENT });
   }
   freeWasReached = free;
 }

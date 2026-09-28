@@ -15,10 +15,10 @@ export default async function () {
   const cv = $('[data-petals]', root);
   if (cv) { const fx = attach(cv, { count: w => (w < 700 ? 16 : 32), interactive: false }); onLeave(() => fx.destroy()); }
   if (!isReduced) {
-    // большой салют: 45 розовых лепестков сакуры из девяти точек (brief/08 § 1)
+    // большой салют: 45 лепестков в фирменном зелёном из девяти точек (brief/11 § 5.3)
     const top = Math.max(0, $('.hdr')?.getBoundingClientRect().bottom || 0);
-    const pink = paletteFrom('#F2418C'), light = paletteFrom('#F5649F');
-    for (let i = 0; i < 9; i++) setTimeout(() => burst(innerWidth * (.2 + (i % 3) * .3), top + 120 + (i % 2) * 30, { count: 5, spread: 1.4, palette: i % 2 ? light : pink }), 380 + i * 70);
+    const green = paletteFrom('#2DCD31'), light = paletteFrom('#4FD853');
+    for (let i = 0; i < 9; i++) setTimeout(() => burst(innerWidth * (.2 + (i % 3) * .3), top + 120 + (i % 2) * 30, { count: 5, spread: 1.4, palette: i % 2 ? light : green }), 380 + i * 70);
   }
 
   // QR-код wa.me на десктопе (локальная библиотека qrcode-generator, MIT)

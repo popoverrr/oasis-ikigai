@@ -1,7 +1,7 @@
 // Главная v5: хореография hero (постер → видео → розовые лепестки → заголовок по словам), страховка появления текста,
 // панель корзины скрыта, пока виден первый экран, карусель журнала со стрелками и линией прогресса (brief/08 §§ 3, 8)
 import { isReduced } from './data.js';
-import { attach, paletteFrom } from './petals.js';
+import { attach } from './petals.js';
 import { $, splitWords } from './ui.js';
 import { onLeave } from './page.js';
 
@@ -23,7 +23,8 @@ function hero(root) {
   const canvas = $('[data-petals]', hero);
   let petals = null, gone = false;
   if (canvas) {
-    const go = () => { if (!gone) petals = attach(canvas, { palette: paletteFrom('#F2418C') }); };
+    // v8: над видео с сакурой — белые лепестки (палитра по умолчанию)
+    const go = () => { if (!gone) petals = attach(canvas); };
     if (isReduced) go(); else setTimeout(go, 350);
   }
   onLeave(() => {

@@ -1,7 +1,7 @@
 // Общий интерфейс: шапка, меню-шторка, поиск, языки (плашка выбора при первом входе), чат, тосты, «+»/степперы, обране, аккордеоны, появление при скролле, панель корзины
 import { cart, MAX_QTY } from './cart.js';
 import { config, str, product, fmt, money, sum, center, fetchProducts, isReduced } from './data.js';
-import { attach, burst, PALETTE_PINK } from './petals.js';
+import { attach, burst, PALETTE_ACCENT } from './petals.js';
 import { sfx } from './sound.js';
 import { onLeave } from './page.js';
 
@@ -188,7 +188,7 @@ function initChat() {
 // ── Кнопка «+» ↔ степпер ─────────────────────────────────
 function addControl(el, name) {
   if (el.dataset.style === 'big') {
-    const btn = h('button', { class: 'btn btn--pink btn--block', type: 'button', 'data-add': '' }, h('span', { text: str.add }));
+    const btn = h('button', { class: 'btn btn--accent btn--block', type: 'button', 'data-add': '' }, h('span', { text: str.add }));
     return btn;
   }
   return h('button', { class: 'add', type: 'button', 'data-add': '', 'aria-label': fmt(str.addLabel, { name }) }, icon('plus', 14, 14));
@@ -238,7 +238,7 @@ export function flyToCart(from) {
   const pic = h('img', { src: img.currentSrc || img.src, alt: '' });
   outer.append(pic);
   Object.assign(outer.style, { position: 'fixed', left: a.x - size / 2 + 'px', top: a.y - size / 2 + 'px', width: size + 'px', height: size + 'px', zIndex: 95, pointerEvents: 'none' });
-  Object.assign(pic.style, { width: '100%', height: '100%', objectFit: 'cover', boxShadow: '0 0 0 2px #F2418C' });
+  Object.assign(pic.style, { width: '100%', height: '100%', objectFit: 'cover', boxShadow: '0 0 0 2px #2DCD31' });
   document.body.append(outer);
   const dx = b.x - a.x, dy = b.y - a.y, dur = 700;
   outer.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${dx}px)` }], { duration: dur, easing: 'cubic-bezier(.3,.1,.3,1)', fill: 'forwards' });
@@ -263,7 +263,7 @@ export function addWithFx(btn, id, n = 1) {
   btn.classList.remove('is-stamp'); void btn.offsetWidth; btn.classList.add('is-stamp');
   // салют розовыми лепестками сакуры (brief/08 § 1)
   const c = center(btn);
-  burst(c.x, c.y, { count: 12, spread: .8, scale: .8, palette: PALETTE_PINK });
+  burst(c.x, c.y, { count: 12, spread: .8, scale: .8, palette: PALETTE_ACCENT });
   flyToCart(btn);
   if (isReduced) bumpCounts();
   const bar = $('[data-cartbar]');
@@ -309,7 +309,7 @@ function initWish() {
     if (!b) return;
     e.preventDefault();
     const on = wish.toggle(b.dataset.wish);
-    if (on) { const c = center(b); burst(c.x, c.y, { count: 6, spread: .6, scale: .7, palette: PALETTE_PINK }); }
+    if (on) { const c = center(b); burst(c.x, c.y, { count: 6, spread: .6, scale: .7, palette: PALETTE_ACCENT }); }
     toast(on ? str.wishAdded : str.wishRemoved);
   });
   addEventListener('storage', e => { if (e.key === WKEY) renderWish(); });
