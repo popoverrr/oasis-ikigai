@@ -1,5 +1,5 @@
 // Обране: id из localStorage → карточки рендерит сервер (/wishlist?partial=1&ids=…), те же, что в каталоге
-import { config } from './data.js';
+import { config, isReduced } from './data.js';
 import { $, wish, initReveal, renderCartUI, renderWish } from './ui.js';
 import { onLeave } from './page.js';
 
@@ -22,8 +22,11 @@ export default function (root = document) {
   // сняли сердечко прямо на странице «Обране» — карточка уходит
   const off = e => {
     if (e.detail.on) return;
-    box.querySelector(`.card[data-product="${e.detail.id}"]`)?.remove();
-    empty.hidden = box.children.length > 0;
+    const card = box.querySelector(`.card[data-product="${e.detail.id}"]`);
+    const done = () => { card?.remove(); empty.hidden = box.children.length > 0; };
+    // v11: карточка плавно исчезает (при «уменьшить движение» — сразу)
+    if (card && !isReduced) card.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.94)' }], { duration: 260, easing: 'ease-out', fill: 'forwards' }).finished.then(done, done);
+    else done();
   };
   document.addEventListener('oi:wish', off);
   onLeave(() => document.removeEventListener('oi:wish', off));

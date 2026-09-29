@@ -30,14 +30,18 @@ export function h(tag, attrs = {}, ...kids) {
 }
 
 // ── Тосты ───────────────────────────────────────────────
-export function toast(text, { action, onAction, timeout = 2400 } = {}) {
+export function toast(text, { action, onAction, href, timeout = 2400 } = {}) {
   const box = $('[data-toasts]');
   if (!box) return;
   while (box.children.length > 2) box.firstElementChild.remove();
   const el = h('div', { class: 'toast' }, h('span', { text }));
   let timer;
   const close = () => { clearTimeout(timer); el.remove(); };
-  if (action) {
+  if (action && href) {                                   // v11: ссылка («Відкрити» → обране); мягкий переход её подхватит
+    const a = h('a', { href, text: action });
+    a.addEventListener('click', () => close());
+    el.append(a);
+  } else if (action) {
     const btn = h('button', { type: 'button', text: action });
     btn.addEventListener('click', () => { onAction?.(); close(); });
     el.append(btn);
@@ -390,8 +394,17 @@ export const wish = {
 };
 export function renderWish() {
   const ids = wish.ids();
-  for (const b of $$('[data-wish]')) b.setAttribute('aria-pressed', ids.includes(+b.dataset.wish) ? 'true' : 'false');
-  for (const s of $$('[data-wish-count]')) { s.textContent = ids.length; s.hidden = ids.length === 0; }
+  for (const b of $$('[data-wish]')) {
+    const on = ids.includes(+b.dataset.wish);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    if (str.wishAdd) b.setAttribute('aria-label', on ? str.wishRemove : str.wishAdd);   // v11: подпись для экранных дикторов переключается
+  }
+  for (const s of $$('[data-wish-count]')) {
+    const was = s.textContent;
+    s.textContent = ids.length; s.hidden = ids.length === 0;
+    if (was !== String(ids.length) && ids.length && !isReduced) { s.classList.remove('is-bump'); void s.offsetWidth; s.classList.add('is-bump'); }
+  }
+  if (str.wishHdr) for (const a of $$('[data-wish-link]')) a.setAttribute('aria-label', fmt(str.wishHdr, { n: ids.length }));
 }
 function initWish() {
   document.addEventListener('click', e => {
@@ -400,7 +413,9 @@ function initWish() {
     e.preventDefault();
     const on = wish.toggle(b.dataset.wish);
     if (on) { const c = center(b); burst(c.x, c.y, { count: 6, spread: .6, scale: .7, palette: PALETTE_ACCENT }); }
-    toast(on ? str.wishAdded : str.wishRemoved);
+    // v11: сердце «прыгает» и от круга расходится зелёное кольцо; при удалении — короткое сжатие
+    if (!isReduced) { b.classList.remove('is-pop', 'is-unpop'); void b.offsetWidth; b.classList.add(on ? 'is-pop' : 'is-unpop'); }
+    toast(on ? str.wishAdded : str.wishRemoved, on && config.wishlistUrl ? { action: str.wishOpen, href: config.wishlistUrl, timeout: 3200 } : {});
   });
   addEventListener('storage', e => { if (e.key === WKEY) renderWish(); });
   renderWish();
@@ -467,6 +482,32 @@ export function initReveal(root = document) {
   }, { rootMargin: '0px 0px -10% 0px', threshold: [0, .05, .1, .2] });
   for (const el of els) io.observe(el);
   onLeave(() => io.disconnect());
+}
+
+/** Карусель со стрелками и полосой прогресса ([data-carousel]): журнал на главной, с v11 — ленты отзывов */
+export function initCarousels(root = document) {
+  for (const box of root.querySelectorAll('[data-carousel]')) {
+    const track = $('[data-carousel-track]', box), bar = $('[data-carousel-bar]', box);
+    const prev = $('[data-carousel-prev]', box), next = $('[data-carousel-next]', box);
+    if (!track) continue;
+    const step = () => (track.firstElementChild?.getBoundingClientRect().width || track.clientWidth) + parseFloat(getComputedStyle(track).columnGap || 0);
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      if (bar) {
+        bar.style.setProperty('--w', `${Math.min(100, (track.clientWidth / track.scrollWidth) * 100)}%`);
+        bar.style.setProperty('--x', `${(track.scrollLeft / Math.max(1, track.clientWidth)) * 100}%`);
+      }
+      if (prev) prev.disabled = track.scrollLeft <= 2;
+      if (next) next.disabled = track.scrollLeft >= max - 2;
+    };
+    const go = dir => track.scrollBy({ left: dir * step(), behavior: isReduced ? 'auto' : 'smooth' });
+    prev?.addEventListener('click', () => go(-1));
+    next?.addEventListener('click', () => go(1));
+    track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+    addEventListener('resize', update);
+    onLeave(() => removeEventListener('resize', update));
+    update();
+  }
 }
 
 // ── Лепестки в секциях (кроме hero — там свой запуск) ──────

@@ -47,32 +47,6 @@ function hero(root) {
   onLeave(() => { vis.disconnect(); removeEventListener('load', play); video.pause(); });
 }
 
-function carousels(root) {
-  for (const box of root.querySelectorAll('[data-carousel]')) {
-    const track = $('[data-carousel-track]', box), bar = $('[data-carousel-bar]', box);
-    const prev = $('[data-carousel-prev]', box), next = $('[data-carousel-next]', box);
-    if (!track) continue;
-    const step = () => (track.firstElementChild?.getBoundingClientRect().width || track.clientWidth) + parseFloat(getComputedStyle(track).columnGap || 0);
-    const update = () => {
-      const max = track.scrollWidth - track.clientWidth;
-      if (bar) {
-        bar.style.setProperty('--w', `${Math.min(100, (track.clientWidth / track.scrollWidth) * 100)}%`);
-        bar.style.setProperty('--x', `${(track.scrollLeft / Math.max(1, track.clientWidth)) * 100}%`);
-      }
-      if (prev) prev.disabled = track.scrollLeft <= 2;
-      if (next) next.disabled = track.scrollLeft >= max - 2;
-    };
-    const go = dir => track.scrollBy({ left: dir * step(), behavior: isReduced ? 'auto' : 'smooth' });
-    prev?.addEventListener('click', () => go(-1));
-    next?.addEventListener('click', () => go(1));
-    track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
-    addEventListener('resize', update);
-    onLeave(() => removeEventListener('resize', update));
-    update();
-  }
-}
-
 export default function (root = document) {
   hero(root);
-  carousels(root);
 }
