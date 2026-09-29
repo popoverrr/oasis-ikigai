@@ -49,10 +49,12 @@ initPage(document.querySelector('main'));
 // v11 (brief/14 § 3): бабочка Икигай — один раз на весь сайт (на мягких переходах модуль перезапускается сам), после загрузки, в свободное время.
 // Не летает в корзине, на экране заказа и странице отзыва — чтобы не отвлекать от покупки; вкл/выкл и частота — в админке
 const bf = config.butterfly || {};
+// базовый путь сайта: '' на хостинге, '/oasis-ikigai' в превью на GitHub Pages (адрес каталога его уже содержит)
+const base = String(config.shopUrl || '/shop').replace(/\/((ru|en)\/)?shop\/?$/, '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 if (bf.on) addEventListener('load', () => (window.requestIdleCallback || setTimeout)(() =>
   import(`./butterfly.js?v=${config.v?.butterfly || 0}`).then(({ initButterfly }) => initButterfly({
     lang: config.lang, strings: bf.str, catalogUrl: config.shopUrl, chance: bf.chance,
-    exclude: [/^\/(ru\/|en\/)?(cart|order|checkout|review)(\/|$)/, new RegExp('^/' + (config.adminPath || 'admin') + '(/|$)'), /^\/install/],
+    exclude: [new RegExp('^' + base + '/((ru|en)/)?(cart|order|checkout|review)(/|$)'), new RegExp('^/' + (config.adminPath || 'admin') + '(/|$)'), /^\/install/],
   })).catch(e => console.error(e)), { timeout: 3000 }), { once: true });
 // поимка: короткий звук «в корзину» (только если звуки включены) и событие аналитики, если она подключена владельцем
 addEventListener('oi:butterfly', e => {
