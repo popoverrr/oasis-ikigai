@@ -25,9 +25,9 @@
 <link rel="apple-touch-icon" href="/oasis-ikigai/apple-touch-icon.png">
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-300.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tm2upf">
-<link rel="stylesheet" href="/oasis-ikigai/assets/css/goals-fx5.css?v=tm2qqz">
-<script src="/oasis-ikigai/assets/js/boot.js?v=tm2bp4"></script>
+<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tm45bv">
+<link rel="stylesheet" href="/oasis-ikigai/assets/css/goals-fx5.css?v=tm43hb">
+<script src="/oasis-ikigai/assets/js/boot.js?v=tm44oe"></script>
 </head>
 <body class="" data-page="">
 <a class="skip" href="#main">Skip to content</a>
@@ -55,7 +55,7 @@
   <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.2A9.8 9.8 0 0 0 3.6 17l-1.4 4.8 5-1.3A9.8 9.8 0 1 0 12 2.2Zm0 17.8a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8 1c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6a2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.3-.2-.5-.3Z"/></symbol>
 </svg>
 <header class="hdr" data-hdr>
-  <button class="icon-btn hdr__menu" type="button" aria-controls="menu" aria-expanded="false" aria-label="Open menu" data-menu-open><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-menu"/></svg></button>
+  <button class="icon-btn hdr__menu" type="button" aria-controls="menu" aria-expanded="false" aria-label="Open menu" data-menu-open><span class="burger" aria-hidden="true"><i></i></span></button>
   <a class="logo" href="/oasis-ikigai/en/" aria-label="OASIS IKIGAI — home"><b>OASIS IKIGAI</b></a>
   <nav class="hdr__nav" aria-label="Main navigation">
     <a href="/oasis-ikigai/en/shop" data-nav-key="shop">Shop</a><a href="/oasis-ikigai/en/brands" data-nav-key="brands" aria-current="page">Brands</a><a href="/oasis-ikigai/en/journal" data-nav-key="journal">Journal</a><a href="/oasis-ikigai/en/about" data-nav-key="about">About</a>  </nav>
@@ -74,7 +74,7 @@
 <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu" data-menu hidden>
   <div class="menu__top">
     <a class="logo" href="/oasis-ikigai/en/"><b>OASIS IKIGAI</b></a>
-    <button class="icon-btn" type="button" aria-label="Close" data-menu-close><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button>
+    <button class="icon-btn menu__x" type="button" aria-label="Close" data-menu-close><span class="burger" aria-hidden="true"><i></i></span></button>
   </div>
   <nav class="menu__langs" aria-label="Language">
     <a href="/oasis-ikigai/brands/kissme" hreflang="uk" lang="uk" data-lang-link="uk">Українська</a><a href="/oasis-ikigai/ru/brands/kissme" hreflang="ru" lang="ru" data-lang-link="ru">Русский</a><a href="/oasis-ikigai/en/brands/kissme" hreflang="en" lang="en" data-lang-link="en" aria-current="true">English<svg class="icon" width="18" height="18" aria-hidden="true" focusable="false"><use href="#i-check"/></svg></a>  </nav>
@@ -136,11 +136,14 @@
         <nav class="langs langs--hdr langs--ftr" aria-label="Language"><a href="/oasis-ikigai/brands/kissme" hreflang="uk" lang="uk" data-lang-link="uk">UA</a><a href="/oasis-ikigai/ru/brands/kissme" hreflang="ru" lang="ru" data-lang-link="ru">RU</a><a href="/oasis-ikigai/en/brands/kissme" hreflang="en" lang="en" data-lang-link="en" aria-current="true">EN</a></nav>
       </div>
     </div>
-    <div class="ftr__bottom">
-      <p>© 2026 OASIS IKIGAI · <a href="/oasis-ikigai/en/imprint">Seller details</a></p>
-      <p class="ftr__legal"><a href="/oasis-ikigai/en/privacy">Privacy</a><a href="/oasis-ikigai/en/terms">Terms</a><a href="/oasis-ikigai/en/cookies">Cookies</a></p>
+    <div class="ftr__end">
+      <div class="ftr__bottom">
+        <p>© 2026 OASIS IKIGAI · <a href="/oasis-ikigai/en/imprint">Seller details</a></p>
+        <p class="ftr__legal"><a href="/oasis-ikigai/en/privacy">Privacy</a><a href="/oasis-ikigai/en/terms">Terms</a><a href="/oasis-ikigai/en/cookies">Cookies</a></p>
+      </div>
+      <p class="ftr__disc">Food supplements should not be used as a substitute for a varied and balanced diet and a healthy lifestyle. Consult a qualified professional if you are pregnant, breastfeeding, taking medication or under medical care.</p>            <p class="ftr__credit"><span class="credit" role="note" aria-label="Website created by Cybermove Consulting"><span class="credit__by">Created by</span> <b class="credit__name">Cybermove Consulting</b></span></p>
     </div>
-    <p class="ftr__disc">Food supplements should not be used as a substitute for a varied and balanced diet and a healthy lifestyle. Consult a qualified professional if you are pregnant, breastfeeding, taking medication or under medical care.</p>  </div>
+  </div>
 </footer>
 <div class="cartbar" data-cartbar hidden>
   <a class="cartbar__info" href="/oasis-ikigai/en/cart" data-cartbar-info>
@@ -149,7 +152,8 @@
   <a class="btn btn--dark cartbar__cta" href="/oasis-ikigai/en/cart#checkout" data-cartbar-cta><svg class="icon" width="18" height="18" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg><span>Checkout</span></a>
 </div>
 <div class="chat" data-chat>
-  <div class="chat__card" id="chat-card" role="dialog" aria-labelledby="chat-t" data-chat-card hidden>
+  <div class="chat__scrim" data-chat-scrim hidden></div>
+  <div class="chat__card" id="chat-card" role="dialog" aria-modal="true" aria-labelledby="chat-t" data-chat-card hidden>
     <button class="icon-btn chat__x" type="button" aria-label="Close" data-chat-close><svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button>
     <p class="chat__t" id="chat-t">Message us</p>
     <p class="chat__hint">Our manager will reply shortly</p>

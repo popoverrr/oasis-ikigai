@@ -165,24 +165,100 @@ function langPicker() {
   $('.lp__b.is-likely', box)?.focus({ preventScroll: true });
 }
 
-// ── Чат: розовая кнопка → карточка с WhatsApp и Telegram (brief/08 § 10) ──
+// ── Чат: зелёная кнопка → окно с WhatsApp и Telegram (brief/08 § 10) ──
+// v10 (brief/13 § 2): на телефоне (< 768) — нижняя панель с затемнением: не зависит от того, где стоит кнопка (на первом экране
+// она поднята вверх, и прежнее окно уезжало за верх экрана). Закрывается крестиком, тапом мимо, Esc, свайпом вниз > 80 px,
+// на мягком переходе и при переходе в WhatsApp/Telegram; страница под панелью не прокручивается, фокус заперт в окне.
+// На десктопе — окно у кнопки: вверх, если над ней хватает места, иначе вниз; всегда внутри экрана с отступом 12 px.
 function initChat() {
   const root = $('[data-chat]');
   if (!root) return;
-  const btn = $('[data-chat-open]', root), card = $('[data-chat-card]', root);
-  const toggle = (open = card.hidden) => {
-    card.hidden = !open;
-    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    root.classList.toggle('is-open', open);
-    if (open) $('a[href]', card)?.focus({ preventScroll: true });
+  const btn = $('[data-chat-open]', root), card = $('[data-chat-card]', root), scrim = $('[data-chat-scrim]', root);
+  const sheet = matchMedia('(max-width: 767px)');
+  const html = document.documentElement;
+  let y0 = 0, raf = 0;
+  const place = () => {
+    raf = 0;
+    if (card.hidden || sheet.matches) { card.style.left = card.style.top = ''; return; }
+    const b = btn.getBoundingClientRect(), w = card.offsetWidth, ht = card.offsetHeight, gap = 12, m = 12;
+    let top = b.top - gap - ht >= m ? b.top - gap - ht : b.bottom + gap;
+    top = Math.max(m, Math.min(top, innerHeight - ht - m));
+    card.style.left = Math.max(m, Math.min(b.right - w, innerWidth - w - m)) + 'px';
+    card.style.top = top + 'px';
   };
-  btn.addEventListener('click', () => toggle());
-  $('[data-chat-close]', root)?.addEventListener('click', () => { toggle(false); btn.focus(); });
-  root.addEventListener('keydown', e => { if (e.key === 'Escape' && !card.hidden) { toggle(false); btn.focus(); } });
-  document.addEventListener('click', e => {
-    if (e.target.closest('[data-chat-ask]')) { e.preventDefault(); toggle(true); return; }
-    if (!card.hidden && !root.contains(e.target)) toggle(false);
+  const replace = () => { if (!raf) raf = requestAnimationFrame(place); };
+  const open = () => {
+    if (!card.hidden) return;
+    y0 = scrollY;
+    card.hidden = false;
+    if (scrim) scrim.hidden = false;
+    card.setAttribute('aria-modal', sheet.matches ? 'true' : 'false');
+    btn.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(() => root.classList.add('is-open'));
+    if (sheet.matches) html.classList.add('chat-open');
+    place();
+    addEventListener('resize', replace);
+    addEventListener('scroll', replace, { passive: true });
+    $('a[href]', card)?.focus({ preventScroll: true });
+  };
+  const close = ({ focus = true, animate = true } = {}) => {
+    if (card.hidden) return;
+    btn.setAttribute('aria-expanded', 'false');
+    root.classList.remove('is-open');
+    html.classList.remove('chat-open');
+    removeEventListener('resize', replace);
+    removeEventListener('scroll', replace);
+    const done = () => {
+      card.hidden = true;
+      card.style.transform = '';
+      if (scrim) scrim.hidden = true;
+      if (Math.abs(scrollY - y0) > 1 && sheet.matches) scrollTo({ top: y0, behavior: 'instant' });   // позиция прокрутки — как до открытия
+    };
+    if (animate && sheet.matches && !isReduced) {
+      card.animate([{ transform: card.style.transform || 'none' }, { transform: 'translateY(100%)' }], { duration: 200, easing: 'cubic-bezier(.4,0,1,1)' }).finished.then(done, done);
+    } else done();
+    if (focus) btn.focus({ preventScroll: true });
+  };
+  btn.addEventListener('click', () => (card.hidden ? open() : close()));
+  $('[data-chat-close]', root)?.addEventListener('click', () => close());
+  scrim?.addEventListener('click', () => close());
+  card.addEventListener('click', e => { if (e.target.closest('a[href]')) close({ focus: false, animate: false }); });   // ушли в WhatsApp/Telegram
+  document.addEventListener('keydown', e => {
+    if (card.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    if (e.key === 'Tab') {                                     // фокус не выходит из окна
+      const f = $$('a[href], button:not([disabled])', card), first = f[0], last = f.at(-1);
+      if (!card.contains(document.activeElement)) { e.preventDefault(); first?.focus(); }
+      else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
   });
+  document.addEventListener('click', e => {
+    if (e.target.closest('[data-chat-ask]')) { e.preventDefault(); open(); return; }
+    if (!card.hidden && !root.contains(e.target)) close({ focus: false });
+  });
+  // страница под панелью не прокручивается (iOS не всегда слушает overflow:hidden у html)
+  document.addEventListener('touchmove', e => { if (!card.hidden && sheet.matches && !card.contains(e.target)) e.preventDefault(); }, { passive: false });
+  // свайп панели вниз больше чем на 80 px — закрыть
+  let t0 = null, dy = 0;
+  card.addEventListener('touchstart', e => { if (sheet.matches && card.scrollTop <= 0) { t0 = e.touches[0].clientY; dy = 0; } }, { passive: true });
+  card.addEventListener('touchmove', e => {
+    if (t0 == null) return;
+    dy = Math.max(0, e.touches[0].clientY - t0);
+    if (dy > 0) { e.preventDefault(); card.style.transform = `translateY(${dy}px)`; }
+  }, { passive: false });
+  card.addEventListener('touchend', () => {
+    if (t0 == null) return;
+    t0 = null;
+    if (dy > 80) close();
+    else if (dy > 0) {
+      const from = card.style.transform;
+      card.style.transform = '';
+      if (!isReduced) card.animate([{ transform: from }, { transform: 'none' }], { duration: 180, easing: 'cubic-bezier(.22,.61,.36,1)' });
+    }
+  });
+  sheet.addEventListener('change', () => close({ focus: false, animate: false }));
+  addEventListener('oi:leave', () => close({ focus: false, animate: false }));
 }
 
 // ── Кнопка «+» ↔ степпер ─────────────────────────────────
@@ -204,6 +280,14 @@ export function renderBuy(el) {
   const name = el.dataset.name || product(id)?.name || el.closest('.card')?.querySelector('.card__t')?.textContent.trim() || '';
   const cur = el.firstElementChild, isStep = cur?.classList.contains('stepper');
   const had = document.activeElement && el.contains(document.activeElement);
+  // v10: после «+» кнопка 1,2 с показывает «✓», потом становится степпером
+  const hold = +(el.dataset.hold || 0) - Date.now();
+  if (q > 0 && !isStep && hold > 0 && cur?.classList.contains('is-ok')) {
+    clearTimeout(el._hold);
+    el._hold = setTimeout(() => renderBuy(el), hold);
+    return;
+  }
+  if (q === 0 && cur?.classList.contains('is-ok')) cur.classList.remove('is-ok');
   if (q > 0) {
     if (isStep) {
       const out = cur.querySelector('output');
@@ -258,6 +342,12 @@ function bumpCounts() {
 export function addWithFx(btn, id, n = 1) {
   if (cart.qty(id) >= MAX_QTY) { toast(str.max); return false; }
   const before = cart.count();
+  const box = btn.closest('[data-buy]');
+  if (btn.classList.contains('add') && box && !isReduced) {   // v10: «+» → «✓» на 1,2 с (кросс-фейд иконок)
+    if (!$('.add__ok', btn)) { const ok = icon('check', 15, 15); ok.classList.add('add__ok'); btn.append(ok); }
+    btn.classList.add('is-ok');
+    box.dataset.hold = String(Date.now() + 1200);
+  }
   cart.add(id, n);
   sfx('add');
   btn.classList.remove('is-stamp'); void btn.offsetWidth; btn.classList.add('is-stamp');
@@ -352,18 +442,29 @@ export function splitWords(el) {
   };
   walk(el);
 }
+// v10 (brief/13 § 4, по мотивам itis.cafe, без библиотек): элементы появляются группами. Группа — ближайший [data-reveal-group]
+// или родитель; когда элемент группы входит в экран, все её ещё не показанные элементы, которые уже на экране, появляются по очереди
+// в порядке разметки: текст ([data-reveal]) — шаг 120 мс (0/120/240/360), карточки ([data-reveal-item]) — шаг 60 мс, не больше 6 подряд.
 export function initReveal(root = document) {
   const els = $$('[data-reveal], [data-reveal-item]', root).filter(el => !el.classList.contains('is-in'));
   if (isReduced || !('IntersectionObserver' in window)) { for (const el of els) el.classList.add('is-in'); return; }
   for (const el of els) if (el.matches('.h2[data-reveal]')) splitWords(el);
+  const group = new Map(els.map(el => [el, el.parentElement.closest('[data-reveal-group]') || el.parentElement]));
+  for (const g of new Set(group.values())) g.setAttribute('data-reveal-group', '');
+  const onScreen = el => { const r = el.getBoundingClientRect(); return r.top < innerHeight * .9 && r.bottom > 0 && r.left < innerWidth && r.right > 0 && r.width > 0; };
   const io = new IntersectionObserver(entries => {
-    const batch = entries.filter(e => e.isIntersecting).map(e => e.target);
-    batch.forEach((el, i) => {
-      if (el.hasAttribute('data-reveal-item')) el.style.setProperty('--d', Math.min(i, 6) * 0.07 + 's');
-      el.classList.add('is-in');
-      io.unobserve(el);
-    });
-  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    const hit = entries.filter(e => e.isIntersecting && (e.intersectionRatio >= .2 || e.intersectionRect.height > innerHeight * .4)).map(e => e.target);
+    for (const g of new Set(hit.map(el => group.get(el)))) {
+      const list = els.filter(el => group.get(el) === g && !el.classList.contains('is-in') && (hit.includes(el) || onScreen(el)));
+      list.forEach((el, i) => {
+        const card = el.hasAttribute('data-reveal-item'), k = Math.min(i, card ? 5 : 3);
+        el.style.setProperty('--i', k);
+        el.style.setProperty('--d', (k * (card ? 60 : 120)) / 1000 + 's');
+        el.classList.add('is-in');
+        io.unobserve(el);
+      });
+    }
+  }, { rootMargin: '0px 0px -10% 0px', threshold: [0, .05, .1, .2] });
   for (const el of els) io.observe(el);
   onLeave(() => io.disconnect());
 }
@@ -433,6 +534,7 @@ export function renderCartUI() {
 }
 
 export function init() {
+  window.__oiUI = true;   // boot.js: скрипты запустились, страховка html.is-done не нужна
   document.documentElement.classList.add('js');
   if (/[?&]freeze=1/.test(location.search)) document.documentElement.classList.add('freeze');
   initHeader();

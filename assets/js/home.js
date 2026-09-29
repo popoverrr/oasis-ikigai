@@ -35,6 +35,7 @@ function hero(root) {
   const big = matchMedia('(min-width: 1600px), (min-width: 1200px) and (min-resolution: 2dppx)').matches;
   video.src = portrait ? video.dataset.srcPortrait : big ? video.dataset.srcQhd : video.dataset.srcHd;
   video.preload = 'auto';
+  video.disablePictureInPicture = true; video.disableRemotePlayback = true;   // v10: фон не уходит в «картинку в картинке» iOS
   video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
   const play = () => video.play().catch(() => {});
   if (document.readyState === 'complete') play(); else addEventListener('load', play, { once: true });

@@ -16,6 +16,8 @@
  --error:#FF4040;--error-ink:#D10000;
   --f:"Ubuntu",system-ui,sans-serif;--f-jp:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
   --g:clamp(20px,5vw,64px);--ease:cubic-bezier(.16,1,.3,1);--hdr:64px;--pill:44px;--safe-b:env(safe-area-inset-bottom,0px);
+  /* v10 (brief/13 § 3): единая система скруглений; --ease-o — плавное появление (§ 4) */
+  --r-xs:8px;--r-md:14px;--r-lg:20px;--r-pill:999px;--ease-o:cubic-bezier(.22,.61,.36,1);
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:80px;font-synthesis:none}
@@ -39,7 +41,7 @@ main:focus{outline:0}
 .micro{font:500 12px/1.3 var(--f);letter-spacing:.14em;text-transform:uppercase}
 .jp{font-family:var(--f-jp)}
 .icon{width:22px;height:22px;flex:none}
-.arrow{width:28px;height:10px;flex:none;transition:transform .3s var(--ease)}
+.arrow{width:28px;height:10px;flex:none;transition:transform .2s var(--ease)}
 .price{font:700 17px/1 var(--f);font-variant-numeric:tabular-nums;white-space:nowrap}
 .price s{color:var(--text-2);font-weight:400;font-size:.85em;margin-right:4px}
 .price--lg{font:700 28px/1 var(--f)}
@@ -49,11 +51,11 @@ main:focus{outline:0}
 .sec--accent .link{background-image:linear-gradient(var(--black),var(--black))}
 
 /* кнопки: острые углы; главная — розовая, вторичная — обводка, на розовом — чёрная */
-.btn{min-height:56px;display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:0 28px;font:500 16px/1 var(--f);letter-spacing:.02em;transition:background-color .2s,color .2s,box-shadow .2s,transform .2s}
-.btn:hover .arrow{transform:translateX(4px)}
-.btn:active{transform:scale(.98)}
+.btn{min-height:56px;display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:0 28px;font:500 16px/1 var(--f);letter-spacing:.02em;transition:background-color .2s,color .2s,box-shadow .2s,transform .12s ease}
+@media (hover:hover){.btn:hover .arrow{transform:translateX(4px)}}
+.btn:active{transform:scale(.97)}
 .btn--accent{background:var(--accent);color:var(--black)}
-.btn--accent:hover{background:var(--accent-hi)}
+@media (hover:hover){.btn--accent:hover{background:var(--accent-hi)}}
 .btn--ghost{box-shadow:inset 0 0 0 1.5px var(--white);color:var(--white)}
 .btn--ghost:hover{background:var(--white);color:var(--black)}
 .white .btn--ghost{box-shadow:inset 0 0 0 1.5px var(--black);color:var(--black)}
@@ -67,7 +69,7 @@ main:focus{outline:0}
 
 /* шапка */
 .hdr{position:fixed;inset:0 0 auto;z-index:40;height:var(--hdr);padding:0 calc(var(--g) - 10px);display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:8px;
-  background:rgba(0,0,0,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line);transition:transform .4s var(--ease),background-color .3s,box-shadow .3s}
+  background:rgba(0,0,0,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line);transition:transform .25s ease,background-color .3s,box-shadow .3s}
 .hdr--over:not(.is-solid){background:linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,0));box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
 .hdr.is-hidden{transform:translateY(-100%)}
 .logo{justify-self:center;display:flex;align-items:center;gap:10px;min-height:44px}
@@ -75,8 +77,8 @@ main:focus{outline:0}
 .hdr__nav,.hdr__search,.hdr__wish{display:none}
 .hdr__tools{display:flex;align-items:center;margin-right:-6px}
 .count{position:absolute;top:5px;right:3px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--accent);color:var(--black);font:700 11px/18px var(--f);text-align:center}
-.count.is-bump{animation:bump .5s var(--ease)}
-@keyframes bump{0%{transform:scale(1.6) translateY(-3px)}100%{transform:none}}
+.count.is-bump{animation:bump .3s var(--ease-o)}
+@keyframes bump{50%{transform:scale(1.25)}}   /* v10: «пульс» счётчика 1 → 1.25 → 1 */
 .langs{display:flex;align-items:center;gap:8px;font:500 12px/1 var(--f);letter-spacing:.16em;color:var(--text-2)}
 .langs a{padding:12px 2px}
 .langs a[aria-current]{color:var(--accent);font-weight:700}
@@ -294,7 +296,7 @@ body.hero-on .cartbar{transform:translateY(calc(100% + 24px));pointer-events:non
 .card__sold{color:var(--text-2);font-size:12px}
 .white .card__sold{color:var(--ink-2)}
 .add{width:44px;height:44px;background:var(--accent);color:var(--black);display:grid;place-items:center;transition:background-color .2s}
-.add:hover{background:var(--accent-hi)}
+@media (hover:hover){.add:hover{background:var(--accent-hi)}}
 .add .icon{width:15px;height:15px}
 .add.is-stamp{animation:stamp .5s var(--ease)}
 @keyframes stamp{0%{transform:scale(.8)}55%{transform:scale(1.12)}100%{transform:none}}
@@ -516,7 +518,6 @@ html.lp-open{overflow:hidden}
    Без этого на телефоне лента прокручивалась ещё и по вертикали на 20–24 px (сдвиг анимации появления у карточек за краем) —
    палец «цеплялся» за ленту и страница листалась рывками. Внутри лент карточки проявляются без сдвига. */
 .prods--rail,.posts--rail,.goal-filter,.gallery__track{overflow-y:hidden;overscroll-behavior-x:contain}
-.js .prods--rail [data-reveal-item]:not(.is-in),.js .posts--rail [data-reveal-item]:not(.is-in){transform:none}
 
 /* появление при скролле (только с JS) */
 .js [data-reveal]:not(.is-in),.js [data-reveal-item]:not(.is-in){opacity:0;transform:translateY(24px)}
@@ -869,3 +870,164 @@ html.freeze .done__seal{opacity:1!important;transform:rotate(-6deg)!important}
 .done__items b{color:var(--accent);font-weight:500}
 .done__total{padding-top:10px;border-top:1px solid var(--line);font-weight:700}
 .done__note{color:var(--text-2);font-size:12.5px;display:block!important}
+
+/* ═══ v10 (brief/13_FINAL_V10.md): финальная шлифовка — единая система скруглений, окно чата на телефоне, анимации по мотивам itis.cafe,
+   подпись в футере. Логика радиусов: нажимается и с текстом — пилюля; только иконка — круг; поля — --r-md; карточки и плашки — --r-lg;
+   во всю ширину экрана (секции, ленты, шапка, меню, видео первого экрана) — без скругления. Цвета не менялись. ═══ */
+
+/* кнопки и всё нажимаемое с текстом — пилюли */
+.btn,.cartbar,.lp__b,.chip,.aud__c span,.seg__opt span,.menu__langs a,.pd__sold,.toolbar__q,.toolbar__sort select,.fgroup__search,
+.post__cat,.badge,.review__v,.stepper,.free__bar,.langs--hdr,.langs--hdr a{border-radius:var(--r-pill)}
+/* только иконка — круг, не меньше 44×44 */
+.icon-btn,.add,.wish,.jr__btn,.line__rm,.chat__x,.lp__x{border-radius:50%}
+.wish{width:44px;height:44px;right:8px;top:8px}
+.line__rm{width:44px;height:44px;margin:-2px -2px 0 0}
+.line{grid-template-columns:80px 1fr 44px}
+.chat__x,.lp__x{box-shadow:inset 0 0 0 1.5px currentColor}
+/* поля, миниатюры, тосты */
+.field__input,.rv__f textarea,.rv__f input,.price-range input,.line__img,.toast,.checkout__error,.skip,.cartp__skeleton span,.done__qr-img,.done__seal{border-radius:var(--r-md)}
+/* карточки, плашки, панели: крупное скругление; картинка, стоящая вплотную, обрезается углами карточки */
+.card,.post__a,.orig,.philo__store,.how,.quick,.review,.rv__thanks,.offline,.summary,.done__sum,.chat__card,.article__cover,.prose img{border-radius:var(--r-lg)}
+.card{overflow:hidden}
+.goal.goal{border-radius:var(--r-lg)}.goal.goal--hero{border-radius:var(--r-lg)}.goal.goal--mini,.goal-filter .goal.goal--mini{border-radius:var(--r-md)}
+@media (min-width:1024px){.gallery__track{border-radius:var(--r-lg)}.gallery__dots button{border-radius:var(--r-md)}}
+/* выделение слова в заголовке на плашке */
+.white .h2 em,.white .hero__h1 em,.sec--accent .h2 em{border-radius:var(--r-xs);padding:0 .18em}
+.brandlist b{border-radius:var(--r-xs)}
+/* точки у бренда и в бейджах — круги 7 px; флажок фильтра — мягкий квадрат */
+.white .card__brand::before,.badge::before{width:7px;height:7px;border-radius:50%}
+.badge{padding:6px 10px 6px 8px}
+.check input{border-radius:6px}
+/* нижние панели (выбор языка, лист «очистить корзину») на телефоне — скруглены сверху; на десктопе — карточки */
+.lp__card,.sheet__panel{border-radius:var(--r-lg) var(--r-lg) 0 0}
+@media (min-width:768px){.lp__card{border-radius:var(--r-lg)}}
+@media (min-width:700px){.sheet__panel{border-radius:var(--r-lg)}}
+
+/* размеры: всё нажимаемое ≥ 44 px; язык в шапке 44×40, в футере 44×44; на мобайле вторичная кнопка — 48 px */
+.chip,.aud__c span{min-height:44px}
+.aud legend{margin-top:15px}
+.langs--hdr{height:auto;padding:2px}
+.langs--hdr a{height:40px}
+.langs--ftr a{height:44px}
+.seg__opts{gap:8px}
+.cartbar{padding:0 8px 0 20px}
+@media (max-width:767px){
+  .btn--ghost,.ftr__btns .btn--ghost{min-height:48px}
+  .filters__foot .btn{min-height:52px}
+}
+/* степпер: пилюля, кнопки ± — круги; зона нажатия каждой кнопки — 44×44 */
+.stepper{padding:0 3px}
+.stepper button{position:relative;width:38px;height:38px;border-radius:50%;transition:background-color .2s,transform .12s ease}
+.stepper button::after{content:"";position:absolute;inset:-3px}
+.stepper--lg button,.buy--big .stepper button{width:48px;height:48px}
+.line__row .stepper{height:44px}.line__row .stepper button{width:38px;height:38px}
+.card .stepper{height:40px;padding:0 2px}
+.card .stepper button{width:34px;height:34px}.card .stepper button::after{inset:-5px}
+.card .stepper output{min-width:16px}
+.card__row{flex-wrap:wrap}
+@media (hover:hover){.stepper button:hover{background:rgba(128,128,128,.22)}}
+
+/* поля ввода на мобайле — 16 px, иначе iPhone увеличивает страницу при фокусе */
+.toolbar__sort select,.price-range input,.fgroup__search{font-size:16px}
+.toolbar__sort select{padding:0 36px 0 16px}
+.fgroup__search{padding:0 16px}
+
+/* кнопка звука на первом экране — вторичная (как плавающая кнопка музыки): круг 44, чёрный 72 % и белая обводка;
+   стоит на одной вертикальной оси с кнопкой чата, 12 px над ней */
+.sound,.sound[aria-pressed=true]{width:44px;height:44px;background:rgba(0,0,0,.72);box-shadow:inset 0 0 0 1.5px var(--white);color:var(--white)}
+.sound .icon{width:18px;height:18px}
+@media (max-width:899px){.sound{right:22px;top:112px}}
+@media (min-width:900px) and (max-width:1023px){.sound{right:30px;top:112px}}
+@media (min-width:1024px){.sound{right:30px;bottom:92px}}
+
+/* нажатие и наведение (itis.cafe: кнопки-пилюли с плавным переходом) */
+html{-webkit-tap-highlight-color:transparent}
+.add,.wish,.icon-btn,.jr__btn,.lp__b,.chip,.menu__langs a,.music,.sound{transition:background-color .2s,color .2s,box-shadow .2s,transform .12s ease}
+.add:active,.wish:active,.icon-btn:active,.jr__btn:active,.lp__b:active,.chip:active,.menu__langs a:active,.music:active,.sound:active,.stepper button:active,.aud__c:active span,.seg__opt:active span{transform:scale(.97)}
+
+/* «+» → «✓» на 1,2 с после добавления в корзину (кросс-фейд иконок) */
+.add>*{grid-area:1/1}
+.add .icon{transition:opacity .2s ease,transform .2s ease}
+.add .add__ok{opacity:0;transform:scale(.6)}
+.add.is-ok .add__ok{opacity:1;transform:none}
+.add.is-ok .icon:not(.add__ok){opacity:0;transform:scale(.6)}
+
+/* гамбургер → крестик (itis.cafe, hamburger--spin): три линии, вращение 225° */
+.burger{position:relative;display:block;width:22px;height:14px}
+.burger i,.burger i::before,.burger i::after{position:absolute;left:0;width:22px;height:2px;border-radius:1px;background:currentColor}
+.burger i{top:50%;margin-top:-1px;transition:transform .22s cubic-bezier(.215,.61,.355,1)}
+.burger i::before{content:"";top:-6px;transition:top .1s .22s ease-out,opacity .1s .22s ease-out}
+.burger i::after{content:"";bottom:-6px;transition:bottom .1s .22s ease-out,transform .22s cubic-bezier(.215,.61,.355,1)}
+.menu.is-open .burger i{transform:rotate(225deg);transition:transform .22s .12s cubic-bezier(.55,.055,.675,.19)}
+.menu.is-open .burger i::before{top:0;opacity:0;transition:top .1s ease-in,opacity .1s ease-in}
+.menu.is-open .burger i::after{bottom:0;transform:rotate(-90deg);transition:bottom .1s ease-in,transform .22s .12s cubic-bezier(.55,.055,.675,.19)}
+/* в меню крестик стоит там же, где гамбургер в шапке, логотип — там же, где в шапке */
+.menu__top{display:grid;grid-template-columns:44px 1fr 44px;gap:8px;margin:0 -10px}
+.menu__top .logo{grid-column:2;justify-self:center}
+.menu__x{grid-column:1;grid-row:1}
+
+/* появление: каскад внутри группы (надпись → заголовок → текст → кнопка, шаг 120 мс, 500 мс, 16 px) и карточки (шаг 60 мс, до 6, 400 мс, 12 px).
+   Только transform и opacity, один раз. Группа — [data-reveal-group] или родитель; индекс — --i, задержка — --d (ставит ui.js) */
+.js [data-reveal]:not(.is-in){opacity:0;transform:translateY(16px)}
+.js [data-reveal]{transition:opacity .5s var(--ease-o),transform .5s var(--ease-o);transition-delay:var(--d,0s)}
+.js [data-reveal-item]:not(.is-in){opacity:0;transform:translateY(12px)}
+.js [data-reveal-item]{transition:opacity .4s var(--ease-o),transform .4s var(--ease-o);transition-delay:var(--d,0s)}
+.js .h2[data-reveal] .w>span{transition:transform .9s var(--ease) calc(var(--d,0s) + var(--n)*.04s)}
+/* ленты: у карточек при появлении сдвиг 12 px — запас снизу 16 px, чтобы лента не получала вертикальной прокрутки (фикс «микроскролла») */
+.prods--rail,.posts--rail{padding-bottom:16px;margin-bottom:-12px}
+@media (min-width:1024px){.prods--rail{padding-bottom:0;margin-bottom:0}}
+/* страховка: если скрипты не запустились за 4 с, boot.js ставит html.is-done — всё видно */
+html.is-done [data-reveal],html.is-done [data-reveal-item]{opacity:1!important;transform:none!important}
+html.is-done .h2 .w>span{transform:none!important}
+@media (prefers-reduced-motion:reduce){
+  .js [data-reveal],.js [data-reveal-item]{opacity:1!important;transform:none!important;transition:none!important}
+  .js .h2[data-reveal] .w>span{transform:none!important;transition:none!important}
+  .burger i,.burger i::before,.burger i::after{transition:none!important}
+}
+
+/* окно чата. Телефон (< 768): нижняя панель во всю ширину с затемнением, не зависит от того, где стоит кнопка */
+.chat__scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .2s ease}
+.chat__scrim[hidden]{display:none}
+.chat.is-open .chat__scrim{opacity:1}
+@media (max-width:767px){
+  .chat.is-open{z-index:85}
+  .chat__card{position:fixed;left:0;right:0;bottom:0;width:auto;max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain;
+    padding:14px 16px calc(20px + var(--safe-b));border-top:0;border-radius:var(--r-lg) var(--r-lg) 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.35);animation:chat-up .26s var(--ease-o) both}
+  .chat__card::before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:#D9D9D9;margin:0 auto 14px}
+  .chat__x{right:12px;top:28px}
+  .chat__t{font:700 21px/1.2 var(--f);padding-right:56px}
+  .chat__hint{padding-right:56px}
+  .chat__btns{gap:10px;margin-top:16px}
+  .chat__btns .btn{min-height:52px;justify-content:center}
+  html.chat-open{overflow:hidden}
+}
+@keyframes chat-up{from{transform:translateY(100%)}}
+/* ≥ 768: всплывающее окно у кнопки, всегда внутри экрана (координаты ставит ui.js: вверх, если хватает места, иначе вниз; отступ 12 px) */
+@media (min-width:768px){
+  .chat__scrim{display:none}
+  .chat__card{position:fixed;right:auto;bottom:auto;left:12px;top:12px}
+}
+@media (prefers-reduced-motion:reduce){.chat__card{animation:none}.chat__scrim{transition:none}}
+
+/* лепестки на 404 и «Замовлення прийнято»: правило потерялось в v5 — canvas был 300×150 в углу; теперь снова на весь экран за текстом */
+.final__petals{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+
+/* подпись в футере «Created by Cybermove Consulting»: пилюля 40 px с зелёной обводкой; на мобайле по центру, самая нижняя строка;
+   на десктопе — справа в строке с копирайтом. Плавающие кнопки (чат, музыка, панель корзины) её не закрывают */
+.ftr__credit{display:flex;justify-content:center;margin-top:22px}
+.credit{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 18px;border-radius:var(--r-pill);box-shadow:inset 0 0 0 1.5px var(--accent);font:400 13px/1 var(--f);color:#BDBDBD;white-space:nowrap}
+.credit__name{font-weight:700;color:var(--accent);letter-spacing:.02em}
+a.credit{transition:background-color .2s}
+@media (hover:hover){a.credit:hover{background:var(--coal-2)}}
+@media (max-width:767px){
+  .ftr{padding-bottom:calc(96px + var(--safe-b))}
+  body.has-cartbar .ftr{padding-bottom:calc(166px + var(--safe-b))}
+  body.has-cartbar{padding-bottom:0}
+}
+@media (min-width:768px){.ftr{padding-bottom:96px}}   /* кнопки музыки и чата внизу по углам не закрывают дисклеймер */
+@media (min-width:1024px){
+  .ftr__end{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:32px;align-items:center;margin-top:16px}
+  .ftr__end .ftr__bottom{margin-top:0}
+  .ftr__end .ftr__disc{grid-column:1/-1;grid-row:2}
+  .ftr__credit{margin-top:0;grid-column:2;grid-row:1}
+}
