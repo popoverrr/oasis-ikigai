@@ -1131,3 +1131,21 @@ html.rvf-open{overflow:hidden}
   .wish.is-pop .i-on,.wish.is-pop::after,.wish.is-unpop .i-off{animation:none}
   .rvf__card,.rvf__scrim{transition:none}
 }
+
+/* ═══ v11.1 (brief/15_EDITS_V11_1.md): выделенное слово в заголовке — не на зелёной плашке, а с полосой снизу, как у логотипа в шапке;
+   шрифт, насыщенность и размер прежние. При переносе полоса под каждой строкой. Тёмные секции (слово просто зелёное) не меняются ═══ */
+.white .h2 em,.white .hero__h1 em{
+  color:inherit;border-radius:0;padding:0 0 .08em;
+  background:linear-gradient(var(--accent),var(--accent)) 0 100%/100% .09em no-repeat;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.sec--accent .h2 em{
+  color:inherit;border-radius:0;padding:0 0 .08em;
+  background:linear-gradient(var(--black),var(--black)) 0 100%/100% .09em no-repeat;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone}
+
+/* полоса «Бренди» с бегущей строкой — примерно вдвое ниже; скорость, пауза и reduced-motion прежние; ссылки — не ниже 44 px */
+.bmarq{padding:17px 0 19px}   /* 26/28 по брифу минус запас, который дала высота ссылок 44 px: итог ~110 px на 390 */
+.bmarq .sh{margin-bottom:10px}
+.bmarq__row a{font-size:clamp(22px,5.6vw,30px);padding:2px 0;min-height:44px;display:flex;align-items:center}
+.bmarq__row li::after{width:7px;height:7px;margin:0 clamp(16px,3vw,28px)}
+@media (min-width:1024px){.bmarq{padding:44px 0 48px}}
