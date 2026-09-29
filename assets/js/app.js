@@ -54,6 +54,7 @@ const base = String(config.shopUrl || '/shop').replace(/\/((ru|en)\/)?shop\/?$/,
 if (bf.on) addEventListener('load', () => (window.requestIdleCallback || setTimeout)(() =>
   import(`./butterfly.js?v=${config.v?.butterfly || 0}`).then(({ initButterfly }) => initButterfly({
     lang: config.lang, strings: bf.str, catalogUrl: config.shopUrl, chance: bf.chance,
+    firstAt: bf.first ? bf.first * 1000 : null,   // v11.2: гарантированный первый вылет от начала визита
     exclude: [new RegExp('^' + base + '/((ru|en)/)?(cart|order|checkout|review)(/|$)'), new RegExp('^/' + (config.adminPath || 'admin') + '(/|$)'), /^\/install/],
   })).catch(e => console.error(e)), { timeout: 3000 }), { once: true });
 // поимка: короткий звук «в корзину» (только если звуки включены) и событие аналитики, если она подключена владельцем

@@ -12,7 +12,7 @@
  *   – холст поверх страницы с pointer-events: none; нажимается только сама бабочка (круг 56px);
  *   – не летает, когда открыто меню, чат, фильтры, модальное окно или в фокусе поле ввода;
  *   – пауза в фоновой вкладке; при prefers-reduced-motion — выключена полностью.
- * Случайность:
+ * Первый вылет — гарантированно через firstAt (30 с) после захода на сайт; дальше — случайно:
  *   – при каждом просмотре страницы (и мягком переходе oi:page) шанс CHANCE, задержка — случайная в DELAY;
  *   – не чаще раза в COOLDOWN и не больше MAX_PER_SESSION за сессию.
  * Для проверки: ?butterfly=1 — вылет сразу, без лимитов; window.oiButterfly.fly() — вылет вручную.
@@ -212,7 +212,7 @@ export function initButterfly(opts = {}) {
   if (typeof window === 'undefined') return null;
   if (window.__oiButterfly) return window.__oiButterfly;
   const o = {
-    chance: .22, delay: [6000, 45000], maxPerSession: 3, cooldown: 90000, speed: null, zIndex: 39, cardZIndex: 47,
+    chance: .22, delay: [6000, 45000], maxPerSession: 3, cooldown: 90000, speed: null, zIndex: 39, cardZIndex: 47, firstAt: 30000,
     catalogUrl: '/shop', lang: (document.documentElement.lang || 'uk').slice(0, 2), strings: null,
     exclude: [/^\/admin/, /^\/install/], ...opts,
   };
@@ -231,6 +231,8 @@ export function initButterfly(opts = {}) {
   const petals = [0, 1, 2].map(i => petalSprite(9, i * 6 - 6));
 
   const sess = () => { try { return JSON.parse(sessionStorage.getItem(SS_KEY) || '{"n":0,"last":0}'); } catch { return { n: 0, last: 0 }; } };
+  // начало визита: запоминаем один раз за сессию вкладки — переживает и мягкие переходы, и обычную перезагрузку
+  { const s0 = sess(); if (!s0.start) { s0.start = Math.round(Math.min(Date.now(), performance.timeOrigin || Date.now())); try { sessionStorage.setItem(SS_KEY, JSON.stringify(s0)); } catch {} } }
   const setSess = v => { try { sessionStorage.setItem(SS_KEY, JSON.stringify(v)); } catch {} };
   const caught = () => { try { return (JSON.parse(localStorage.getItem(LS_KEY) || '{}').caught) || 0; } catch { return 0; } };
   const setCaught = n => { try { localStorage.setItem(LS_KEY, JSON.stringify({ caught: n })); } catch {} };
@@ -251,6 +253,13 @@ export function initButterfly(opts = {}) {
     if (state !== 'idle' || reduced.matches || excluded()) return;
     if (force) { timer = setTimeout(() => fly(true), 800); return; }
     const s = sess();
+    // Гарантированный первый вылет: через firstAt мс после захода на сайт, если за визит бабочки ещё не было.
+    // Если в этот момент открыто меню/чат/поле ввода или человек в корзине — ждём и пробуем каждые 3 с.
+    if (o.firstAt != null && !s.n) {
+      const guaranteed = () => { if (state !== 'idle') return; if (busy()) { timer = setTimeout(guaranteed, 3000); return; } fly(); };
+      timer = setTimeout(guaranteed, Math.max(1500, (s.start || Date.now()) + o.firstAt - Date.now()));
+      return;
+    }
     if (s.n >= o.maxPerSession || Date.now() - s.last < o.cooldown) return;
     if (Math.random() > o.chance) return;
     let tries = 0;
@@ -284,7 +293,7 @@ export function initButterfly(opts = {}) {
 
   function fly(bypass) {
     if (state !== 'idle' || reduced.matches) return;
-    if (!bypass) { const s = sess(); setSess({ n: s.n + 1, last: Date.now() }); }
+    if (!bypass) { const s = sess(); setSess({ ...s, n: s.n + 1, last: Date.now() }); }
     mount();
     const small = W < 700;
     const path = makePath(W, H);
