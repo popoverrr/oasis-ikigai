@@ -60,84 +60,124 @@ export const STRINGS_HB = {
         t3: 'Master-level reflexes!', p3: 'A hummingbird is not easy to catch. Your ikigai is in the catalogue.' },
 };
 
-/* ---------- звуки поимки: синтез Web Audio, без файлов ---------- */
-let AC = null;
-function ac() { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); return AC; } catch { return null; } }
+/* ---------- звуки поимки: синтез Web Audio, без файлов ----------
+ * Премиальный звук: FM-колокола (как стекло и хрусталь), стерео-панорама, синтезированная реверберация (ConvolverNode),
+ * мягкий компрессор на выходе, чтобы не было резких пиков. Бабочка и колибри звучат по-разному:
+ *   бабочка — «волшебный расцвет»: тёплый вдох воздуха, мягкий глубокий удар, аккорд Cmaj9 из стеклянных колоколов,
+ *             восходящая россыпь искр по пентатонике и длинный светлый хвост (≈2,8 с);
+ *   колибри — «хрустальный трепет»: быстрый трепет крыльев, стремительная трель стеклянных капель слева направо
+ *             в ля-мажорной пентатонике, звонкий «дзинь» фурина и короткий искристый хвост (≈1,8 с). */
+let AC = null, BUS = null;
+function ac() {
+  try {
+    if (!AC) {
+      AC = new (window.AudioContext || window.webkitAudioContext)();
+      const comp = AC.createDynamicsCompressor(); comp.threshold.value = -16; comp.knee.value = 12; comp.ratio.value = 4; comp.attack.value = .003; comp.release.value = .25;
+      comp.connect(AC.destination);
+      const verb = AC.createConvolver(), len = AC.sampleRate * 3.2, ir = AC.createBuffer(2, len, AC.sampleRate);
+      for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) { const t = i / len; d[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 3.2) * (i < 400 ? i / 400 : 1); } }
+      verb.buffer = ir; const wet = AC.createGain(); wet.gain.value = .55; verb.connect(wet); wet.connect(comp);
+      const dry = AC.createGain(); dry.gain.value = .9; dry.connect(comp);
+      BUS = { dry, verb, comp };
+    }
+    if (AC.state === 'suspended') AC.resume();
+    return AC;
+  } catch { return null; }
+}
+function voice(c, vol, pan = 0, send = .5) {           // вход «голоса»: громкость → панорама → сухой сигнал + реверберация
+  const g = c.createGain(); g.gain.value = vol;
+  const p = c.createStereoPanner ? c.createStereoPanner() : null; if (p) p.pan.value = pan;
+  const s = c.createGain(); s.gain.value = send;
+  (p ? (g.connect(p), p) : g).connect(BUS.dry); (p || g).connect(s); s.connect(BUS.verb);
+  return g;
+}
+function fmBell(c, f, t0, dur, v, { pan = 0, ratio = 3.5, index = 2.2, send = .6, detune = 0 } = {}) {
+  const car = c.createOscillator(), mod = c.createOscillator(), mg = c.createGain(), eg = c.createGain(), out = voice(c, 1, pan, send);
+  car.frequency.value = f; car.detune.value = detune; mod.frequency.value = f * ratio;
+  mg.gain.setValueAtTime(f * index, t0); mg.gain.exponentialRampToValueAtTime(f * .02, t0 + dur * .6);
+  eg.gain.setValueAtTime(0, t0); eg.gain.linearRampToValueAtTime(v, t0 + .004); eg.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  mod.connect(mg); mg.connect(car.frequency); car.connect(eg); eg.connect(out);
+  car.start(t0); mod.start(t0); car.stop(t0 + dur + .05); mod.stop(t0 + dur + .05);
+}
 function noiseBuf(c, sec) { const b = c.createBuffer(1, c.sampleRate * sec, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; }
-function out(c, vol) {                    // общий выход: громкость + лёгкое «эхо» для волшебного хвоста
-  const m = c.createGain(); m.gain.value = vol;
-  const dl = c.createDelay(1), fb = c.createGain(), wet = c.createGain();
-  dl.delayTime.value = .16; fb.gain.value = .32; wet.gain.value = .35;
-  m.connect(c.destination); m.connect(dl); dl.connect(fb); fb.connect(dl); dl.connect(wet); wet.connect(c.destination);
-  return m;
+function air(c, t0, dur, f0, f1, v, pan = 0) {         // «дыхание» — шум через полосовой фильтр с движением частоты
+  const n = c.createBufferSource(); n.buffer = noiseBuf(c, dur + .1);
+  const f = c.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.1; f.frequency.setValueAtTime(f0, t0); f.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+  const g = c.createGain(); g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(v, t0 + dur * .45); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  n.connect(f); f.connect(g); g.connect(voice(c, 1, pan, .7)); n.start(t0); n.stop(t0 + dur + .1);
 }
-function bell(c, dst, f, t0, dur, v, type = 'sine') {
-  const o = c.createOscillator(), g = c.createGain(); o.type = type; o.frequency.value = f;
-  g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(v, t0 + .008); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
-  o.connect(g); g.connect(dst); o.start(t0); o.stop(t0 + dur + .05);
-}
-// Бабочка: «волшебный взрыв» — мягкий удар и шелест, затем каскад хрустальных колокольчиков вверх
+const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+
+// Бабочка — «волшебный расцвет»
 export function soundButterfly(vol = .5) {
-  const c = ac(); if (!c) return; const t = c.currentTime + .01, m = out(c, vol);
-  const n = c.createBufferSource(); n.buffer = noiseBuf(c, 1); const f = c.createBiquadFilter(), ng = c.createGain();
-  f.type = 'bandpass'; f.Q.value = .8; f.frequency.setValueAtTime(400, t); f.frequency.exponentialRampToValueAtTime(6000, t + .5);
-  ng.gain.setValueAtTime(.0001, t); ng.gain.exponentialRampToValueAtTime(.55, t + .03); ng.gain.exponentialRampToValueAtTime(.0001, t + .7);
-  n.connect(f); f.connect(ng); ng.connect(m); n.start(t); n.stop(t + 1);
-  const boom = c.createOscillator(), bg = c.createGain(); boom.type = 'sine';
-  boom.frequency.setValueAtTime(180, t); boom.frequency.exponentialRampToValueAtTime(45, t + .35);
-  bg.gain.setValueAtTime(.6, t); bg.gain.exponentialRampToValueAtTime(.0001, t + .4); boom.connect(bg); bg.connect(m); boom.start(t); boom.stop(t + .45);
-  [1046.5, 1318.5, 1568, 2093, 2637, 3136, 4186].forEach((fr, i) => { bell(c, m, fr, t + .06 + i * .055, 1.1, .16); bell(c, m, fr * 2.01, t + .06 + i * .055, .5, .04, 'triangle'); });
+  const c = ac(); if (!c) return; const t = c.currentTime + .02;
+  air(c, t, .55, 300, 5200, .22 * vol * 2);                                                    // вдох воздуха вверх
+  const sub = c.createOscillator(), sg = c.createGain(); sub.type = 'sine';                       // мягкий глубокий удар
+  sub.frequency.setValueAtTime(110, t + .38); sub.frequency.exponentialRampToValueAtTime(48, t + .9);
+  sg.gain.setValueAtTime(0, t + .38); sg.gain.linearRampToValueAtTime(.5 * vol, t + .41); sg.gain.exponentialRampToValueAtTime(.0001, t + 1.1);
+  sub.connect(sg); sg.connect(voice(c, 1, 0, .25)); sub.start(t + .38); sub.stop(t + 1.2);
+  [60, 64, 67, 71, 74].forEach((m, i) => fmBell(c, hz(m + 12), t + .4 + i * .012, 2.6, .10 * vol, { pan: -.5 + i * .25, ratio: 3.01, index: 1.6, send: .75, detune: (i % 2 ? 4 : -4) }));  // аккорд Cmaj9
+  [72, 74, 76, 79, 81, 84, 86, 88, 91, 93].forEach((m, i) => fmBell(c, hz(m + 12), t + .5 + i * .07, 1.4, .07 * vol, { pan: Math.sin(i * 1.3) * .8, ratio: 4.2, index: 1.2, send: .8 }));  // искры вверх
+  air(c, t + .45, 2.2, 7000, 12000, .05 * vol * 2, .3);                                         // светлый шелест хвоста
 }
-// Колибри: быстрые восходящие «чирики», трепет крыльев и искристый звон — короче и выше
+// Колибри — «хрустальный трепет»
 export function soundHummingbird(vol = .5) {
-  const c = ac(); if (!c) return; const t = c.currentTime + .01, m = out(c, vol);
-  for (let i = 0; i < 4; i++) {
-    const o = c.createOscillator(), g = c.createGain(), t0 = t + i * .075; o.type = 'sine';
-    o.frequency.setValueAtTime(2200 + i * 250, t0); o.frequency.exponentialRampToValueAtTime(4200 + i * 300, t0 + .06);
-    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.22, t0 + .01); g.gain.exponentialRampToValueAtTime(.0001, t0 + .09);
-    o.connect(g); g.connect(m); o.start(t0); o.stop(t0 + .1);
-  }
-  const n = c.createBufferSource(); n.buffer = noiseBuf(c, .6); const f = c.createBiquadFilter(), ng = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
-  f.type = 'bandpass'; f.frequency.value = 900; f.Q.value = 1.4; lfo.frequency.value = 48; lg.gain.value = .18; lfo.connect(lg); lg.connect(ng.gain);
-  ng.gain.setValueAtTime(.18, t); ng.gain.linearRampToValueAtTime(0, t + .45);
-  n.connect(f); f.connect(ng); ng.connect(m); n.start(t); n.stop(t + .5); lfo.start(t); lfo.stop(t + .5);
-  [2349, 2960, 3520, 4699, 5920].forEach((fr, i) => bell(c, m, fr, t + .3 + i * .035, .6, .1, 'triangle'));
-  bell(c, m, 1760, t + .3, .9, .12);
+  const c = ac(); if (!c) return; const t = c.currentTime + .02;
+  // трепет крыльев: шум, промодулированный ~45 Гц, быстро затухает
+  const n = c.createBufferSource(); n.buffer = noiseBuf(c, .5); const f = c.createBiquadFilter(), g = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+  f.type = 'bandpass'; f.frequency.value = 1400; f.Q.value = 1.6; lfo.frequency.value = 45; lg.gain.value = .12 * vol * 2; lfo.connect(lg); lg.connect(g.gain);
+  g.gain.setValueAtTime(.12 * vol * 2, t); g.gain.linearRampToValueAtTime(0, t + .38);
+  n.connect(f); f.connect(g); g.connect(voice(c, 1, -.3, .3)); n.start(t); n.stop(t + .45); lfo.start(t); lfo.stop(t + .45);
+  // трель стеклянных капель слева направо (ля-мажорная пентатоника)
+  [81, 83, 85, 88, 90, 93, 95, 97, 100].forEach((m, i) => fmBell(c, hz(m), t + .08 + i * .038, .5, .14 * vol, { pan: -.85 + i * .21, ratio: 5.1, index: .9, send: .55 }));
+  // «дзинь» фурина — два чуть расстроенных колокола с длинным сиянием
+  fmBell(c, hz(93), t + .46, 1.6, .2 * vol, { pan: .35, ratio: 2.76, index: 2.8, send: .8, detune: -6 });
+  fmBell(c, hz(100), t + .47, 1.3, .12 * vol, { pan: .5, ratio: 2.76, index: 2.2, send: .85, detune: 7 });
+  air(c, t + .45, 1.2, 9000, 14000, .04 * vol * 2, .5);
 }
 
 /* ---------- колибри ---------- */
 function drawHummingbird(g, x, y, S, rot, wingT, t, alpha, glow, face) {
+  // Цвета: изумрудная спинка (цвет сайта), рубиново-малиновое горлышко, бирюзовая шапочка с переливом,
+  // янтарные кончики хвоста и фиолетово-бирюзовый отлив крыльев — контрастно, но в одной гамме «драгоценных камней».
   g.save(); g.translate(x, y); g.rotate(rot); g.scale(face, 1); g.globalAlpha = alpha;
   const ar = S * (2.2 + Math.sin(t * 3) * .2) * (1 + glow * .8);
   const au = g.createRadialGradient(0, 0, 0, 0, 0, ar);
-  au.addColorStop(0, `rgba(120,255,140,${.26 + glow * .35})`); au.addColorStop(.5, `rgba(45,205,49,${.1 + glow * .2})`); au.addColorStop(1, 'rgba(45,205,49,0)');
+  au.addColorStop(0, `rgba(120,255,160,${.22 + glow * .3})`); au.addColorStop(.45, `rgba(60,200,220,${.08 + glow * .15})`); au.addColorStop(.75, `rgba(230,60,140,${.04 + glow * .08})`); au.addColorStop(1, 'rgba(45,205,49,0)');
   g.fillStyle = au; g.beginPath(); g.arc(0, 0, ar, 0, TAU); g.fill();
-  // крылья: очень частые взмахи — рисуем «веер» из нескольких полупрозрачных положений (размытие движения)
+  const shift = .5 + .5 * Math.sin(t * 4);                 // перелив оперения
   const wing = (a, op) => {
     g.save(); g.translate(-S * .05, -S * .12); g.rotate(a);
     const wg = g.createLinearGradient(0, 0, 0, -S * 1.25);
-    wg.addColorStop(0, `rgba(45,205,49,${op})`); wg.addColorStop(1, `rgba(220,255,225,${op * .7})`);
+    wg.addColorStop(0, `rgba(40,200,190,${op})`); wg.addColorStop(.55, `rgba(150,110,255,${op * .75})`); wg.addColorStop(1, `rgba(235,245,255,${op * .7})`);
     g.fillStyle = wg; g.beginPath(); g.moveTo(0, 0);
     g.bezierCurveTo(S * .35, -S * .45, S * .3, -S * 1.05, -S * .05, -S * 1.25);
     g.bezierCurveTo(-S * .25, -S * .9, -S * .2, -S * .4, 0, 0); g.fill(); g.restore();
   };
   const base = Math.sin(wingT);
-  for (let k = 0; k < 4; k++) wing(-.2 + (base + k * .5 - .75) * .95, .16 + (k === 1 ? .2 : 0));
-  g.shadowColor = 'rgba(90,255,120,.8)'; g.shadowBlur = S * (.3 + glow * .6);
-  // хвост
-  g.fillStyle = '#0c5c1c';
+  for (let k = 0; k < 4; k++) wing(-.2 + (base + k * .5 - .75) * .95, .16 + (k === 1 ? .22 : 0));
+  g.shadowColor = 'rgba(90,255,150,.7)'; g.shadowBlur = S * (.3 + glow * .6);
+  // хвост: тёмно-изумрудный с янтарными кончиками
+  const tg = g.createLinearGradient(-S * .55, 0, -S * 1.08, 0); tg.addColorStop(0, '#0c5c1c'); tg.addColorStop(.7, '#127a3a'); tg.addColorStop(1, '#F5A524');
+  g.fillStyle = tg;
   g.beginPath(); g.moveTo(-S * .55, S * .08); g.lineTo(-S * 1.05, S * .42); g.lineTo(-S * .9, S * .05); g.lineTo(-S * 1.08, -S * .12); g.closePath(); g.fill();
-  // тело: переливающийся изумрудный градиент
+  // тело: спинка изумрудная с бирюзовым отливом, брюшко светлое
   const bg = g.createLinearGradient(-S * .6, -S * .3, S * .5, S * .3);
-  bg.addColorStop(0, '#0b4a18'); bg.addColorStop(.35, '#169A2E'); bg.addColorStop(.6, '#2DCD31'); bg.addColorStop(.85, '#B7F7BE'); bg.addColorStop(1, '#169A2E');
+  bg.addColorStop(0, '#0b4a18'); bg.addColorStop(.3, '#169A2E'); bg.addColorStop(.55, `rgb(${45 - 20 * shift},${205},${49 + 120 * shift})`); bg.addColorStop(.8, '#B7F7BE'); bg.addColorStop(1, '#E9FFF0');
   g.fillStyle = bg; g.beginPath(); g.ellipse(0, 0, S * .62, S * .27, -.12, 0, TAU); g.fill();
-  // голова и клюв
-  g.beginPath(); g.arc(S * .55, -S * .14, S * .2, 0, TAU); g.fill();
+  // голова: бирюзовая шапочка
+  const hg = g.createRadialGradient(S * .5, -S * .24, 1, S * .55, -S * .14, S * .24);
+  hg.addColorStop(0, '#9FFFF0'); hg.addColorStop(.45, '#19C3B5'); hg.addColorStop(1, '#0E6E6A');
+  g.fillStyle = hg; g.beginPath(); g.arc(S * .55, -S * .14, S * .2, 0, TAU); g.fill();
   g.shadowBlur = 0;
-  g.strokeStyle = '#3f8f4a'; g.lineWidth = Math.max(1.2, S * .05); g.lineCap = 'round';
+  // рубиновое горлышко с искрой
+  const rg = g.createRadialGradient(S * .44, S * .0, 1, S * .42, S * .02, S * .17);
+  rg.addColorStop(0, '#FFD1E4'); rg.addColorStop(.35, '#FF3D8B'); rg.addColorStop(1, '#9E1150');
+  g.fillStyle = rg; g.beginPath(); g.ellipse(S * .42, S * .02, S * .16, S * .1, .35, 0, TAU); g.fill();
+  g.fillStyle = `rgba(255,255,255,${.35 + .5 * shift})`; g.beginPath(); g.arc(S * .46, -S * .01, S * .03, 0, TAU); g.fill();
+  // клюв и глаз
+  g.strokeStyle = '#2b3a2e'; g.lineWidth = Math.max(1.2, S * .05); g.lineCap = 'round';
   g.beginPath(); g.moveTo(S * .72, -S * .12); g.lineTo(S * 1.35, -S * .02); g.stroke();
-  // горлышко-отлив и глаз
-  g.fillStyle = `rgba(240,255,240,${.55 + .35 * Math.sin(t * 5)})`; g.beginPath(); g.ellipse(S * .38, S * .02, S * .12, S * .07, .3, 0, TAU); g.fill();
   g.fillStyle = '#021a09'; g.beginPath(); g.arc(S * .6, -S * .19, S * .045, 0, TAU); g.fill();
   g.fillStyle = '#fff'; g.beginPath(); g.arc(S * .615, -S * .205, S * .015, 0, TAU); g.fill();
   g.restore();
@@ -252,9 +292,11 @@ function drawButterfly(g, x, y, S, rot, open, t, alpha, glow) {
   g.restore();
 }
 
-function drawSparkle(g, x, y, r, a, green) {
+const SPARK_HB = [['#27C22C', 'rgba(20,120,30,.9)'], ['#19C3B5', 'rgba(20,160,160,.9)'], ['#FF3D8B', 'rgba(200,30,110,.9)'], ['#F5A524', 'rgba(200,120,20,.9)'], ['#A98BFF', 'rgba(110,80,230,.9)']];
+function drawSparkle(g, x, y, r, a, green, color) {
   g.save(); g.translate(x, y); g.globalAlpha = a;
-  g.fillStyle = green ? '#27C22C' : '#EFFFF0'; g.shadowColor = green ? 'rgba(20,120,30,.9)' : 'rgba(80,255,110,1)'; g.shadowBlur = r * (green ? 1.5 : 3);
+  if (color) { g.fillStyle = color[0]; g.shadowColor = color[1]; g.shadowBlur = r * 2; }
+  else { g.fillStyle = green ? '#27C22C' : '#EFFFF0'; g.shadowColor = green ? 'rgba(20,120,30,.9)' : 'rgba(80,255,110,1)'; g.shadowBlur = r * (green ? 1.5 : 3); }
   g.beginPath();
   for (let i = 0; i < 8; i++) { const ang = i * Math.PI / 4, rr = i % 2 ? r * .28 : r; g.lineTo(Math.cos(ang) * rr, Math.sin(ang) * rr); }
   g.closePath(); g.fill(); g.restore();
@@ -427,6 +469,7 @@ export function initButterfly(opts = {}) {
   function spawnSpark(x, y, burst) {
     const a = rnd(0, TAU), v = burst ? rnd(60, 260) : rnd(4, 18);
     parts.push({ k: 's', x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - (burst ? 0 : 10), r: rnd(1.6, burst ? 4.2 : 3.2), tw: rnd(0, TAU), green: Math.random() < .45, life: burst ? rnd(.8, 1.5) : rnd(.9, 1.6), age: 0 });
+    if ((B && B.kind === 'hb') || (!B && lastKind === 'hb')) { if (Math.random() < .6) parts[parts.length - 1].color = SPARK_HB[(Math.random() * SPARK_HB.length) | 0]; }
   }
 
   function doCatch() {
@@ -443,7 +486,7 @@ export function initButterfly(opts = {}) {
     setTimeout(() => document.removeEventListener('click', swallow, true), 800);
     const n = caught() + 1; setCaught(n);
     if (B.kind === 'hb') {                          // колибри: спираль искр, три быстрых кольца, мало лепестков
-      for (let i = 0; i < 70; i++) { spawnSpark(B.x, B.y, true); const q = parts[parts.length - 1]; q.green = Math.random() < .7; const a = i * .5; q.vx = Math.cos(a) * (60 + i * 3.2); q.vy = Math.sin(a) * (60 + i * 3.2); }
+      for (let i = 0; i < 70; i++) { spawnSpark(B.x, B.y, true); const q = parts[parts.length - 1]; const a = i * .5; q.vx = Math.cos(a) * (60 + i * 3.2); q.vy = Math.sin(a) * (60 + i * 3.2); }
       for (let i = 0; i < 10; i++) spawnPetal(B.x, B.y, true);
       for (let r = 0; r < 3; r++) parts.push({ k: 'ring', x: B.x, y: B.y, age: -r * .1, life: .7, R: Math.min(W, H) * (.14 + r * .08) });
     } else {
@@ -568,7 +611,7 @@ export function initButterfly(opts = {}) {
         g.globalAlpha = Math.min(1, a * 1.4) * .95; g.drawImage(q.img, -q.img.width / 2, -q.img.height / 2); g.restore();
       } else if (q.k === 's') {
         q.vx *= 1 - dt * 1.8; q.vy *= 1 - dt * 1.8; q.x += q.vx * dt; q.y += q.vy * dt; q.tw += dt * 9;
-        drawSparkle(g, q.x, q.y, q.r * (.65 + .35 * Math.sin(q.tw)), Math.min(1, a * 1.6), q.green);
+        drawSparkle(g, q.x, q.y, q.r * (.65 + .35 * Math.sin(q.tw)), Math.min(1, a * 1.6), q.green, q.color);
       } else if (q.k === 'ring') {
         const k = ease(q.age / q.life);
         g.save(); g.globalAlpha = a * .9; g.strokeStyle = 'rgba(150,255,170,1)'; g.lineWidth = 3 * a + .5;

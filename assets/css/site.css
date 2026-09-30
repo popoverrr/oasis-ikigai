@@ -1218,3 +1218,77 @@ html.rvf-open{overflow:hidden}
   .philo__grid{grid-template-columns:7fr 5fr;gap:40px;align-items:start}
   .philo__v{writing-mode:horizontal-tb;font-size:60px;letter-spacing:.1em}
 }
+
+/* ═══ v13 (brief/18_EDITS_V13.md): «Знайдіть своє IKIGAI» — стеклянная панель на чёрном; подпись Cyber Move — ссылка;
+   журнал — карточки размером с товарные: квадратная обложка + стеклянная панель (liquid glass на белом) ═══ */
+.ikigai{background:var(--black);color:var(--white)}
+.ikigai__glass{position:relative;isolation:isolate;overflow:hidden;border-radius:20px;padding:22px 0 18px;
+  background:linear-gradient(140deg,rgba(255,255,255,.12),rgba(255,255,255,.03) 45%,rgba(255,255,255,.07));
+  -webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 0 0 1px rgba(255,255,255,.12),0 24px 60px -24px rgba(0,0,0,.9)}
+.ikigai__glass::before{content:"";position:absolute;z-index:-1;inset:-30%;opacity:.26;   /* зелёные пятна под стеклом: фирменный зелёный + прозрачность слоя */
+  background:radial-gradient(40% 30% at 15% 10%,var(--accent),transparent 70%),radial-gradient(28% 20% at 90% 90%,var(--accent),transparent 70%)}
+.ikigai__glass>.h2,.ikigai__glass>.ikigai__hint{padding-inline:18px}
+.ikigai .h2{color:var(--white)}
+.ikigai .h2 em{color:inherit;border-radius:0;padding:0 0 .08em;background:linear-gradient(var(--accent),var(--accent)) 0 100%/100% .09em no-repeat;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.ikigai .ikigai__hint{color:var(--text-2)}
+.ikigai .goal-filter{margin-inline:0;padding-inline:18px;scroll-padding-inline:18px;padding-block:8px 10px;margin-block:-8px -10px}
+.ikigai .goal--mini[aria-pressed="true"]{outline:2.5px solid #fff;outline-offset:2px}
+@media (min-width:1024px){.ikigai .goal-filter{padding-inline:18px;margin-inline:0}}
+
+a.credit:hover .credit__name,a.credit:focus-visible .credit__name{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+
+.jr{position:relative;isolation:isolate;overflow:hidden}
+.jr::before{content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;opacity:.2;
+  background:radial-gradient(30% 40% at 12% 55%,var(--accent),transparent 70%),radial-gradient(22% 28% at 88% 40%,var(--accent),transparent 70%)}
+.post__a{aspect-ratio:auto;display:flex;flex-direction:column;height:100%;border-radius:20px;overflow:hidden;background:rgba(255,255,255,.55);color:var(--black);
+  -webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 1px rgba(255,255,255,.7),0 1px 0 rgba(0,0,0,.04),0 18px 40px -22px rgba(0,0,0,.35)}
+.white .post__a{background:rgba(255,255,255,.55)}
+.post__a::before{display:none}
+.post__img{position:relative;inset:auto;z-index:0;display:block;aspect-ratio:1/1;overflow:hidden;border-radius:20px 20px 0 0;background:#000;height:auto}
+.post__img picture,.post__img img{position:static;width:100%;height:100%;object-fit:cover}
+.post__body{display:grid;justify-items:start;gap:8px;padding:14px 16px 16px;flex:1}
+.post__body h3{margin:0;font:500 17px/1.25 var(--f);color:var(--black);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.post__body .meta{color:var(--ink-2);font-size:13px}
+.posts{grid-template-columns:1fr 1fr;gap:12px}
+.posts--rail{grid-template-columns:none;grid-auto-columns:min(66vw,280px)}
+.posts--rail>*{min-width:0}
+@media (min-width:600px) and (max-width:1023px){.posts--rail{grid-auto-columns:min(40vw,280px)}}
+@media (min-width:1024px){
+  .posts{grid-template-columns:repeat(4,1fr);gap:16px}
+  .posts--rail{grid-template-columns:none;grid-auto-columns:calc((100% - 48px)/4);gap:16px}
+}
+/* страница /journal — белый фон и тёмный текст в карточках (стекло видно по пятнам) */
+.post__a .post__cat{align-self:start}
+
+/* v13: статья журнала — оглавление, «Важливо», товары в тексте, FAQ, «Джерела», кнопка в каталог; рубрики на /journal */
+.article__dates{margin-top:12px;color:var(--ink-2);font-size:13.5px}
+.art h2{font:500 clamp(24px,6vw,32px)/1.2 var(--f);color:var(--black);margin:40px 0 14px;scroll-margin-top:90px}
+.art h3{font:500 19px/1.3 var(--f);color:var(--black);margin:26px 0 8px}
+.art a{color:var(--accent-ink);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+.art b{color:var(--black);font-weight:500}
+.art-toc{margin:22px 0;padding:16px 18px;border-radius:var(--r-lg);background:#F2F2F2}
+.art-toc .micro{color:var(--black);margin-bottom:8px}
+.art-toc ol{display:grid;gap:6px;padding-left:20px;margin:0;list-style:decimal;font-size:15px}
+.art-note{margin:26px 0;padding:16px 18px;border-radius:var(--r-lg);background:var(--black);color:var(--white)}
+.art-note b{display:block;color:var(--accent);font:700 12px/1.3 var(--f);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.art-note p{color:var(--white);margin:0}
+.art-note a{color:var(--accent)}
+.art-prods{grid-template-columns:1fr 1fr;margin:22px 0 26px;gap:10px}
+.art-prods .card__t a{color:inherit;text-decoration:none}
+@media (min-width:768px){.art-prods{grid-template-columns:repeat(3,1fr)}}
+.art-faq{display:grid;gap:0;margin:10px 0 20px;border-top:1px solid var(--line-light)}
+.art-faq__item{padding:16px 0;border-bottom:1px solid var(--line-light)}
+.art-faq__q{margin:0 0 6px!important;font:500 17px/1.35 var(--f)!important}
+.art-faq__item p{margin:0}
+.art-src{margin-top:34px;font-size:14px}
+.art-src h2{font-size:20px!important;margin-top:0!important}
+.art-src ul{padding-left:18px}
+.art-cta{margin:26px 0}
+.art-cta .btn{color:var(--black);text-decoration:none}
+.art-more{margin-top:30px}
+.art-more .link{text-decoration:none}
+.rubrics{display:flex;flex-wrap:wrap;gap:8px;margin:-10px 0 22px}
+.white .rubrics .chip{--c:var(--black);color:var(--black)}
+.rubrics .chip.is-on{background:var(--accent);color:var(--black);box-shadow:none}

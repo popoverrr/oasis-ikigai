@@ -37,7 +37,13 @@ function hero(root) {
   video.preload = 'auto';
   video.disablePictureInPicture = true; video.disableRemotePlayback = true;   // v10: фон не уходит в «картинку в картинке» iOS
   video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
-  const play = () => video.play().catch(() => {});
+  // iPhone: автозапуск разрешён только беззвучному встроенному видео — ставим и свойства, не только атрибуты
+  video.muted = true; video.defaultMuted = true; video.playsInline = true; video.setAttribute('playsinline', ''); video.setAttribute('webkit-playsinline', '');
+  // Режим энергосбережения iOS (и некоторые встроенные браузеры) запрещают автозапуск — тогда стартуем от первого касания или прокрутки
+  const gestures = ['touchstart', 'pointerdown', 'scroll', 'keydown'];
+  const kick = () => { gestures.forEach(g => removeEventListener(g, kick, true)); video.play().catch(() => {}); };
+  const play = () => video.play().catch(() => { gestures.forEach(g => addEventListener(g, kick, { capture: true, passive: true, once: true })); });
+  onLeave(() => gestures.forEach(g => removeEventListener(g, kick, true)));
   if (document.readyState === 'complete') play(); else addEventListener('load', play, { once: true });
   // ушли со страницы — видео не должно продолжать грузиться
   onLeave(() => { video.pause(); video.removeAttribute('src'); video.load(); });
