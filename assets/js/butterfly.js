@@ -15,7 +15,9 @@
  * Первый вылет — гарантированно через firstAt (30 с) после захода на сайт; дальше — случайно:
  *   – при каждом просмотре страницы (и мягком переходе oi:page) шанс CHANCE, задержка — случайная в DELAY;
  *   – не чаще раза в COOLDOWN и не больше MAX_PER_SESSION за сессию.
- * Для проверки: ?butterfly=1 — вылет сразу, без лимитов; window.oiButterfly.fly() — вылет вручную.
+ * Колибри: с вероятностью o.hummingbird (0,5) вместо бабочки летит колибри — рывки и зависания, свои тексты и звук.
+ * Звук поимки — синтез Web Audio (без файлов), если o.sound() вернёт true.
+ * Для проверки: ?butterfly=1 (&hummingbird=1 — именно колибри) — вылет сразу, без лимитов; window.oiButterfly.fly() — вылет вручную.
  * Смена языка без перезагрузки: window.oiButterfly.set({ lang: 'en', catalogUrl: '/en/shop' }).
  * События: 'oi:butterfly' на window, detail = { type: 'show' | 'catch' | 'gone', count } — для звуков и аналитики.
  */
@@ -41,6 +43,113 @@ export const STRINGS = {
         t2: 'Another Ikigai butterfly!', p2: 'You are clearly on the right path. Take a look at the catalogue — everything for your ritual is there.',
         t3: 'A true ikigai hunter!', p3: 'Your ikigai is somewhere close — in the catalogue.' },
 };
+
+// Колибри: свои тексты окошка (кнопка «Собрать своё икигай» и «Закрыть» — общие)
+export const STRINGS_HB = {
+  uk: { aria: 'Спіймати колібрі Ікігаї', counter: 'Спіймано колібрі: {n}',
+        t1: 'Ви спіймали колібрі Ікігаї!', p1: 'Колібрі — символ радості й легкості. Спіймати її — на удачу: зазирніть у каталог і зберіть своє ікігаї.',
+        t2: 'Знову колібрі!', p2: 'Така швидка — а ви встигли. Схоже, сьогодні ваш день: каталог чекає.',
+        t3: 'У вас реакція майстра!', p3: 'Колібрі не дається в руки просто так. Ваше ікігаї — в каталозі.' },
+  ru: { aria: 'Поймать колибри Икигай', counter: 'Поймано колибри: {n}',
+        t1: 'Вы поймали колибри Икигай!', p1: 'Колибри — символ радости и лёгкости. Поймать её — к удаче: загляните в каталог и соберите своё икигай.',
+        t2: 'Снова колибри!', p2: 'Такая быстрая — а вы успели. Похоже, сегодня ваш день: каталог ждёт.',
+        t3: 'У вас реакция мастера!', p3: 'Колибри не даётся в руки просто так. Ваше икигай — в каталоге.' },
+  en: { aria: 'Catch the Ikigai hummingbird', counter: 'Hummingbirds caught: {n}',
+        t1: 'You caught the Ikigai hummingbird!', p1: 'The hummingbird is a symbol of joy and lightness. Catching one brings luck — find your ikigai in the catalogue.',
+        t2: 'Another hummingbird!', p2: 'So fast — and yet you made it. Looks like today is your day: the catalogue is waiting.',
+        t3: 'Master-level reflexes!', p3: 'A hummingbird is not easy to catch. Your ikigai is in the catalogue.' },
+};
+
+/* ---------- звуки поимки: синтез Web Audio, без файлов ---------- */
+let AC = null;
+function ac() { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); return AC; } catch { return null; } }
+function noiseBuf(c, sec) { const b = c.createBuffer(1, c.sampleRate * sec, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; }
+function out(c, vol) {                    // общий выход: громкость + лёгкое «эхо» для волшебного хвоста
+  const m = c.createGain(); m.gain.value = vol;
+  const dl = c.createDelay(1), fb = c.createGain(), wet = c.createGain();
+  dl.delayTime.value = .16; fb.gain.value = .32; wet.gain.value = .35;
+  m.connect(c.destination); m.connect(dl); dl.connect(fb); fb.connect(dl); dl.connect(wet); wet.connect(c.destination);
+  return m;
+}
+function bell(c, dst, f, t0, dur, v, type = 'sine') {
+  const o = c.createOscillator(), g = c.createGain(); o.type = type; o.frequency.value = f;
+  g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(v, t0 + .008); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  o.connect(g); g.connect(dst); o.start(t0); o.stop(t0 + dur + .05);
+}
+// Бабочка: «волшебный взрыв» — мягкий удар и шелест, затем каскад хрустальных колокольчиков вверх
+export function soundButterfly(vol = .5) {
+  const c = ac(); if (!c) return; const t = c.currentTime + .01, m = out(c, vol);
+  const n = c.createBufferSource(); n.buffer = noiseBuf(c, 1); const f = c.createBiquadFilter(), ng = c.createGain();
+  f.type = 'bandpass'; f.Q.value = .8; f.frequency.setValueAtTime(400, t); f.frequency.exponentialRampToValueAtTime(6000, t + .5);
+  ng.gain.setValueAtTime(.0001, t); ng.gain.exponentialRampToValueAtTime(.55, t + .03); ng.gain.exponentialRampToValueAtTime(.0001, t + .7);
+  n.connect(f); f.connect(ng); ng.connect(m); n.start(t); n.stop(t + 1);
+  const boom = c.createOscillator(), bg = c.createGain(); boom.type = 'sine';
+  boom.frequency.setValueAtTime(180, t); boom.frequency.exponentialRampToValueAtTime(45, t + .35);
+  bg.gain.setValueAtTime(.6, t); bg.gain.exponentialRampToValueAtTime(.0001, t + .4); boom.connect(bg); bg.connect(m); boom.start(t); boom.stop(t + .45);
+  [1046.5, 1318.5, 1568, 2093, 2637, 3136, 4186].forEach((fr, i) => { bell(c, m, fr, t + .06 + i * .055, 1.1, .16); bell(c, m, fr * 2.01, t + .06 + i * .055, .5, .04, 'triangle'); });
+}
+// Колибри: быстрые восходящие «чирики», трепет крыльев и искристый звон — короче и выше
+export function soundHummingbird(vol = .5) {
+  const c = ac(); if (!c) return; const t = c.currentTime + .01, m = out(c, vol);
+  for (let i = 0; i < 4; i++) {
+    const o = c.createOscillator(), g = c.createGain(), t0 = t + i * .075; o.type = 'sine';
+    o.frequency.setValueAtTime(2200 + i * 250, t0); o.frequency.exponentialRampToValueAtTime(4200 + i * 300, t0 + .06);
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.22, t0 + .01); g.gain.exponentialRampToValueAtTime(.0001, t0 + .09);
+    o.connect(g); g.connect(m); o.start(t0); o.stop(t0 + .1);
+  }
+  const n = c.createBufferSource(); n.buffer = noiseBuf(c, .6); const f = c.createBiquadFilter(), ng = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+  f.type = 'bandpass'; f.frequency.value = 900; f.Q.value = 1.4; lfo.frequency.value = 48; lg.gain.value = .18; lfo.connect(lg); lg.connect(ng.gain);
+  ng.gain.setValueAtTime(.18, t); ng.gain.linearRampToValueAtTime(0, t + .45);
+  n.connect(f); f.connect(ng); ng.connect(m); n.start(t); n.stop(t + .5); lfo.start(t); lfo.stop(t + .5);
+  [2349, 2960, 3520, 4699, 5920].forEach((fr, i) => bell(c, m, fr, t + .3 + i * .035, .6, .1, 'triangle'));
+  bell(c, m, 1760, t + .3, .9, .12);
+}
+
+/* ---------- колибри ---------- */
+function drawHummingbird(g, x, y, S, rot, wingT, t, alpha, glow, face) {
+  g.save(); g.translate(x, y); g.rotate(rot); g.scale(face, 1); g.globalAlpha = alpha;
+  const ar = S * (2.2 + Math.sin(t * 3) * .2) * (1 + glow * .8);
+  const au = g.createRadialGradient(0, 0, 0, 0, 0, ar);
+  au.addColorStop(0, `rgba(120,255,140,${.26 + glow * .35})`); au.addColorStop(.5, `rgba(45,205,49,${.1 + glow * .2})`); au.addColorStop(1, 'rgba(45,205,49,0)');
+  g.fillStyle = au; g.beginPath(); g.arc(0, 0, ar, 0, TAU); g.fill();
+  // крылья: очень частые взмахи — рисуем «веер» из нескольких полупрозрачных положений (размытие движения)
+  const wing = (a, op) => {
+    g.save(); g.translate(-S * .05, -S * .12); g.rotate(a);
+    const wg = g.createLinearGradient(0, 0, 0, -S * 1.25);
+    wg.addColorStop(0, `rgba(45,205,49,${op})`); wg.addColorStop(1, `rgba(220,255,225,${op * .7})`);
+    g.fillStyle = wg; g.beginPath(); g.moveTo(0, 0);
+    g.bezierCurveTo(S * .35, -S * .45, S * .3, -S * 1.05, -S * .05, -S * 1.25);
+    g.bezierCurveTo(-S * .25, -S * .9, -S * .2, -S * .4, 0, 0); g.fill(); g.restore();
+  };
+  const base = Math.sin(wingT);
+  for (let k = 0; k < 4; k++) wing(-.2 + (base + k * .5 - .75) * .95, .16 + (k === 1 ? .2 : 0));
+  g.shadowColor = 'rgba(90,255,120,.8)'; g.shadowBlur = S * (.3 + glow * .6);
+  // хвост
+  g.fillStyle = '#0c5c1c';
+  g.beginPath(); g.moveTo(-S * .55, S * .08); g.lineTo(-S * 1.05, S * .42); g.lineTo(-S * .9, S * .05); g.lineTo(-S * 1.08, -S * .12); g.closePath(); g.fill();
+  // тело: переливающийся изумрудный градиент
+  const bg = g.createLinearGradient(-S * .6, -S * .3, S * .5, S * .3);
+  bg.addColorStop(0, '#0b4a18'); bg.addColorStop(.35, '#169A2E'); bg.addColorStop(.6, '#2DCD31'); bg.addColorStop(.85, '#B7F7BE'); bg.addColorStop(1, '#169A2E');
+  g.fillStyle = bg; g.beginPath(); g.ellipse(0, 0, S * .62, S * .27, -.12, 0, TAU); g.fill();
+  // голова и клюв
+  g.beginPath(); g.arc(S * .55, -S * .14, S * .2, 0, TAU); g.fill();
+  g.shadowBlur = 0;
+  g.strokeStyle = '#3f8f4a'; g.lineWidth = Math.max(1.2, S * .05); g.lineCap = 'round';
+  g.beginPath(); g.moveTo(S * .72, -S * .12); g.lineTo(S * 1.35, -S * .02); g.stroke();
+  // горлышко-отлив и глаз
+  g.fillStyle = `rgba(240,255,240,${.55 + .35 * Math.sin(t * 5)})`; g.beginPath(); g.ellipse(S * .38, S * .02, S * .12, S * .07, .3, 0, TAU); g.fill();
+  g.fillStyle = '#021a09'; g.beginPath(); g.arc(S * .6, -S * .19, S * .045, 0, TAU); g.fill();
+  g.fillStyle = '#fff'; g.beginPath(); g.arc(S * .615, -S * .205, S * .015, 0, TAU); g.fill();
+  g.restore();
+}
+// «Рывок-зависание»: цели по экрану, быстрый бросок к каждой, короткое зависание, затем вылет за край
+function makeDarts(w, h) {
+  const top = 110, bottom = h - 170, fromLeft = Math.random() < .5, n = w < 700 ? 5 : 6, pts = [];
+  pts.push({ x: fromLeft ? -60 : w + 60, y: rnd(top, bottom) });
+  for (let i = 0; i < n; i++) pts.push({ x: rnd(50, w - 50), y: rnd(top, bottom) });
+  pts.push({ x: fromLeft ? w + 80 : -80, y: rnd(top, bottom * .7) });
+  return pts;
+}
 
 /* ---------- спрайты лепестков сакуры (рисуются один раз) ---------- */
 function petalSprite(size, hueShift) {
@@ -212,12 +321,15 @@ export function initButterfly(opts = {}) {
   if (typeof window === 'undefined') return null;
   if (window.__oiButterfly) return window.__oiButterfly;
   const o = {
-    chance: .22, delay: [6000, 45000], maxPerSession: 3, cooldown: 90000, speed: null, zIndex: 39, cardZIndex: 47, firstAt: 30000,
+    chance: .22, delay: [6000, 45000], maxPerSession: 3, cooldown: 90000, speed: null, zIndex: 39, cardZIndex: 47, firstAt: 30000, hummingbird: .5, sound: () => true, volume: .5,
     catalogUrl: '/shop', lang: (document.documentElement.lang || 'uk').slice(0, 2), strings: null,
     exclude: [/^\/admin/, /^\/install/], ...opts,
   };
   const pick = () => o.strings || STRINGS[o.lang === 'ua' ? 'uk' : o.lang] || STRINGS.uk;
   let S_ = pick();
+  const pickHb = () => ({ ...S_, ...((o.stringsHb) || STRINGS_HB[o.lang === 'ua' ? 'uk' : o.lang] || STRINGS_HB.uk) });
+  const T = () => (B && B.kind === 'hb') || lastKind === 'hb' ? pickHb() : S_;
+  const forceHb = /[?&]hummingbird=1\b/.test(location.search);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const force = /[?&]butterfly=1\b/.test(location.search);
   if (!document.getElementById('ikb-css')) { const st = document.createElement('style'); st.id = 'ikb-css'; st.textContent = CSS; document.head.appendChild(st); }
@@ -225,6 +337,7 @@ export function initButterfly(opts = {}) {
   document.documentElement.style.setProperty('--ikb-card-z', o.cardZIndex);
 
   let cv, g, hit, card, raf = 0, timer = 0, last = 0, dpr = 1, W = 0, H = 0;
+  let lastKind = 'bf';
   let state = 'idle';          // idle | fly | catch | fade
   let B = null;                // бабочка
   const parts = [];            // частицы: лепестки, искры, кольца
@@ -234,8 +347,9 @@ export function initButterfly(opts = {}) {
   // начало визита: запоминаем один раз за сессию вкладки — переживает и мягкие переходы, и обычную перезагрузку
   { const s0 = sess(); if (!s0.start) { s0.start = Math.round(Math.min(Date.now(), performance.timeOrigin || Date.now())); try { sessionStorage.setItem(SS_KEY, JSON.stringify(s0)); } catch {} } }
   const setSess = v => { try { sessionStorage.setItem(SS_KEY, JSON.stringify(v)); } catch {} };
-  const caught = () => { try { return (JSON.parse(localStorage.getItem(LS_KEY) || '{}').caught) || 0; } catch { return 0; } };
-  const setCaught = n => { try { localStorage.setItem(LS_KEY, JSON.stringify({ caught: n })); } catch {} };
+  const kindKey = () => (B && B.kind === 'hb') || lastKind === 'hb' ? 'hb' : 'caught';
+  const caught = () => { try { return (JSON.parse(localStorage.getItem(LS_KEY) || '{}')[kindKey()]) || 0; } catch { return 0; } };
+  const setCaught = n => { try { const v = JSON.parse(localStorage.getItem(LS_KEY) || '{}'); v[kindKey()] = n; localStorage.setItem(LS_KEY, JSON.stringify(v)); } catch {} };
   const emit = (type, extra) => window.dispatchEvent(new CustomEvent('oi:butterfly', { detail: { type, count: caught(), ...extra } }));
 
   function busy() {
@@ -291,13 +405,16 @@ export function initButterfly(opts = {}) {
     if (!cv) return; cv.width = W * dpr; cv.height = H * dpr;
   }
 
-  function fly(bypass) {
+  function fly(bypass, kind) {
     if (state !== 'idle' || reduced.matches) return;
+    kind = kind || (forceHb ? 'hb' : Math.random() < o.hummingbird ? 'hb' : 'bf'); lastKind = kind;
     if (!bypass) { const s = sess(); setSess({ ...s, n: s.n + 1, last: Date.now() }); }
     mount();
     const small = W < 700;
     const path = makePath(W, H);
-    B = { path, d: 0, speed: o.speed || (small ? 46 : 62), S: small ? 26 : 32, t: 0, phase: rnd(0, TAU), glide: 0, x: -999, y: -999, rot: 0, alpha: 1, scale: 1, glow: 0, emitP: 0, emitS: 0 };
+    B = { kind, path, d: 0, speed: o.speed || (small ? 46 : 62), S: small ? 26 : 32, t: 0, phase: rnd(0, TAU), glide: 0, x: -999, y: -999, rot: 0, alpha: 1, scale: 1, glow: 0, emitP: 0, emitS: 0 };
+    if (kind === 'hb') { const pts = makeDarts(W, H); Object.assign(B, { S: small ? 22 : 27, pts, i: 0, seg: 0, segDur: .5, hover: 0, x: pts[0].x, y: pts[0].y, face: pts[1].x > pts[0].x ? 1 : -1, wing: 0 }); }
+    hit.setAttribute('aria-label', T().aria);
     state = 'fly'; last = performance.now(); emit('show');
     raf = requestAnimationFrame(tick);
   }
@@ -325,19 +442,26 @@ export function initButterfly(opts = {}) {
     document.addEventListener('click', swallow, true);
     setTimeout(() => document.removeEventListener('click', swallow, true), 800);
     const n = caught() + 1; setCaught(n);
-    for (let i = 0; i < 34; i++) spawnPetal(B.x, B.y, true);
-    for (let i = 0; i < 46; i++) spawnSpark(B.x, B.y, true);
-    parts.push({ k: 'ring', x: B.x, y: B.y, age: 0, life: 1.1, R: Math.min(W, H) * .32 });
-    parts.push({ k: 'ring', x: B.x, y: B.y, age: -.18, life: 1.2, R: Math.min(W, H) * .22 });
-    parts.push({ k: 'rays', x: B.x, y: B.y, age: 0, life: 1.0 });
+    if (B.kind === 'hb') {                          // колибри: спираль искр, три быстрых кольца, мало лепестков
+      for (let i = 0; i < 70; i++) { spawnSpark(B.x, B.y, true); const q = parts[parts.length - 1]; q.green = Math.random() < .7; const a = i * .5; q.vx = Math.cos(a) * (60 + i * 3.2); q.vy = Math.sin(a) * (60 + i * 3.2); }
+      for (let i = 0; i < 10; i++) spawnPetal(B.x, B.y, true);
+      for (let r = 0; r < 3; r++) parts.push({ k: 'ring', x: B.x, y: B.y, age: -r * .1, life: .7, R: Math.min(W, H) * (.14 + r * .08) });
+    } else {
+      for (let i = 0; i < 34; i++) spawnPetal(B.x, B.y, true);
+      for (let i = 0; i < 46; i++) spawnSpark(B.x, B.y, true);
+      parts.push({ k: 'ring', x: B.x, y: B.y, age: 0, life: 1.1, R: Math.min(W, H) * .32 });
+      parts.push({ k: 'ring', x: B.x, y: B.y, age: -.18, life: 1.2, R: Math.min(W, H) * .22 });
+      parts.push({ k: 'rays', x: B.x, y: B.y, age: 0, life: 1.0 });
+    }
+    try { if (o.sound()) (B.kind === 'hb' ? soundHummingbird : soundButterfly)(o.volume); } catch {}
     try { navigator.vibrate?.(18); } catch {}
-    emit('catch', { count: n });
+    emit('catch', { count: n, kind: B.kind === 'hb' ? 'hummingbird' : 'butterfly' });
     setTimeout(() => showCard(B ? B.x : W / 2, B ? B.y : H / 2, n), 650);
   }
 
   function showCard(x, y, n) {
     card?.remove();
-    const v = n >= 3 ? 3 : n;
+    const v = n >= 3 ? 3 : n, S_ = T(), isHb = lastKind === 'hb';
     card = document.createElement('div'); card.className = 'ikb-card'; card.setAttribute('role', 'status'); card.setAttribute('aria-live', 'polite');
     card.innerHTML = `<button class="ikb-card__x" type="button" aria-label="${S_.close}">×</button>
       <canvas class="ikb-card__ico" width="136" height="136" aria-hidden="true"></canvas>
@@ -352,7 +476,7 @@ export function initButterfly(opts = {}) {
     requestAnimationFrame(() => card.classList.add('is-in'));
     // мини-бабочка в углу окошка
     const ic = card.querySelector('.ikb-card__ico'), ig = ic.getContext('2d'); let it = 0, iraf;
-    const iconLoop = () => { it += 1 / 60; ig.clearRect(0, 0, 136, 136); drawButterfly(ig, 68, 70, 20, 0, .55 + .45 * Math.cos(it * 5), it, 1, 0); iraf = requestAnimationFrame(iconLoop); };
+    const iconLoop = () => { it += 1 / 60; ig.clearRect(0, 0, 136, 136); isHb ? drawHummingbird(ig, 62, 72, 22, .1, it * TAU * 14, it, 1, 0, 1) : drawButterfly(ig, 68, 70, 20, 0, .55 + .45 * Math.cos(it * 5), it, 1, 0); iraf = requestAnimationFrame(iconLoop); };
     iconLoop();
     const close = () => { cancelAnimationFrame(iraf); card?.classList.remove('is-in'); const c = card; card = null; setTimeout(() => c?.remove(), 350); removeEventListener('keydown', onKey); };
     const onKey = e => { if (e.key === 'Escape') close(); };
@@ -370,7 +494,29 @@ export function initButterfly(opts = {}) {
     if (document.hidden) { raf = requestAnimationFrame(tick); return; }
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
 
-    if (B && state === 'fly') {
+    if (B && state === 'fly' && B.kind === 'hb') {
+      B.t += dt; B.wing += dt * TAU * 22;                          // ~22 взмаха в секунду
+      if (B.hover > 0) {                                           // зависание: дрожит на месте, чуть покачивается
+        B.hover -= dt; B.x += Math.sin(B.t * 13) * .35; B.y += Math.cos(B.t * 9) * .3; B.rot += (Math.sin(B.t * 2) * .08 - B.rot) * dt * 6;
+      } else {
+        const a = B.pts[B.i], b = B.pts[B.i + 1];
+        if (!b) { state = 'fade'; hit?.remove(); hit = null; emit('gone'); B = null; }
+        else {
+          if (!B.seg) { B.segDur = clamp(Math.hypot(b.x - a.x, b.y - a.y) / (W < 700 ? 520 : 700), .22, .7); B.face = b.x >= a.x ? 1 : -1; }
+          B.seg = Math.min(1, B.seg + dt / B.segDur);
+          const k = ease(B.seg), px = B.x, py = B.y;
+          B.x = a.x + (b.x - a.x) * k; B.y = a.y + (b.y - a.y) * k - Math.sin(k * Math.PI) * 18;
+          B.rot += (clamp((B.y - py) * .03 * B.face, -.35, .35) + .12 - B.rot) * Math.min(1, dt * 10);
+          if (Math.random() < .8) spawnSpark(px + rnd(-4, 4), py + rnd(-4, 4), false);
+          if (B.seg >= 1) { B.i++; B.seg = 0; B.hover = B.i < B.pts.length - 1 ? rnd(.55, 1.3) : 0; }
+        }
+      }
+      if (B) {
+        B.emitS += dt; if (B.emitS > .05) { B.emitS = 0; spawnSpark(B.x + rnd(-B.S, B.S) * .6, B.y + rnd(-B.S, B.S) * .5, false); }
+        B.emitP += dt; if (B.emitP > .45) { B.emitP = 0; spawnPetal(B.x, B.y + 6, false); }
+        if (hit) hit.style.transform = `translate(${B.x}px,${B.y}px)`;
+      }
+    } else if (B && state === 'fly') {
       B.t += dt;
       // взмахи: ~1,4 Гц, иногда планирование с раскрытыми крыльями
       if (B.glide > 0) B.glide -= dt; else if (Math.random() < dt * .22) B.glide = rnd(.6, 1.2);
@@ -389,7 +535,15 @@ export function initButterfly(opts = {}) {
       if (hit) hit.style.transform = `translate(${B.x}px,${B.y}px)`;
       if (B.d >= B.path.len) { state = 'fade'; hit?.remove(); hit = null; emit('gone'); }
     }
-    if (B && state === 'catch') {
+    if (B && state === 'catch' && B.kind === 'hb') {
+      B.t += dt; B.ct += dt; B.wing += dt * TAU * 30;
+      const k = clamp(B.ct / .9, 0, 1);
+      B.glow = Math.min(1, B.ct * 4); B.scale = 1 + Math.sin(k * Math.PI) * .5;
+      B.alpha = k < .5 ? 1 : 1 - ease((k - .5) / .5);
+      B.x += dt * 260 * B.face * k; B.y -= dt * 320 * k; B.rot = -.5 * B.face * k;   // взмывает вверх по дуге
+      if (Math.random() < .9) spawnSpark(B.x + rnd(-10, 10), B.y + rnd(-10, 10), false);
+      if (k >= 1) { B = null; state = 'fade'; }
+    } else if (B && state === 'catch') {
       B.t += dt; B.ct += dt;
       const k = clamp(B.ct / 1.15, 0, 1);
       B.phase += dt * TAU * 4.5; B.open = .5 + .5 * Math.cos(B.phase);
@@ -429,7 +583,8 @@ export function initButterfly(opts = {}) {
         g.restore();
       }
     }
-    if (B) drawButterfly(g, B.x, B.y, B.S * (B.scale || 1), B.rot, B.open ?? 1, B.t, B.alpha, B.glow || 0);
+    if (B) B.kind === 'hb' ? drawHummingbird(g, B.x, B.y, B.S * (B.scale || 1), B.rot, B.wing, B.t, B.alpha, B.glow || 0, B.face)
+           : drawButterfly(g, B.x, B.y, B.S * (B.scale || 1), B.rot, B.open ?? 1, B.t, B.alpha, B.glow || 0);
 
     if (!B && !parts.length) { unmount(); schedule(); return; }
     raf = requestAnimationFrame(tick);
@@ -442,7 +597,7 @@ export function initButterfly(opts = {}) {
 
   // set({ lang, strings, catalogUrl, chance, ... }) — если язык сменился мягким переходом, без перезагрузки
   const set = (next = {}) => { Object.assign(o, next); S_ = pick(); if (hit) hit.setAttribute('aria-label', S_.aria); };
-  const api = { fly: () => fly(true), stop: unmount, set, get state() { return state; } };
+  const api = { fly: kind => fly(true, kind === 'hummingbird' ? 'hb' : kind === 'butterfly' ? 'bf' : undefined), stop: unmount, set, get state() { return state; } };
   window.__oiButterfly = api; window.oiButterfly = api;
   schedule();
   return api;

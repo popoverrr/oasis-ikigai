@@ -4,8 +4,8 @@
 // поэтому шапка, чат, панель корзины и музыка живут без перерыва; JS страницы — в initPage(root), уборка — onLeave().
 import { init as initUI, initReveal, initPetals, initCarousels, renderCartUI, renderWish, syncChrome } from './ui.js';
 import { initGoals } from './goals-fx5.js';
-import { initSound, sfx } from './sound.js';
-import { initMusic } from './bgm.js';
+import { initSound } from './sound.js';
+import { initMusic, userMuted } from './bgm.js';
 import { initSoftNav } from './softnav.js';
 import { config, addProducts } from './data.js';
 import { leavePage } from './page.js';
@@ -55,14 +55,15 @@ if (bf.on) addEventListener('load', () => (window.requestIdleCallback || setTime
   import(`./butterfly.js?v=${config.v?.butterfly || 0}`).then(({ initButterfly }) => initButterfly({
     lang: config.lang, strings: bf.str, catalogUrl: config.shopUrl, chance: bf.chance,
     firstAt: bf.first ? bf.first * 1000 : null,   // v11.2: гарантированный первый вылет от начала визита
+    stringsHb: bf.strHb,                          // v12: тексты окошка колибри
+    sound: () => !userMuted(),                    // v12: звук поимки (синтез в модуле) молчит, только если посетитель сам выключил звук кнопкой
     exclude: [new RegExp('^' + base + '/((ru|en)/)?(cart|order|checkout|review)(/|$)'), new RegExp('^/' + (config.adminPath || 'admin') + '(/|$)'), /^\/install/],
   })).catch(e => console.error(e)), { timeout: 3000 }), { once: true });
-// поимка: короткий звук «в корзину» (только если звуки включены) и событие аналитики, если она подключена владельцем
+// поимка: событие аналитики, если она подключена владельцем (v12: звук поимки играет сам модуль — второго звука здесь нет)
 addEventListener('oi:butterfly', e => {
   if (e.detail?.type !== 'catch') return;
-  sfx('add');
-  if (typeof window.gtag === 'function') window.gtag('event', 'butterfly_catch', { count: e.detail.count });
-  else if (Array.isArray(window.dataLayer)) window.dataLayer.push({ event: 'butterfly_catch', count: e.detail.count });
+  if (typeof window.gtag === 'function') window.gtag('event', 'butterfly_catch', { count: e.detail.count, kind: e.detail.kind });
+  else if (Array.isArray(window.dataLayer)) window.dataLayer.push({ event: 'butterfly_catch', count: e.detail.count, kind: e.detail.kind });
 });
 
 addEventListener('oi:leave', () => leavePage());

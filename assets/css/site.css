@@ -1149,3 +1149,72 @@ html.rvf-open{overflow:hidden}
 .bmarq__row a{font-size:clamp(22px,5.6vw,30px);padding:2px 0;min-height:44px;display:flex;align-items:center}
 .bmarq__row li::after{width:7px;height:7px;margin:0 clamp(16px,3vw,28px)}
 @media (min-width:1024px){.bmarq{padding:44px 0 48px}}
+
+/* ═══ v12 (brief/17_EDITS_V12.md): страница товара (чипы без ссылок, бегущая строка на фото, 3 открытых вопроса в стекле, тёмные отзывы)
+   и блок «Філософія» на главной — зелёная стеклянная карточка на чёрном. Цвета прежние, новых иероглифов нет ═══ */
+
+/* точка в бейдже «Новинка» — зелёная со свечением, как у остальных бейджей (и в каталоге) */
+.badge::before,.badge--new::before{background:var(--accent);box-shadow:0 0 8px #2DCD31}
+.badge--sale::before{background:var(--error);box-shadow:none}
+
+/* «Для чого» — чипы без ссылок: вид тот же, реакции на нажатие и наведение нет */
+.chip--static{cursor:default;pointer-events:none}
+.chip--static:active{transform:none}
+
+/* бейдж и бегущая строка тезисов поверх главного фото товара */
+.pd__tick{position:absolute;top:14px;left:16px;right:16px;z-index:3;display:flex;gap:8px;align-items:center;pointer-events:none}
+.pd__tick .badge{position:static;flex:none;height:30px}
+.tick{flex:1;min-width:0;height:30px;overflow:hidden;display:flex;align-items:center;border-radius:var(--r-pill);
+  background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent)}
+.tick__row{display:flex;flex:none;width:max-content;animation:tick 16s linear infinite}
+.tick__row span{display:inline-flex;align-items:center;gap:8px;padding:0 14px;font:700 11px/1 var(--f);letter-spacing:.12em;text-transform:uppercase;color:#fff;white-space:nowrap}
+.tick__row span::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px #2DCD31;flex:none}
+@keyframes tick{to{transform:translateX(-50%)}}
+@media (min-width:1024px){.pd__tick{left:14px;right:14px}}
+@media (prefers-reduced-motion:reduce){.tick__row{animation:none}.tick{overflow-x:auto;scrollbar-width:none;pointer-events:auto}}
+.gallery__track{position:relative}
+
+/* вопросы о товаре — одна стеклянная карточка, все ответы открыты (liquid glass на чёрном) */
+.pd-faq{position:relative;isolation:isolate;overflow:hidden;border-radius:20px;padding:6px 20px;margin-top:28px;
+  background:linear-gradient(140deg,rgba(255,255,255,.12),rgba(255,255,255,.03) 45%,rgba(255,255,255,.07));
+  -webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 0 0 1px rgba(255,255,255,.12),
+             inset 0 -12px 30px -18px color-mix(in srgb,var(--accent) 35%,transparent),0 24px 60px -24px rgba(0,0,0,.9)}
+.pd-faq::before{content:"";position:absolute;z-index:-1;inset:-30%;
+  opacity:.28;   /* зелёные пятна под стеклом: фирменный зелёный + прозрачность слоя (второе пятно слабее — меньше и дальше к краю) */
+  background:radial-gradient(40% 30% at 20% 10%,var(--accent),transparent 70%),
+             radial-gradient(28% 20% at 90% 80%,var(--accent),transparent 70%)}
+.pd-faq__item{padding:18px 0}
+.pd-faq__item+.pd-faq__item{border-top:1px solid rgba(255,255,255,.12)}
+.pd-faq__q{font:500 18px/1.3 var(--f);color:var(--white);margin:0 0 10px}
+.pd-faq__a{color:rgba(255,255,255,.78);font-size:15px;line-height:1.6;display:grid;gap:10px}
+.pd-faq__a p{margin:0}
+.pd-faq__sub{font:700 11px/1.3 var(--f)!important;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)!important;margin-top:6px!important}
+.pd-faq__a .ingr b{color:var(--white)}
+.pd-faq__dl{display:grid;gap:6px;margin:0}
+.pd-faq__dl div{display:flex;justify-content:space-between;gap:14px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.pd-faq__dl dt{color:rgba(255,255,255,.6)}
+.pd-faq__dl dd{margin:0;text-align:right;color:var(--white)}
+.pd-faq + .orig--sm{margin-top:18px}
+
+/* отзывы на странице товара — чёрная секция, как вся карточка */
+.reviews--dark{background:var(--black);padding-top:40px}
+.reviews--dark .review{background:var(--coal);color:var(--white);box-shadow:inset 0 0 0 1px var(--line)}
+.reviews--dark .review--card time,.reviews--dark .review__city{color:var(--text-2)}
+.reviews--dark .review__ava{background:var(--coal-2);box-shadow:inset 0 0 0 1px var(--line)}
+
+/* «Мистецтво Ікігаї» на главной — зелёная карточка со стеклянным бликом на чёрном; иероглифы вдвое меньше и внутри карточки */
+.philo__card{position:relative;background:var(--accent);color:var(--black);border-radius:var(--r-lg);padding:28px 22px 26px}
+.philo__card .micro,.philo__card .h2,.philo__card p,.philo__card .link{color:var(--black)}
+.philo__card .sh i{background:var(--black)}
+.philo__card .h2 em{color:inherit;border-radius:0;padding:0 0 .08em;
+  background:linear-gradient(var(--black),var(--black)) 0 100%/100% .09em no-repeat;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.philo__card .link{background:linear-gradient(var(--black),var(--black)) 0 calc(100% - 8px)/100% 2px no-repeat}
+.philo__v{display:block;font-size:clamp(32px,10vw,60px);margin-bottom:14px}
+.philo__store{box-shadow:inset 0 0 0 1px var(--line)}
+@media (min-width:1024px){
+  .philo__card{padding:44px 48px}
+  .philo__grid{grid-template-columns:7fr 5fr;gap:40px;align-items:start}
+  .philo__v{writing-mode:horizontal-tb;font-size:60px;letter-spacing:.1em}
+}

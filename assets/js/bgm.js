@@ -13,7 +13,12 @@
 // • Переходы: при мягкой навигации (softnav.js) аудио не прерывается. При обычной перезагрузке страницы музыка
 //   продолжает с того же места (позиция хранится в sessionStorage).
 // • Вкладка скрыта — пауза; вернулись — продолжаем (если музыка включена).
-const KEY = 'oi_bgm_v1';
+// v12 (brief/17 § 2): выключили кнопкой → localStorage oi_bgm_off = "1": музыка больше НЕ стартует сама — ни от первого касания,
+//   ни после мягкого перехода, ни после перезагрузки, в новой вкладке или на следующий день. Включить можно только кнопкой.
+//   resumeOnNavigate в этом случае не срабатывает.
+const KEY = 'oi_bgm_v1', OFF = 'oi_bgm_off';
+export const userMuted = () => { try { return localStorage.getItem(OFF) === '1'; } catch { return false; } };
+const setMuted = on => { try { on ? localStorage.setItem(OFF, '1') : localStorage.removeItem(OFF); } catch {} };
 const store = {
   get() { try { return JSON.parse(sessionStorage.getItem(KEY) || '{}'); } catch { return {}; } },
   set(v) { try { sessionStorage.setItem(KEY, JSON.stringify(v)); } catch {} },
@@ -26,7 +31,7 @@ export function initMusic({ src, volume = .25, resumeOnNavigate = true } = {}) {
   const a = new Audio();
   a.src = src; a.loop = true; a.preload = 'auto'; a.volume = 0;
   const saved = store.get();
-  let wantOn = resumeOnNavigate ? true : !saved.muted;
+  let wantOn = userMuted() ? false : resumeOnNavigate ? true : !saved.muted;
   let raf = 0, armed = false;
 
   if (saved.t != null && saved.at) {
@@ -52,7 +57,7 @@ export function initMusic({ src, volume = .25, resumeOnNavigate = true } = {}) {
     const label = wantOn ? b.dataset.labelOff : b.dataset.labelOn;          // подпись действия: «Вимкнути музику» / «Увімкнути музику»
     if (label) b.setAttribute('aria-label', label);
   });
-  const unlock = () => { disarm(); if (wantOn) play(); };
+  const unlock = () => { disarm(); if (wantOn && !userMuted()) play(); };
   const arm = () => {
     if (armed) return; armed = true;
     ['pointerdown', 'keydown', 'touchend'].forEach(e => document.addEventListener(e, unlock, { capture: true, passive: true }));
@@ -71,10 +76,10 @@ export function initMusic({ src, volume = .25, resumeOnNavigate = true } = {}) {
   const api = {
     audio: a,
     get on() { return wantOn; },
-    toggle() { wantOn = !wantOn; save(); wantOn ? play() : pause(); ui(); },
+    toggle() { wantOn = !wantOn; setMuted(!wantOn); save(); wantOn ? play() : pause(); ui(); },
     onPage() {                                   // вызывается после мягкой навигации (событие oi:page)
       bind();
-      if (resumeOnNavigate && !wantOn) { wantOn = true; save(); play(); }
+      if (resumeOnNavigate && !wantOn && !userMuted()) { wantOn = true; save(); play(); }
       ui();
     },
   };
