@@ -1,7 +1,7 @@
 // bgm.js — фоновая музыка OASIS IKIGAI (ES-модуль, без зависимостей)
 //
 //   import { initMusic } from './bgm.js';
-//   initMusic({ src: '/assets/audio/ambient.mp3', volume: .25, resumeOnNavigate: true });
+//   initMusic({ src: '/assets/audio/ambient.mp3', volume: .15, resumeOnNavigate: true });
 //
 // Поведение:
 // • Музыка включена по умолчанию. При загрузке страницы пробуем включить сразу. Если браузер запретил автозапуск
@@ -24,7 +24,7 @@ const store = {
   set(v) { try { sessionStorage.setItem(KEY, JSON.stringify(v)); } catch {} },
 };
 
-export function initMusic({ src, volume = .25, resumeOnNavigate = true } = {}) {
+export function initMusic({ src, volume = .15, resumeOnNavigate = true } = {}) {
   if (!src) return null;
   if (window.__oiBgm) { window.__oiBgm.onPage(); return window.__oiBgm; }   // уже создан (мягкая навигация)
 
@@ -71,6 +71,14 @@ export function initMusic({ src, volume = .25, resumeOnNavigate = true } = {}) {
     (p && p.then ? p : Promise.resolve()).then(() => { disarm(); fade(volume, 1500); ui(); }).catch(() => { arm(); ui(); });
   };
   const pause = () => fade(0, 600, () => { a.pause(); ui(); });
+  // v15: пока звучит звук поимки бабочки/колибри — музыка на 2,5 с тише (40% своего уровня), потом плавно возвращается
+  let duckT = 0;
+  addEventListener('oi:butterfly', e => {
+    if (e.detail?.type !== 'catch' || !wantOn || a.paused) return;
+    clearTimeout(duckT);
+    fade(volume * .4, 250);
+    duckT = setTimeout(() => { if (wantOn && !a.paused) fade(volume, 600); }, 2500);
+  });
   const save = () => store.set({ t: a.currentTime, at: Date.now(), d: a.duration || 0, muted: !wantOn });
 
   const api = {

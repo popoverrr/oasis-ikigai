@@ -39,7 +39,7 @@ function initPage(root) {
 initUI();
 initSound();         // звуки интерфейса — только когда включена музыка
 const media = config.media || {};
-if (media.ambient) initMusic({ src: media.ambient, volume: .25, resumeOnNavigate: media.resume !== false });
+if (media.ambient) initMusic({ src: media.ambient, volume: .15, resumeOnNavigate: media.resume !== false });
 if (config.softnav !== false) {
   initSoftNav({ main: 'main', exclude: [new RegExp('^/' + (config.adminPath || 'admin') + '(/|$)'), /^\/install/, /^\/api\//, /^(\/(ru|en))?\/order\//, /^(\/(ru|en))?\/review\//] });
 }

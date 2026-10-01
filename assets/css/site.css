@@ -134,7 +134,7 @@ html.menu-open{overflow:hidden}
 .hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;isolation:isolate;background:var(--black)}
 .hero__poster,.hero__poster img,.hero__video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3}
 /* v9: бамбук — одинаковая обработка видео и постера, чтобы при старте видео картинка не менялась */
-.hero__video,.hero__poster img{filter:saturate(1.25) contrast(1.12) brightness(.8);object-fit:cover;object-position:60% 50%}
+.hero__video,.hero__poster img{filter:saturate(1.25) contrast(1.12) brightness(.88);object-fit:cover;object-position:70% 50%}
 .hero__video{opacity:0;transition:opacity 1.2s ease}
 .hero__video.is-playing{opacity:1}
 .hero::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,0) 20%),linear-gradient(0deg,#000 6%,rgba(0,0,0,.88) 36%,rgba(0,0,0,.45) 56%,rgba(0,0,0,0) 72%)}
