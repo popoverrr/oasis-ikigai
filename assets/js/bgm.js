@@ -72,12 +72,17 @@ export function initMusic({ src, volume = .15, resumeOnNavigate = true } = {}) {
   };
   const pause = () => fade(0, 600, () => { a.pause(); ui(); });
   // v15: пока звучит звук поимки бабочки/колибри — музыка на 2,5 с тише (40% своего уровня), потом плавно возвращается
-  let duckT = 0;
+  let duckT = 0, catchDuck = false;
   addEventListener('oi:butterfly', e => {
-    if (e.detail?.type !== 'catch' || !wantOn || a.paused) return;
-    clearTimeout(duckT);
-    fade(volume * .4, 250);
-    duckT = setTimeout(() => { if (wantOn && !a.paused) fade(volume, 600); }, 2500);
+    const type = e.detail?.type;
+    if (!wantOn || a.paused) return;
+    if (type === 'show') { clearTimeout(duckT); fade(volume * .6, 500); }          // v17: пока пасхалка летит — 60%
+    else if (type === 'gone') { if (!catchDuck) fade(volume, 900); }                 // после поимки вернёт таймер поимки
+    else if (type === 'catch') {
+      clearTimeout(duckT); catchDuck = true;
+      fade(volume * .4, 250);
+      duckT = setTimeout(() => { catchDuck = false; if (wantOn && !a.paused) fade(volume, 600); }, 2500);
+    }
   });
   const save = () => store.set({ t: a.currentTime, at: Date.now(), d: a.duration || 0, muted: !wantOn });
 

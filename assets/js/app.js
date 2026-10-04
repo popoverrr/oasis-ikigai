@@ -57,6 +57,7 @@ if (bf.on) addEventListener('load', () => (window.requestIdleCallback || setTime
     firstAt: bf.first ? bf.first * 1000 : null,   // v11.2: гарантированный первый вылет от начала визита
     stringsHb: bf.strHb,                          // v12: тексты окошка колибри
     sound: () => !userMuted(),                    // v12: звук поимки (синтез в модуле) молчит, только если посетитель сам выключил звук кнопкой
+    flightSound: bf.flight !== false,             // v17: звук полёта — та же кнопка звука; выключается в админке
     exclude: [new RegExp('^' + base + '/((ru|en)/)?(cart|order|checkout|review)(/|$)'), new RegExp('^/' + (config.adminPath || 'admin') + '(/|$)'), /^\/install/],
   })).catch(e => console.error(e)), { timeout: 3000 }), { once: true });
 // поимка: событие аналитики, если она подключена владельцем (v12: звук поимки играет сам модуль — второго звука здесь нет)

@@ -17,6 +17,7 @@
  *   – не чаще раза в COOLDOWN и не больше MAX_PER_SESSION за сессию.
  * Колибри: с вероятностью o.hummingbird (0,5) вместо бабочки летит колибри — рывки и зависания, свои тексты и звук.
  * Звук поимки — синтез Web Audio (без файлов), если o.sound() вернёт true.
+ * Звук полёта (до клика) — тихий, свой у бабочки и у колибри; o.flightSound, o.flightVolume. Слышен, если посетитель уже нажимал на страницу.
  * Для проверки: ?butterfly=1 (&hummingbird=1 — именно колибри) — вылет сразу, без лимитов; window.oiButterfly.fly() — вылет вручную.
  * Смена языка без перезагрузки: window.oiButterfly.set({ lang: 'en', catalogUrl: '/en/shop' }).
  * События: 'oi:butterfly' на window, detail = { type: 'show' | 'catch' | 'gone', count } — для звуков и аналитики.
@@ -84,18 +85,18 @@ function ac() {
     return AC;
   } catch { return null; }
 }
-function voice(c, vol, pan = 0, send = .5) {           // вход «голоса»: громкость → панорама → сухой сигнал + реверберация
+function voice(c, vol, pan = 0, send = .5, bus = null) {           // вход «голоса»: громкость → панорама → сухой сигнал + реверберация
   const g = c.createGain(); g.gain.value = vol;
   const p = c.createStereoPanner ? c.createStereoPanner() : null; if (p) p.pan.value = pan;
   const s = c.createGain(); s.gain.value = send;
-  (p ? (g.connect(p), p) : g).connect(BUS.dry); (p || g).connect(s); s.connect(BUS.verb);
+  (p ? (g.connect(p), p) : g).connect(bus || BUS.dry); if (!bus) { (p || g).connect(s); s.connect(BUS.verb); }
   return g;
 }
-function fmBell(c, f, t0, dur, v, { pan = 0, ratio = 3.5, index = 2.2, send = .6, detune = 0 } = {}) {
-  const car = c.createOscillator(), mod = c.createOscillator(), mg = c.createGain(), eg = c.createGain(), out = voice(c, 1, pan, send);
+function fmBell(c, f, t0, dur, v, { pan = 0, ratio = 3.5, index = 2.2, send = .6, detune = 0, bus = null, attack = .004 } = {}) {
+  const car = c.createOscillator(), mod = c.createOscillator(), mg = c.createGain(), eg = c.createGain(), out = voice(c, 1, pan, send, bus);
   car.frequency.value = f; car.detune.value = detune; mod.frequency.value = f * ratio;
   mg.gain.setValueAtTime(f * index, t0); mg.gain.exponentialRampToValueAtTime(f * .02, t0 + dur * .6);
-  eg.gain.setValueAtTime(0, t0); eg.gain.linearRampToValueAtTime(v, t0 + .004); eg.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  eg.gain.setValueAtTime(0, t0); eg.gain.linearRampToValueAtTime(v, t0 + attack); eg.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
   mod.connect(mg); mg.connect(car.frequency); car.connect(eg); eg.connect(out);
   car.start(t0); mod.start(t0); car.stop(t0 + dur + .05); mod.stop(t0 + dur + .05);
 }
@@ -103,7 +104,7 @@ function noiseBuf(c, sec) { const b = c.createBuffer(1, c.sampleRate * sec, c.sa
 function air(c, t0, dur, f0, f1, v, pan = 0) {         // «дыхание» — шум через полосовой фильтр с движением частоты
   const n = c.createBufferSource(); n.buffer = noiseBuf(c, dur + .1);
   const f = c.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.1; f.frequency.setValueAtTime(f0, t0); f.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
-  const g = c.createGain(); g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(v, t0 + dur * .45); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  const g = c.createGain(); g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(Math.max(v, .0001), t0 + dur * .45); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
   n.connect(f); f.connect(g); g.connect(voice(c, 1, pan, .7)); n.start(t0); n.stop(t0 + dur + .1);
 }
 const hz = m => 440 * Math.pow(2, (m - 69) / 12);
@@ -134,6 +135,73 @@ export function soundHummingbird(vol = .5) {
   fmBell(c, hz(93), t + .46, 1.6, .2 * vol, { pan: .35, ratio: 2.76, index: 2.8, send: .8, detune: -6 });
   fmBell(c, hz(100), t + .47, 1.3, .12 * vol, { pan: .5, ratio: 2.76, index: 2.2, send: .85, detune: 7 });
   air(c, t + .45, 1.2, 9000, 14000, .04 * vol * 2, .5);
+}
+
+
+/* ---------- звук полёта (до клика): тихий, ненавязчивый, у бабочки и колибри разный ----------
+ * Браузеры не дают сайту звучать, пока посетитель ни разу не нажал на страницу. Поэтому звук полёта играет,
+ * только если такое нажатие уже было (контекст звука «разбужен» первым тапом/кликом/клавишей) — иначе полёт беззвучный.
+ *   бабочка — «стеклянный ветерок»: редкие мягкие хрустальные ноты фурина в ре-мажорной пентатонике (раз в 1,3–2,6 с),
+ *             с длинным эхом зала и едва слышным воздушным шелестом; ноты плавают слева-направо вслед за бабочкой;
+ *   колибри — «трепет»: тихое бархатное жужжание крыльев, которое усиливается на каждом рывке и стихает при зависании,
+ *             и короткая двойная «капля» стекла в начале рывка (ми-мажорная пентатоника, выше и суше, чем у бабочки).
+ * Всё идёт через общую шину и за 0,5 с затухает при поимке, вылете за край и уходе со страницы. */
+let FL = null;
+function flightBus(c, vol) {                      // шина полёта: общая громкость → сухой сигнал + зал; гасится целиком
+  const g = c.createGain(); g.gain.setValueAtTime(0, c.currentTime); g.gain.linearRampToValueAtTime(vol, c.currentTime + .8);
+  const wet = c.createGain(); wet.gain.value = .85; g.connect(BUS.dry); g.connect(wet); wet.connect(BUS.verb);
+  return g;
+}
+export function flightStop(fade = .5) {
+  if (!FL || !AC) return; const f = FL; FL = null; clearTimeout(f.timer);
+  try { const t = AC.currentTime; f.bus.gain.cancelScheduledValues(t); f.bus.gain.setTargetAtTime(0, t, fade / 3);
+    setTimeout(() => { f.nodes.forEach(n => { try { n.stop(); } catch {} }); try { f.bus.disconnect(); } catch {} }, fade * 1000 + 2500); } catch {}
+}
+export function flightStart(kind, vol = .22, getPan = () => 0) {
+  flightStop(.2);
+  const c = AC; if (!c || c.state !== 'running') return false;       // без жеста посетителя звук не начинаем
+  const bus = flightBus(c, vol), f = { kind, bus, nodes: [], timer: 0, getPan }; FL = f;
+  if (kind === 'hb') {
+    // жужжание крыльев: шум → полосовой фильтр → быстрая амплитудная модуляция; громкость ведёт flightDash()/hover
+    const n = c.createBufferSource(); n.buffer = noiseBuf(c, 2); n.loop = true;
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 520; bp.Q.value = 1.1;
+    const hp = c.createBiquadFilter(); hp.type = 'lowpass'; hp.frequency.value = 1800;
+    const am = c.createGain(); am.gain.value = .5; const lfo = c.createOscillator(); lfo.frequency.value = 46; const lg = c.createGain(); lg.gain.value = .5;
+    lfo.connect(lg); lg.connect(am.gain);
+    const hum = c.createGain(); hum.gain.value = .12; f.hum = hum; f.lfo = lfo;
+    n.connect(bp); bp.connect(hp); hp.connect(am); am.connect(hum); hum.connect(bus);
+    // тихий тон-основа трепета (две близкие синусоиды дают мягкое биение)
+    [92, 94.5].forEach(fr => { const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = fr; const og = c.createGain(); og.gain.value = .22; o.connect(og); og.connect(am); o.start(); f.nodes.push(o); });
+    n.start(); lfo.start(); f.nodes.push(n, lfo);
+  } else {
+    air(c, c.currentTime + .05, 1.6, 2500, 9000, .05, 0);            // лёгкий вдох при появлении
+    const scale = [74, 76, 78, 81, 83, 86, 88, 90]; let last = -1;
+    const note = () => {
+      if (FL !== f) return;
+      let i; do { i = (Math.random() * scale.length) | 0; } while (i === last); last = i;
+      const pan = Math.max(-.8, Math.min(.8, f.getPan())), t = c.currentTime + .02;
+      fmBell(c, hz(scale[i]), t, 2.4, .5, { pan, ratio: 2.76, index: 1.3, send: .9, bus, attack: .012 });
+      if (Math.random() < .35) fmBell(c, hz(scale[i] + 12), t + .09, 1.6, .22, { pan: -pan * .6, ratio: 2.76, index: .9, send: 1, bus, attack: .012 });
+      f.timer = setTimeout(note, 1300 + Math.random() * 1300);
+    };
+    f.timer = setTimeout(note, 500);
+  }
+  return true;
+}
+// Колибри: начало рывка — жужжание усиливается и звучит двойная стеклянная «капля»; зависание — стихает
+export function flightDash(dur = .4) {
+  const f = FL; if (!f || f.kind !== 'hb' || !AC) return; const c = AC, t = c.currentTime;
+  f.hum.gain.cancelScheduledValues(t); f.hum.gain.setTargetAtTime(.55, t, .04); f.hum.gain.setTargetAtTime(.12, t + dur, .12);
+  f.lfo.frequency.cancelScheduledValues(t); f.lfo.frequency.setTargetAtTime(58, t, .05); f.lfo.frequency.setTargetAtTime(46, t + dur, .15);
+  const sc = [88, 90, 93, 95, 97, 100], i = (Math.random() * (sc.length - 1)) | 0, pan = Math.max(-.8, Math.min(.8, f.getPan()));
+  fmBell(c, hz(sc[i]), t + .01, .5, .24, { pan, ratio: 5.1, index: .7, send: .6, bus: f.bus });
+  fmBell(c, hz(sc[i + 1]), t + .075, .6, .19, { pan: pan * .5, ratio: 5.1, index: .7, send: .7, bus: f.bus });
+}
+// первый жест посетителя «будит» звук — после этого полёты слышны
+export function armAudio() {
+  if (typeof document === 'undefined' || armAudio.done) return; armAudio.done = true;
+  const wake = () => { ac(); ['pointerdown', 'keydown', 'touchend'].forEach(e => document.removeEventListener(e, wake, true)); };
+  ['pointerdown', 'keydown', 'touchend'].forEach(e => document.addEventListener(e, wake, { capture: true, passive: true }));
 }
 
 /* ---------- колибри ---------- */
@@ -363,7 +431,7 @@ export function initButterfly(opts = {}) {
   if (typeof window === 'undefined') return null;
   if (window.__oiButterfly) return window.__oiButterfly;
   const o = {
-    chance: .22, delay: [6000, 45000], maxPerSession: 3, cooldown: 90000, speed: null, zIndex: 39, cardZIndex: 47, firstAt: 30000, hummingbird: .5, sound: () => true, volume: .5,
+    chance: .22, delay: [6000, 45000], maxPerSession: 3, cooldown: 90000, speed: null, zIndex: 39, cardZIndex: 47, firstAt: 30000, hummingbird: .5, sound: () => true, volume: .5, flightSound: true, flightVolume: .22,
     catalogUrl: '/shop', lang: (document.documentElement.lang || 'uk').slice(0, 2), strings: null,
     exclude: [/^\/admin/, /^\/install/], ...opts,
   };
@@ -438,6 +506,7 @@ export function initButterfly(opts = {}) {
     resize(); addEventListener('resize', resize, { passive: true });
   }
   function unmount() {
+    flightStop(.3);
     cancelAnimationFrame(raf); raf = 0;
     removeEventListener('resize', resize);
     cv?.remove(); hit?.remove(); cv = g = hit = null; parts.length = 0; B = null; state = 'idle';
@@ -447,6 +516,7 @@ export function initButterfly(opts = {}) {
     if (!cv) return; cv.width = W * dpr; cv.height = H * dpr;
   }
 
+  armAudio();
   function fly(bypass, kind) {
     if (state !== 'idle' || reduced.matches) return;
     kind = kind || (forceHb ? 'hb' : Math.random() < o.hummingbird ? 'hb' : 'bf'); lastKind = kind;
@@ -458,6 +528,7 @@ export function initButterfly(opts = {}) {
     if (kind === 'hb') { const pts = makeDarts(W, H); Object.assign(B, { S: small ? 22 : 27, pts, i: 0, seg: 0, segDur: .5, hover: 0, x: pts[0].x, y: pts[0].y, face: pts[1].x > pts[0].x ? 1 : -1, wing: 0 }); }
     hit.setAttribute('aria-label', T().aria);
     state = 'fly'; last = performance.now(); emit('show');
+    try { if (o.flightSound && o.sound()) flightStart(kind, o.flightVolume, () => (B ? (B.x / Math.max(1, W)) * 2 - 1 : 0)); } catch {}
     raf = requestAnimationFrame(tick);
   }
 
@@ -474,7 +545,7 @@ export function initButterfly(opts = {}) {
 
   function doCatch() {
     if (state !== 'fly' || !B) return;
-    state = 'catch'; B.ct = 0;
+    state = 'catch'; B.ct = 0; flightStop(.25);
     // «Призрачный» клик: на телефоне после тапа браузер шлёт click в точку тапа. Если кнопка-мишень
     // уже пропустила его сквозь себя, он попадёт в карточку товара или ссылку под бабочкой и уведёт
     // со страницы. Поэтому мишень остаётся на месте ещё 500 мс и гасит click, а на документе стоит
@@ -543,9 +614,9 @@ export function initButterfly(opts = {}) {
         B.hover -= dt; B.x += Math.sin(B.t * 13) * .35; B.y += Math.cos(B.t * 9) * .3; B.rot += (Math.sin(B.t * 2) * .08 - B.rot) * dt * 6;
       } else {
         const a = B.pts[B.i], b = B.pts[B.i + 1];
-        if (!b) { state = 'fade'; hit?.remove(); hit = null; emit('gone'); B = null; }
+        if (!b) { state = 'fade'; hit?.remove(); hit = null; emit('gone'); B = null; flightStop(.8); }
         else {
-          if (!B.seg) { B.segDur = clamp(Math.hypot(b.x - a.x, b.y - a.y) / (W < 700 ? 520 : 700), .22, .7); B.face = b.x >= a.x ? 1 : -1; }
+          if (!B.seg) { B.segDur = clamp(Math.hypot(b.x - a.x, b.y - a.y) / (W < 700 ? 520 : 700), .22, .7); B.face = b.x >= a.x ? 1 : -1; try { flightDash(B.segDur); } catch {} }
           B.seg = Math.min(1, B.seg + dt / B.segDur);
           const k = ease(B.seg), px = B.x, py = B.y;
           B.x = a.x + (b.x - a.x) * k; B.y = a.y + (b.y - a.y) * k - Math.sin(k * Math.PI) * 18;
@@ -576,7 +647,7 @@ export function initButterfly(opts = {}) {
       if (B.emitP > .13) { B.emitP = 0; spawnPetal(B.x - p.dx * .3, B.y + 4, false); }
       if (B.emitS > .06) { B.emitS = 0; spawnSpark(B.x + rnd(-B.S, B.S) * .8, B.y + rnd(-B.S, B.S) * .6, false); }
       if (hit) hit.style.transform = `translate(${B.x}px,${B.y}px)`;
-      if (B.d >= B.path.len) { state = 'fade'; hit?.remove(); hit = null; emit('gone'); }
+      if (B.d >= B.path.len) { state = 'fade'; hit?.remove(); hit = null; emit('gone'); flightStop(.8); }
     }
     if (B && state === 'catch' && B.kind === 'hb') {
       B.t += dt; B.ct += dt; B.wing += dt * TAU * 30;
