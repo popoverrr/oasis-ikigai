@@ -198,10 +198,21 @@ export function flightDash(dur = .4) {
   fmBell(c, hz(sc[i + 1]), t + .075, .6, .19, { pan: pan * .5, ratio: 5.1, index: .7, send: .7, bus: f.bus });
 }
 // первый жест посетителя «будит» звук — после этого полёты слышны
+// v18.1 (iPhone): Safari включает звук только внутри touchend/click (не pointerdown) — слушаем их и снимаем обработчики,
+// лишь когда звук реально пошёл; тихий буфер внутри жеста окончательно «открывает» звук; audioSession 'playback' —
+// чтобы переключатель «Без звуку» на iPhone не глушил Web Audio (фоновая музыка-<audio> им и так не глушится)
 export function armAudio() {
   if (typeof document === 'undefined' || armAudio.done) return; armAudio.done = true;
-  const wake = () => { ac(); ['pointerdown', 'keydown', 'touchend'].forEach(e => document.removeEventListener(e, wake, true)); };
-  ['pointerdown', 'keydown', 'touchend'].forEach(e => document.addEventListener(e, wake, { capture: true, passive: true }));
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch {}
+  const EV = ['touchend', 'click', 'pointerup', 'keydown'];
+  const off = () => EV.forEach(e => document.removeEventListener(e, wake, true));
+  const wake = () => {
+    const c = ac(); if (!c) return;
+    try { const s = c.createBufferSource(); s.buffer = c.createBuffer(1, 1, c.sampleRate); s.connect(c.destination); s.start(0); } catch {}
+    if (c.state === 'running') off();
+    else (c.resume() || Promise.resolve()).then(() => { if (c.state === 'running') off(); }).catch(() => {});
+  };
+  EV.forEach(e => document.addEventListener(e, wake, { capture: true, passive: true }));
 }
 
 /* ---------- колибри ---------- */
