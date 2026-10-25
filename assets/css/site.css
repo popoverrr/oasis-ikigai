@@ -1316,3 +1316,11 @@ a.credit:hover .credit__name,a.credit:focus-visible .credit__name{text-decoratio
 .art-table th,.art-table td{border-bottom:1px solid rgba(0,0,0,.12);padding:10px 8px;text-align:left;vertical-align:top}
 .art-table th{font-weight:500;background:var(--gray-50,#f4f4f4)}
 .art ol{padding-left:1.3em}
+
+/* v21: подписи в текстах карточки — жирные и светлые, списки — с зелёной чертой (просьба владельца) */
+.pd-faq__a b.lbl,.pd__short b.lbl{font-weight:700;color:var(--white)}
+.pd-faq__a ul:not(.ingr),.pd__short ul{display:grid;gap:7px;margin:0;padding:0}
+.pd-faq__a ul:not(.ingr) li,.pd__short ul li{position:relative;padding-left:20px}
+.pd-faq__a ul:not(.ingr) li::before,.pd__short ul li::before{content:"";position:absolute;left:0;top:.8em;width:10px;height:2px;border-radius:2px;background:var(--accent)}
+.pd__short{display:grid;gap:10px}
+.pd__short p{margin:0}

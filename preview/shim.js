@@ -25,7 +25,7 @@
     const aud = (q.get('audience') || '').split(',').filter(Boolean);   // товар без аудитории — «для всіх», виден всегда
     const min = +q.get('min') || 0, max = +q.get('max') || 0, stock = !!q.get('stock');
     const words = (q.get('q') || '').toLowerCase().split(/\s+/).filter(Boolean).slice(0, 5);
-    const items = all.filter(p => (!goal || p.goals.includes(goal)) && (!list.length || list.includes(p.brand)) && (!cats.length || cats.includes(p.category))
+    const items = all.filter(p => (!goal || p.goals.includes(goal)) && (!list.length || list.includes(p.brand)) && (!cats.length || cats.some(c => (p.categories || [p.category]).includes(c)))
       && (!aud.length || !(p.audience || []).length || p.audience.some(a => aud.includes(a)))
       && (!min || p.price >= min) && (!max || p.price <= max) && (!stock || p.stock !== 'out_of_stock') && words.every(w => p.search.includes(w)));
     const out = p => (p.stock === 'out_of_stock' ? 1 : 0);
