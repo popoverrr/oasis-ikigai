@@ -246,10 +246,20 @@ body.hero-on .cartbar{transform:translateY(calc(100% + 24px));pointer-events:non
   .ikigai .goal-filter{margin-inline:0;padding-inline:0;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);overflow:visible}
   .goal-filter .goal.goal--mini{width:auto;min-height:118px;padding:12px 14px;border-radius:14px}
   .goal-filter .goal.goal--mini b{font-size:15px}
-  .shop__goal .goal.goal--hero{min-height:300px}
 }
 .ikigai{scroll-margin-top:var(--hdr)}
-.shop__goal{margin-bottom:20px}
+.shop__goal{margin-bottom:16px}
+/* v26: плашка выбранной цели в каталоге — компактная полоса (просьба владельца: занимала полэкрана); текст слева, сцена справа и не под текстом */
+.shop__goal .goal.goal--hero{min-height:0;padding:16px 18px;gap:4px}
+.shop__goal .goal--hero b,.shop__goal .goal--hero .goal__t{font-size:26px;max-width:66%}
+.shop__goal .goal--hero small{font-size:14px;line-height:1.4;max-width:66%}   /* описание целиком, без обрезки */
+.shop__goal .goal--hero .scene{width:34%;height:100%}
+@media (min-width:1024px){
+  .shop__goal .goal.goal--hero{min-height:150px;padding:22px 30px}
+  .shop__goal .goal--hero b,.shop__goal .goal--hero .goal__t{font-size:36px;max-width:60%}
+  .shop__goal .goal--hero small{font-size:15px;max-width:60%}
+  .shop__goal .goal--hero .scene{width:26%}
+}
 /* «Для кого» — чипы над сеткой: выбранный — розовый с галочкой (brief/08 § 6) */
 .aud{border:0;padding:0;margin:0;min-width:0}
 .aud legend{float:left;margin:13px 12px 0 0;color:var(--text-2)}
