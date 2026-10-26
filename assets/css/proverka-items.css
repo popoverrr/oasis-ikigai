@@ -1,0 +1,25 @@
+/* v24: карточки правок Инны Викторовны — админка и pravki.html в выгрузке */
+.pv-item{background:#fff;border:1px solid #D9D9D9;border-radius:16px;padding:16px;display:grid;gap:12px;color:#0D0D0D}
+.pv-item__h{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;justify-content:space-between}
+.pv-item__h h3{margin:0;font-size:18px;font-weight:600}
+.pv-muted{color:#4D4D4D;font-size:14px}
+.pv-diff{display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,1fr);border:1px solid #D9D9D9;border-radius:12px;overflow:hidden;font-size:14.5px;line-height:1.5}
+.pv-diff>div{padding:9px 12px;border-top:1px solid #D9D9D9;min-width:0;overflow-wrap:anywhere}
+.pv-diff__hd{border-top:0!important;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#4D4D4D;background:#F0F0F0}
+.pv-diff__k{font-weight:600}
+.pv-diff__was{color:#4D4D4D}
+.pv-diff del{color:#D10000}
+.pv-diff ins{color:#1C7D1E;font-weight:700;text-decoration:underline 2px #2DCD31;text-underline-offset:3px}
+.pv-new{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 12px;margin:0;font-size:15px}
+.pv-new dt{font-weight:600}.pv-new dd{margin:0;overflow-wrap:anywhere}
+.pv-note{background:#F0F0F0;border-radius:10px;padding:10px 12px;font-size:15px;margin:0}
+.pv-photos{display:flex;flex-wrap:wrap;gap:8px}
+.pv-photos a{display:block;width:120px;height:120px;border-radius:10px;overflow:hidden;background:#F0F0F0;border:1px solid #D9D9D9}
+.pv-photos img{width:100%;height:100%;object-fit:cover;display:block}
+.pv-actions{display:flex;flex-wrap:wrap;gap:8px}
+.pv-list{display:grid;gap:14px}
+.pv-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pv-box{background:#fff;border:1px solid #D9D9D9;border-radius:16px;padding:16px;display:grid;gap:10px}
+.pv-box form{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.pv-link{font:15px/1.4 ui-monospace,Consolas,monospace;background:#F0F0F0;border-radius:8px;padding:6px 10px;user-select:all;overflow-wrap:anywhere}
+@media (max-width:720px){.pv-diff{grid-template-columns:1fr}.pv-diff__hd{display:none}.pv-diff__k{background:#F0F0F0}.pv-new{grid-template-columns:1fr}}
