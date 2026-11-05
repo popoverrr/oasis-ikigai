@@ -104,6 +104,79 @@ function initMenu() {
   matchMedia('(min-width: 1024px)').addEventListener('change', e => { if (e.matches && menu.classList.contains('is-open')) close(); });
 }
 
+// ── v28: меню каталога «раздел → подкатегории» (brief/25) ──
+// Телефон: плитки разделов, нажатие на раздел с подкатегориями показывает их (.cat--l2), «← Каталог» — назад.
+// Компьютер: панель под шапкой, раздел под курсором показывается справа; нажатие ведёт на страницу раздела.
+function initCatMenu() {
+  const cat = $('[data-cat]');
+  if (!cat) return;
+  const wide = matchMedia('(min-width: 1024px)');
+  const openers = () => $$('[data-cat-open]');
+  const tiles = $$('[data-cat-go]', cat);
+  const q = $('[data-cat-q]', cat);
+  let last = null;
+  const show = i => {
+    $$('[data-cat-s]', cat).forEach(s => { s.hidden = s.dataset.catS !== String(i); });
+    tiles.forEach(t => t.classList.toggle('is-cur', t.dataset.catGo === String(i)));
+  };
+  const open = () => {
+    last = document.activeElement;
+    cat.classList.remove('cat--l2');
+    if (wide.matches) show(0);
+    cat.hidden = false;
+    document.documentElement.classList.add('cat-open');
+    openers().forEach(b => b.setAttribute('aria-expanded', 'true'));
+    requestAnimationFrame(() => cat.classList.add('is-open'));
+    cat.scrollTop = 0;
+  };
+  const close = () => {
+    if (cat.hidden) return;
+    cat.classList.remove('is-open');
+    cat.hidden = true;
+    document.documentElement.classList.remove('cat-open');
+    openers().forEach(b => b.setAttribute('aria-expanded', 'false'));
+    if (last && document.contains(last)) last.focus({ preventScroll: true });
+  };
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-cat-open]');
+    if (!b) return;
+    e.preventDefault();
+    cat.hidden ? open() : close();
+  });
+  $('[data-cat-close]', cat)?.addEventListener('click', close);
+  tiles.forEach(t => {
+    t.addEventListener('click', e => {
+      if (wide.matches || !t.hasAttribute('data-cat-has')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      show(t.dataset.catGo);
+      cat.classList.add('cat--l2');
+      cat.scrollTop = 0;
+    });
+    const hover = () => { if (wide.matches) show(t.dataset.catGo); };
+    t.addEventListener('mouseenter', hover);
+    t.addEventListener('focus', hover);
+  });
+  $$('[data-cat-back]', cat).forEach(b => b.addEventListener('click', () => {
+    cat.classList.remove('cat--l2');
+    cat.scrollTop = 0;
+  }));
+  q?.addEventListener('input', () => {
+    const v = q.value.trim().toLowerCase();
+    let n = 0;
+    tiles.forEach(t => { const hit = !v || t.dataset.q.includes(v); t.hidden = !hit; n += hit; });
+    $('[data-cat-none]', cat).hidden = n > 0;
+  });
+  // переход по ссылке внутри меню (мягкий, softnav) — меню закрывается
+  cat.addEventListener('click', e => { if (e.target.closest('a[href]')) close(); });
+  cat.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); close(); } });
+  // компьютер: клик мимо панели закрывает её
+  document.addEventListener('pointerdown', e => {
+    if (!cat.hidden && wide.matches && !cat.contains(e.target) && !e.target.closest('[data-cat-open]')) close();
+  });
+  wide.addEventListener('change', close);
+}
+
 // ── Поиск в шапке ─────────────────────────────────────────
 function initSearch() {
   const form = $('[data-search]'), openBtn = $('[data-search-open]');
@@ -580,6 +653,7 @@ export function init() {
   if (/[?&]freeze=1/.test(location.search)) document.documentElement.classList.add('freeze');
   initHeader();
   initMenu();
+  initCatMenu();
   initSearch();
   initLang();
   initChat();

@@ -26,7 +26,7 @@
 <link rel="apple-touch-icon" href="/oasis-ikigai/apple-touch-icon.png">
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-300.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/oasis-ikigai/assets/fonts/ubuntu-oasis-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=tni54m">
+<link rel="stylesheet" href="/oasis-ikigai/assets/css/site.css?v=to0pmj">
 <link rel="stylesheet" href="/oasis-ikigai/assets/css/goals-fx5.css?v=tm43hb">
 <script src="/oasis-ikigai/assets/js/boot.js?v=tm44oe"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","@id":"https://popoverrr.github.io/oasis-ikigai/#org","name":"OASIS IKIGAI","url":"https://popoverrr.github.io/oasis-ikigai/","logo":"https://popoverrr.github.io/oasis-ikigai/apple-touch-icon.png","sameAs":["https://instagram.com/oasis_ikigai","https://t.me/oasis_ikigai_dev"]}</script>
@@ -60,9 +60,11 @@
 </svg>
 <header class="hdr" data-hdr>
   <button class="icon-btn hdr__menu" type="button" aria-controls="menu" aria-expanded="false" aria-label="Открыть меню" data-menu-open><span class="burger" aria-hidden="true"><i></i></span></button>
+  <a class="icon-btn hdr__catm" href="/oasis-ikigai/ru/shop" aria-controls="catmenu" aria-expanded="false" aria-label="Открыть каталог" data-cat-open><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2" fill="currentColor"/></svg></a>
   <a class="logo" href="/oasis-ikigai/ru/" aria-label="OASIS IKIGAI — на главную"><b>OASIS IKIGAI</b></a>
   <nav class="hdr__nav" aria-label="Основная навигация">
-    <a href="/oasis-ikigai/ru/shop" data-nav-key="shop">Каталог</a><a href="/oasis-ikigai/ru/brands" data-nav-key="brands">Бренды</a><a href="/oasis-ikigai/ru/journal" data-nav-key="journal">Журнал</a><a href="/oasis-ikigai/ru/about" data-nav-key="about">О нас</a>  </nav>
+        <a class="hdr__cat" href="/oasis-ikigai/ru/shop" aria-controls="catmenu" aria-expanded="false" data-cat-open><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>Каталог</a>
+    <a href="/oasis-ikigai/ru/brands" data-nav-key="brands">Бренды</a><a href="/oasis-ikigai/ru/journal" data-nav-key="journal">Журнал</a><a href="/oasis-ikigai/ru/about" data-nav-key="about">О нас</a>  </nav>
   <div class="hdr__tools">
     <button class="icon-btn hdr__search" type="button" aria-label="Поиск" data-search-open><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-search"/></svg></button>
     <a class="icon-btn hdr__wish" href="/oasis-ikigai/ru/wishlist" data-wish-link aria-label="Избранное, товаров: 0"><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-heart"/></svg><span class="count" data-wish-count hidden>0</span></a>
@@ -75,6 +77,409 @@
   </form>
 </header>
 
+<div class="cat" id="catmenu" role="dialog" aria-modal="true" aria-label="Каталог" data-cat hidden>
+  <div class="cat__top">
+    <b class="cat__t">Каталог</b>
+    <a class="cat__whole" href="/oasis-ikigai/ru/shop">Весь каталог</a>
+    <button class="icon-btn cat__x" type="button" aria-label="Закрыть каталог" data-cat-close><svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button>
+  </div>
+  <div class="cat__in">
+    <div class="cat__l" data-cat-list>
+      <label class="cat__q"><svg class="icon" width="18" height="18" aria-hidden="true" focusable="false"><use href="#i-search"/></svg><span class="visually-hidden">Найти раздел или компонент</span><input type="search" placeholder="Найти раздел или компонент" autocomplete="off" enterkeyhint="search" data-cat-q></label>
+      <div class="cat__grid">
+                  <a class="goal goal--mini goal--vitamins is-in cat__i cat__i--wide" href="/oasis-ikigai/ru/shop/vitamins" data-cat-go="0" data-cat-has data-q="бады, витамины, минералы плацента коллаген эластин керамиды гиалуроновая кислота фолиевая кислота альфа-липоевая кислота nmn msm сквален коэнзим q10 мака цинк селен хром медь калий кальций магний кремний l-аргинин l-цитруллин астаксантин хлорофилл железо биотин витамины группы b витамин e витамин d3 витамин k2 витамин c витамин a витамин p омега-3 dha epa dpa хондроитин глюкозамин женьшень супон gaba функциональные грибы дамасская роза хлорелла аодзиру спирулина лютеин зеаксантин хитозан активированный уголь полезные бактерии марганец йод молибден куркума чёрный чеснок и уксус энзимы электролиты протеогликаны маточное молочко соевые изофлавоны ласточкино гнездо">
+            <div class="scene" aria-hidden="true"><div class="vit-shadow"></div><div class="vit-gr after"><i></i><i></i><i></i></div><div class="vit-cap"><i></i></div></div><b>БАДы, витамины, минералы</b>
+            <small>38 товаров · 63 подкатегории</small>
+            <span class="cat__n">38</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--beauty is-in cat__i" href="/oasis-ikigai/ru/shop/beauty" data-cat-go="1" data-cat-has data-q="красота изнутри для волос для ногтей для тела для кожи для лица для глаз для рук для ног для зубов">
+            <div class="scene" aria-hidden="true"><div class="beauty-rip after"><i></i><i></i><i></i></div><div class="beauty-pearl"></div><div class="beauty-sheen"></div></div><b>Красота изнутри</b>
+            <small>11 товаров · 9 подкатегорий</small>
+            <span class="cat__n">11</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--balance is-in cat__i" href="/oasis-ikigai/ru/shop/balance" data-cat-go="2" data-q="баланс нервной системы ">
+            <div class="scene" aria-hidden="true"><div class="bal-line"></div><div class="bal-pivot"></div><div class="bal-orbit"><div class="bal-x"><div class="bal-y"><div class="bal-orb"></div></div></div><div class="bal-x b2"><div class="bal-y b2"><div class="bal-orb o2"></div></div></div></div></div><b>Баланс нервной системы</b>
+            <small>7 товаров</small>
+            <span class="cat__n">7</span>          </a>
+                  <a class="goal goal--mini goal--longevity is-in cat__i" href="/oasis-ikigai/ru/shop/longevity" data-cat-go="3" data-q="антиоксиданты ">
+            <div class="scene" aria-hidden="true"><div class="halo long-halo"></div><div class="long-ground"></div><svg class="long-sprout" viewBox="0 0 100 130"><path class="stem" pathLength="1" d="M50 128 C50 104 46 86 52 64 C56 50 54 40 52 30"/><path class="leaf l1" d="M51 66 C38 66 26 58 20 44 C34 44 46 50 51 66Z"/><path class="leaf l2" d="M53 44 C60 30 74 24 88 26 C82 40 68 46 53 44Z"/></svg></div><b>Антиоксиданты</b>
+            <small>6 товаров</small>
+            <span class="cat__n">6</span>          </a>
+                  <a class="goal goal--mini goal--eyes is-in cat__i" href="/oasis-ikigai/ru/shop/eye-care" data-cat-go="4" data-q="капли и витамины для глаз ">
+            <div class="scene" aria-hidden="true"><div class="halo eye-halo"></div><div class="eye-ring"></div><div class="eye-iris"></div><div class="eye-pupil"></div><div class="eye-glint"></div></div><b>Капли и витамины для глаз</b>
+            <small>5 товаров</small>
+            <span class="cat__n">5</span>          </a>
+                  <a class="goal goal--mini goal--immunity is-in cat__i" href="/oasis-ikigai/ru/shop/immunity" data-cat-go="5" data-q="иммунитет и щитовидная железа ">
+            <div class="scene" aria-hidden="true"><div class="imm-dots after"><i></i><i></i><i></i><i></i></div><div class="imm-sphere"></div><div class="imm-core"></div></div><b>Иммунитет и щитовидная железа</b>
+            <small>8 товаров</small>
+            <span class="cat__n">8</span>          </a>
+                  <a class="goal goal--mini goal--beauty is-in cat__i" href="/oasis-ikigai/ru/shop/beauty-rituals" style="--c1:#0A4A44;--c2:#3FE0B8" data-cat-go="6" data-cat-has data-q="ритуалы красоты для лица для тела для глаз для шеи для зоны декольте для рук для ног для волос для кожи головы для зубов для интимной зоны">
+            <div class="scene" aria-hidden="true"><div class="beauty-rip after"><i></i><i></i><i></i></div><div class="beauty-pearl"></div><div class="beauty-sheen"></div></div><b>Ритуалы красоты</b>
+            <small>35 товаров · 11 подкатегорий</small>
+            <span class="cat__n">35</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--eyes is-in cat__i" href="/oasis-ikigai/ru/shop/beauty-devices" style="--c1:#26106B;--c2:#8C7BFF" data-cat-go="7" data-cat-has data-q="аппараты для красоты для глаз для лица для волос для кожи головы гель-проводник">
+            <div class="scene" aria-hidden="true"><div class="halo eye-halo"></div><div class="eye-ring"></div><div class="eye-iris"></div><div class="eye-pupil"></div><div class="eye-glint"></div></div><b>Аппараты для красоты</b>
+            <small>3 товара · 5 подкатегорий</small>
+            <span class="cat__n">3</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--longevity is-in cat__i" href="/oasis-ikigai/ru/shop/anti-age" style="--c1:#3A1670;--c2:#B07BFF" data-cat-go="8" data-cat-has data-q="антивозрастной омолаживающий комплекс для лица для глаз для шеи для зоны декольте для тела">
+            <div class="scene" aria-hidden="true"><div class="halo long-halo"></div><div class="long-ground"></div><svg class="long-sprout" viewBox="0 0 100 130"><path class="stem" pathLength="1" d="M50 128 C50 104 46 86 52 64 C56 50 54 40 52 30"/><path class="leaf l1" d="M51 66 C38 66 26 58 20 44 C34 44 46 50 51 66Z"/><path class="leaf l2" d="M53 44 C60 30 74 24 88 26 C82 40 68 46 53 44Z"/></svg></div><b>Антивозрастной омолаживающий комплекс</b>
+            <small>12 товаров · 5 подкатегорий</small>
+            <span class="cat__n">12</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--detox is-in cat__i" href="/oasis-ikigai/ru/shop/hygiene" style="--c1:#00466E;--c2:#4FB8F0" data-cat-go="9" data-cat-has data-q="гигиена для интимной зоны для волос для кожи головы для тела для лица для ног для глаз">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div><b>Гигиена</b>
+            <small>10 товаров · 7 подкатегорий</small>
+            <span class="cat__n">10</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--detox is-in cat__i" href="/oasis-ikigai/ru/shop/oral-care" style="--c1:#004C5C;--c2:#2FD6E8" data-cat-go="10" data-cat-has data-q="гигиена полости рта для зубов для горла для носа">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div><b>Гигиена полости рта</b>
+            <small>2 товара · 3 подкатегории</small>
+            <span class="cat__n">2</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--longevity is-in cat__i" href="/oasis-ikigai/ru/shop/herbs" style="--c1:#0E4A12;--c2:#7BD23A" data-cat-go="11" data-cat-has data-q="лечебные растения функциональные грибы грибы рейши женьшень супон дамасская роза хлорелла спирулина эвглена календула гинкго билоба экстракт дуба тоути салация семена чиа имбирь порошок сены">
+            <div class="scene" aria-hidden="true"><div class="halo long-halo"></div><div class="long-ground"></div><svg class="long-sprout" viewBox="0 0 100 130"><path class="stem" pathLength="1" d="M50 128 C50 104 46 86 52 64 C56 50 54 40 52 30"/><path class="leaf l1" d="M51 66 C38 66 26 58 20 44 C34 44 46 50 51 66Z"/><path class="leaf l2" d="M53 44 C60 30 74 24 88 26 C82 40 68 46 53 44Z"/></svg></div><b>Лечебные растения</b>
+            <small>9 товаров · 16 подкатегорий</small>
+            <span class="cat__n">9</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--longevity is-in cat__i" href="/oasis-ikigai/ru/shop/tea" style="--c1:#244A0A;--c2:#A6D93A" data-cat-go="12" data-q="чай и матча ">
+            <div class="scene" aria-hidden="true"><div class="halo long-halo"></div><div class="long-ground"></div><svg class="long-sprout" viewBox="0 0 100 130"><path class="stem" pathLength="1" d="M50 128 C50 104 46 86 52 64 C56 50 54 40 52 30"/><path class="leaf l1" d="M51 66 C38 66 26 58 20 44 C34 44 46 50 51 66Z"/><path class="leaf l2" d="M53 44 C60 30 74 24 88 26 C82 40 68 46 53 44Z"/></svg></div><b>Чай и матча</b>
+            <small>49 товаров</small>
+            <span class="cat__n">49</span>          </a>
+                  <a class="goal goal--mini goal--vitamins is-in cat__i" href="/oasis-ikigai/ru/shop/sweets" style="--c1:#7A2E00;--c2:#FFB35C" data-cat-go="13" data-q="японские сладости ">
+            <div class="scene" aria-hidden="true"><div class="vit-shadow"></div><div class="vit-gr after"><i></i><i></i><i></i></div><div class="vit-cap"><i></i></div></div><b>Японские сладости</b>
+            <small>0 товаров</small>
+            <span class="cat__n">0</span>          </a>
+                  <a class="goal goal--mini goal--energy is-in cat__i" href="/oasis-ikigai/ru/shop/men" style="--c1:#5A2A00;--c2:#E89A2E" data-cat-go="14" data-cat-has data-q="мужское здоровье гормональный баланс повышение уровня гемоглобина">
+            <div class="scene" aria-hidden="true"><div class="energy-rays"></div><div class="energy-sun"></div><div class="energy-line"></div></div><b>Мужское здоровье</b>
+            <small>6 товаров · 2 подкатегории</small>
+            <span class="cat__n">6</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--beauty is-in cat__i" href="/oasis-ikigai/ru/shop/women" style="--c1:#3E0F66;--c2:#A35CFF" data-cat-go="15" data-cat-has data-q="женское здоровье гормональный баланс повышение уровня гемоглобина">
+            <div class="scene" aria-hidden="true"><div class="beauty-rip after"><i></i><i></i><i></i></div><div class="beauty-pearl"></div><div class="beauty-sheen"></div></div><b>Женское здоровье</b>
+            <small>3 товара · 2 подкатегории</small>
+            <span class="cat__n">3</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--immunity is-in cat__i" href="/oasis-ikigai/ru/shop/heart" style="--c1:#6A0A10;--c2:#FF6A4D" data-cat-go="16" data-q="для сердечно-сосудистой системы ">
+            <div class="scene" aria-hidden="true"><div class="imm-dots after"><i></i><i></i><i></i><i></i></div><div class="imm-sphere"></div><div class="imm-core"></div></div><b>Для сердечно-сосудистой системы</b>
+            <small>4 товара</small>
+            <span class="cat__n">4</span>          </a>
+                  <a class="goal goal--mini goal--eyes is-in cat__i" href="/oasis-ikigai/ru/shop/brain" style="--c1:#1C1A6E;--c2:#6E8CFF" data-cat-go="17" data-q="для памяти и работы мозга ">
+            <div class="scene" aria-hidden="true"><div class="halo eye-halo"></div><div class="eye-ring"></div><div class="eye-iris"></div><div class="eye-pupil"></div><div class="eye-glint"></div></div><b>Для памяти и работы мозга</b>
+            <small>2 товара</small>
+            <span class="cat__n">2</span>          </a>
+                  <a class="goal goal--mini goal--balance is-in cat__i" href="/oasis-ikigai/ru/shop/joints" style="--c1:#2F3E48;--c2:#9FC2D6" data-cat-go="18" data-q="комплекс для суставов, связок и костей ">
+            <div class="scene" aria-hidden="true"><div class="bal-line"></div><div class="bal-pivot"></div><div class="bal-orbit"><div class="bal-x"><div class="bal-y"><div class="bal-orb"></div></div></div><div class="bal-x b2"><div class="bal-y b2"><div class="bal-orb o2"></div></div></div></div></div><b>Комплекс для суставов, связок и костей</b>
+            <small>6 товаров</small>
+            <span class="cat__n">6</span>          </a>
+                  <a class="goal goal--mini goal--energy is-in cat__i" href="/oasis-ikigai/ru/shop/kids" style="--c1:#9A5A00;--c2:#FFD84D" data-cat-go="19" data-q="для детей ">
+            <div class="scene" aria-hidden="true"><div class="energy-rays"></div><div class="energy-sun"></div><div class="energy-line"></div></div><b>Для детей</b>
+            <small>0 товаров</small>
+            <span class="cat__n">0</span>          </a>
+                  <a class="goal goal--mini goal--detox is-in cat__i" href="/oasis-ikigai/ru/shop/weight" style="--c1:#00504A;--c2:#3EE6C4" data-cat-go="20" data-q="контроль калорий и веса ">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div><b>Контроль калорий и веса</b>
+            <small>3 товара</small>
+            <span class="cat__n">3</span>          </a>
+                  <a class="goal goal--mini goal--detox is-in cat__i" href="/oasis-ikigai/ru/shop/edema" style="--c1:#103A78;--c2:#5AA8FF" data-cat-go="21" data-q="от отёков и варикоза ">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div><b>От отёков и варикоза</b>
+            <small>2 товара</small>
+            <span class="cat__n">2</span>          </a>
+                  <a class="goal goal--mini goal--balance is-in cat__i" href="/oasis-ikigai/ru/shop/sugar" style="--c1:#3A2470;--c2:#A08CFF" data-cat-go="22" data-q="уровень сахара и холестерина ">
+            <div class="scene" aria-hidden="true"><div class="bal-line"></div><div class="bal-pivot"></div><div class="bal-orbit"><div class="bal-x"><div class="bal-y"><div class="bal-orb"></div></div></div><div class="bal-x b2"><div class="bal-y b2"><div class="bal-orb o2"></div></div></div></div></div><b>Уровень сахара и холестерина</b>
+            <small>4 товара</small>
+            <span class="cat__n">4</span>          </a>
+                  <a class="goal goal--mini goal--longevity is-in cat__i" href="/oasis-ikigai/ru/shop/digestion" style="--c1:#3E5200;--c2:#C3E04A" data-cat-go="23" data-q="пищеварение и микрофлора кишечника ">
+            <div class="scene" aria-hidden="true"><div class="halo long-halo"></div><div class="long-ground"></div><svg class="long-sprout" viewBox="0 0 100 130"><path class="stem" pathLength="1" d="M50 128 C50 104 46 86 52 64 C56 50 54 40 52 30"/><path class="leaf l1" d="M51 66 C38 66 26 58 20 44 C34 44 46 50 51 66Z"/><path class="leaf l2" d="M53 44 C60 30 74 24 88 26 C82 40 68 46 53 44Z"/></svg></div><b>Пищеварение и микрофлора кишечника</b>
+            <small>4 товара</small>
+            <span class="cat__n">4</span>          </a>
+                  <a class="goal goal--mini goal--detox is-in cat__i" href="/oasis-ikigai/ru/shop/detox" data-cat-go="24" data-q="детокс ">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div><b>Детокс</b>
+            <small>3 товара</small>
+            <span class="cat__n">3</span>          </a>
+                  <a class="goal goal--mini goal--energy is-in cat__i" href="/oasis-ikigai/ru/shop/energy" data-cat-go="25" data-q="энергия ">
+            <div class="scene" aria-hidden="true"><div class="energy-rays"></div><div class="energy-sun"></div><div class="energy-line"></div></div><b>Энергия</b>
+            <small>15 товаров</small>
+            <span class="cat__n">15</span>          </a>
+                  <a class="goal goal--mini goal--vitamins is-in cat__i" href="/oasis-ikigai/ru/shop/liver" style="--c1:#6E3A00;--c2:#F2B33D" data-cat-go="26" data-q="защита печени и антипохмелье ">
+            <div class="scene" aria-hidden="true"><div class="vit-shadow"></div><div class="vit-gr after"><i></i><i></i><i></i></div><div class="vit-cap"><i></i></div></div><b>Защита печени и антипохмелье</b>
+            <small>0 товаров</small>
+            <span class="cat__n">0</span>          </a>
+                  <a class="goal goal--mini goal--detox is-in cat__i" href="/oasis-ikigai/ru/shop/kidneys" style="--c1:#0A3E66;--c2:#4FC2F2" data-cat-go="27" data-q="почки и мочевыводящая система ">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div><b>Почки и мочевыводящая система</b>
+            <small>1 товар</small>
+            <span class="cat__n">1</span>          </a>
+                  <a class="goal goal--mini goal--energy is-in cat__i" href="/oasis-ikigai/ru/shop/sport" style="--c1:#8A1E00;--c2:#FF7A3D" data-cat-go="28" data-cat-has data-q="для спорта нормализация водно-солевого баланса">
+            <div class="scene" aria-hidden="true"><div class="energy-rays"></div><div class="energy-sun"></div><div class="energy-line"></div></div><b>Для спорта</b>
+            <small>4 товара · 1 подкатегория</small>
+            <span class="cat__n">4</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>          </a>
+                  <a class="goal goal--mini goal--immunity is-in cat__i" href="/oasis-ikigai/ru/shop/allergy" style="--c1:#4A1A6A;--c2:#B47BFF" data-cat-go="29" data-q="средства от насморка и аллергии ">
+            <div class="scene" aria-hidden="true"><div class="imm-dots after"><i></i><i></i><i></i><i></i></div><div class="imm-sphere"></div><div class="imm-core"></div></div><b>Средства от насморка и аллергии</b>
+            <small>1 товар</small>
+            <span class="cat__n">1</span>          </a>
+                  <a class="goal goal--mini goal--beauty is-in cat__i" href="/oasis-ikigai/ru/shop/acne" style="--c1:#00563A;--c2:#4DE39A" data-cat-go="30" data-q="средства от акне и кератоза ">
+            <div class="scene" aria-hidden="true"><div class="beauty-rip after"><i></i><i></i><i></i></div><div class="beauty-pearl"></div><div class="beauty-sheen"></div></div><b>Средства от акне и кератоза</b>
+            <small>6 товаров</small>
+            <span class="cat__n">6</span>          </a>
+                  <a class="goal goal--mini goal--sleep is-in cat__i" href="/oasis-ikigai/ru/shop/sleep" data-cat-go="31" data-q="сон ">
+            <div class="scene" aria-hidden="true"><div class="halo sleep-halo"></div><div class="sleep-mist"></div><div class="sleep-stars"><i></i><i></i><i></i><i></i><i></i></div><div class="sleep-moon"></div></div><b>Сон</b>
+            <small>5 товаров</small>
+            <span class="cat__n">5</span>          </a>
+              </div>
+      <p class="cat__none" data-cat-none hidden>Ничего не найдено</p>
+    </div>
+    <div class="cat__r">
+              <section class="cat__s" data-cat-s="0">
+          <div class="goal goal--vitamins goal--mini is-in cat__hero">
+            <div class="scene" aria-hidden="true"><div class="vit-shadow"></div><div class="vit-gr after"><i></i><i></i><i></i></div><div class="vit-cap"><i></i></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>БАДы, витамины, минералы</b><small>38 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/vitamins">Все товары раздела<span>38</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=placenta">Плацента<small>3</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=collagen">Коллаген<small>6</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=elastin">Эластин<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=ceramides">Керамиды<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=hyaluronic-acid">Гиалуроновая кислота<small>4</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=folic-acid">Фолиевая кислота<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=alpha-lipoic-acid">Альфа-липоевая кислота<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=nmn">NMN<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=msm">MSM<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=squalene">Сквален<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=coq10">Коэнзим Q10<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=maca">Мака<small>3</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=zinc">Цинк<small>5</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=selenium">Селен<small>3</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=chromium">Хром<small>3</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=copper">Медь<small>0</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=potassium">Калий<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=calcium">Кальций<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=magnesium">Магний<small>3</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=silicon">Кремний<small>0</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=l-arginine">L-аргинин<small>4</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=l-citrulline">L-цитруллин<small>4</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=astaxanthin">Астаксантин<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=chlorophyll">Хлорофилл<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=iron">Железо<small>3</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=biotin">Биотин<small>0</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=vitamin-b">Витамины группы B<small>9</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=vitamin-e">Витамин E<small>6</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=vitamin-d3">Витамин D3<small>5</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=vitamin-k2">Витамин K2<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=vitamin-c">Витамин C<small>4</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=vitamin-a">Витамин A<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=vitamin-p">Витамин P<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=omega-3">Омега-3<small>3</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=dha">DHA<small>3</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=epa">EPA<small>3</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=dpa">DPA<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=chondroitin">Хондроитин<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=glucosamine">Глюкозамин<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=ginseng">Женьшень<small>1</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=supon">Супон<small>0</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=gaba">GABA<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=mushrooms">Функциональные грибы<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=damask-rose">Дамасская роза<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=chlorella">Хлорелла<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=aojiru">Аодзиру<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=spirulina">Спирулина<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=lutein">Лютеин<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=zeaxanthin">Зеаксантин<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=chitosan">Хитозан<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=activated-charcoal">Активированный уголь<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/vitamins?sub=probiotics">Полезные бактерии<small>1</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=manganese">Марганец<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=iodine">Йод<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=molybdenum">Молибден<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=turmeric">Куркума<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=black-garlic">Чёрный чеснок и уксус<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=enzymes">Энзимы<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=electrolytes">Электролиты<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=proteoglycans">Протеогликаны<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=royal-jelly">Маточное молочко<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=soy-isoflavones">Соевые изофлавоны<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/vitamins?sub=birds-nest">Ласточкино гнездо<small>0</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="1" hidden>
+          <div class="goal goal--beauty goal--mini is-in cat__hero">
+            <div class="scene" aria-hidden="true"><div class="beauty-rip after"><i></i><i></i><i></i></div><div class="beauty-pearl"></div><div class="beauty-sheen"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Красота изнутри</b><small>11 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/beauty">Все товары раздела<span>11</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p" href="/oasis-ikigai/ru/shop/beauty?sub=hair">Для волос<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty?sub=nails">Для ногтей<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty?sub=body">Для тела<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty?sub=skin">Для кожи<small>10</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty?sub=face">Для лица<small>2</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/beauty?sub=eyes">Для глаз<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/beauty?sub=hands">Для рук<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/beauty?sub=feet">Для ног<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/beauty?sub=teeth">Для зубов<small>0</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="2" hidden>
+          <div class="goal goal--balance goal--mini is-in cat__hero">
+            <div class="scene" aria-hidden="true"><div class="bal-line"></div><div class="bal-pivot"></div><div class="bal-orbit"><div class="bal-x"><div class="bal-y"><div class="bal-orb"></div></div></div><div class="bal-x b2"><div class="bal-y b2"><div class="bal-orb o2"></div></div></div></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Баланс нервной системы</b><small>7 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/balance">Все товары раздела<span>7</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="3" hidden>
+          <div class="goal goal--longevity goal--mini is-in cat__hero">
+            <div class="scene" aria-hidden="true"><div class="halo long-halo"></div><div class="long-ground"></div><svg class="long-sprout" viewBox="0 0 100 130"><path class="stem" pathLength="1" d="M50 128 C50 104 46 86 52 64 C56 50 54 40 52 30"/><path class="leaf l1" d="M51 66 C38 66 26 58 20 44 C34 44 46 50 51 66Z"/><path class="leaf l2" d="M53 44 C60 30 74 24 88 26 C82 40 68 46 53 44Z"/></svg></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Антиоксиданты</b><small>6 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/longevity">Все товары раздела<span>6</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="4" hidden>
+          <div class="goal goal--eyes goal--mini is-in cat__hero">
+            <div class="scene" aria-hidden="true"><div class="halo eye-halo"></div><div class="eye-ring"></div><div class="eye-iris"></div><div class="eye-pupil"></div><div class="eye-glint"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Капли и витамины для глаз</b><small>5 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/eye-care">Все товары раздела<span>5</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="5" hidden>
+          <div class="goal goal--immunity goal--mini is-in cat__hero">
+            <div class="scene" aria-hidden="true"><div class="imm-dots after"><i></i><i></i><i></i><i></i></div><div class="imm-sphere"></div><div class="imm-core"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Иммунитет и щитовидная железа</b><small>8 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/immunity">Все товары раздела<span>8</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="6" hidden>
+          <div class="goal goal--beauty goal--mini is-in cat__hero" style="--c1:#0A4A44;--c2:#3FE0B8">
+            <div class="scene" aria-hidden="true"><div class="beauty-rip after"><i></i><i></i><i></i></div><div class="beauty-pearl"></div><div class="beauty-sheen"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Ритуалы красоты</b><small>35 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/beauty-rituals">Все товары раздела<span>35</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=face">Для лица<small>20</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=body">Для тела<small>6</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=eyes">Для глаз<small>8</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=neck">Для шеи<small>0</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=decollete">Для зоны декольте<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=hands">Для рук<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=feet">Для ног<small>3</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=hair">Для волос<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=scalp">Для кожи головы<small>2</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=teeth">Для зубов<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-rituals?sub=intimate">Для интимной зоны<small>1</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="7" hidden>
+          <div class="goal goal--eyes goal--mini is-in cat__hero" style="--c1:#26106B;--c2:#8C7BFF">
+            <div class="scene" aria-hidden="true"><div class="halo eye-halo"></div><div class="eye-ring"></div><div class="eye-iris"></div><div class="eye-pupil"></div><div class="eye-glint"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Аппараты для красоты</b><small>3 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/beauty-devices">Все товары раздела<span>3</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-devices?sub=eyes">Для глаз<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-devices?sub=face">Для лица<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-devices?sub=hair">Для волос<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-devices?sub=scalp">Для кожи головы<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/beauty-devices?sub=gel">Гель-проводник<small>1</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="8" hidden>
+          <div class="goal goal--longevity goal--mini is-in cat__hero" style="--c1:#3A1670;--c2:#B07BFF">
+            <div class="scene" aria-hidden="true"><div class="halo long-halo"></div><div class="long-ground"></div><svg class="long-sprout" viewBox="0 0 100 130"><path class="stem" pathLength="1" d="M50 128 C50 104 46 86 52 64 C56 50 54 40 52 30"/><path class="leaf l1" d="M51 66 C38 66 26 58 20 44 C34 44 46 50 51 66Z"/><path class="leaf l2" d="M53 44 C60 30 74 24 88 26 C82 40 68 46 53 44Z"/></svg></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Антивозрастной омолаживающий комплекс</b><small>12 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/anti-age">Все товары раздела<span>12</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p" href="/oasis-ikigai/ru/shop/anti-age?sub=face">Для лица<small>10</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/anti-age?sub=eyes">Для глаз<small>7</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/anti-age?sub=neck">Для шеи<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/anti-age?sub=decollete">Для зоны декольте<small>0</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/anti-age?sub=body">Для тела<small>1</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="9" hidden>
+          <div class="goal goal--detox goal--mini is-in cat__hero" style="--c1:#00466E;--c2:#4FB8F0">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Гигиена</b><small>10 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/hygiene">Все товары раздела<span>10</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p" href="/oasis-ikigai/ru/shop/hygiene?sub=intimate">Для интимной зоны<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/hygiene?sub=hair">Для волос<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/hygiene?sub=scalp">Для кожи головы<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/hygiene?sub=body">Для тела<small>4</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/hygiene?sub=face">Для лица<small>4</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/hygiene?sub=feet">Для ног<small>1</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/hygiene?sub=eyes">Для глаз<small>0</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="10" hidden>
+          <div class="goal goal--detox goal--mini is-in cat__hero" style="--c1:#004C5C;--c2:#2FD6E8">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Гигиена полости рта</b><small>2 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/oral-care">Все товары раздела<span>2</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p" href="/oasis-ikigai/ru/shop/oral-care?sub=teeth">Для зубов<small>2</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/oral-care?sub=throat">Для горла<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/oral-care?sub=nose">Для носа<small>0</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="11" hidden>
+          <div class="goal goal--longevity goal--mini is-in cat__hero" style="--c1:#0E4A12;--c2:#7BD23A">
+            <div class="scene" aria-hidden="true"><div class="halo long-halo"></div><div class="long-ground"></div><svg class="long-sprout" viewBox="0 0 100 130"><path class="stem" pathLength="1" d="M50 128 C50 104 46 86 52 64 C56 50 54 40 52 30"/><path class="leaf l1" d="M51 66 C38 66 26 58 20 44 C34 44 46 50 51 66Z"/><path class="leaf l2" d="M53 44 C60 30 74 24 88 26 C82 40 68 46 53 44Z"/></svg></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Лечебные растения</b><small>9 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/herbs">Все товары раздела<span>9</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p" href="/oasis-ikigai/ru/shop/herbs?sub=mushrooms">Функциональные грибы<small>1</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/herbs?sub=reishi">Грибы рейши<small>0</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/herbs?sub=ginseng">Женьшень<small>1</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/herbs?sub=supon">Супон<small>0</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/herbs?sub=damask-rose">Дамасская роза<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/herbs?sub=chlorella">Хлорелла<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/herbs?sub=spirulina">Спирулина<small>1</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/herbs?sub=euglena">Эвглена<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/herbs?sub=calendula">Календула<small>0</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/herbs?sub=ginkgo">Гинкго билоба<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/herbs?sub=oak">Экстракт дуба<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/herbs?sub=touchi">Тоути<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/herbs?sub=salacia">Салация<small>2</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/herbs?sub=chia">Семена чиа<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/herbs?sub=ginger">Имбирь<small>0</small></a><a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/herbs?sub=senna">Порошок сены<small>0</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="12" hidden>
+          <div class="goal goal--longevity goal--mini is-in cat__hero" style="--c1:#244A0A;--c2:#A6D93A">
+            <div class="scene" aria-hidden="true"><div class="halo long-halo"></div><div class="long-ground"></div><svg class="long-sprout" viewBox="0 0 100 130"><path class="stem" pathLength="1" d="M50 128 C50 104 46 86 52 64 C56 50 54 40 52 30"/><path class="leaf l1" d="M51 66 C38 66 26 58 20 44 C34 44 46 50 51 66Z"/><path class="leaf l2" d="M53 44 C60 30 74 24 88 26 C82 40 68 46 53 44Z"/></svg></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Чай и матча</b><small>49 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/tea">Все товары раздела<span>49</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="13" hidden>
+          <div class="goal goal--vitamins goal--mini is-in cat__hero" style="--c1:#7A2E00;--c2:#FFB35C">
+            <div class="scene" aria-hidden="true"><div class="vit-shadow"></div><div class="vit-gr after"><i></i><i></i><i></i></div><div class="vit-cap"><i></i></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Японские сладости</b><small>0 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/sweets">Все товары раздела<span>0</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="14" hidden>
+          <div class="goal goal--energy goal--mini is-in cat__hero" style="--c1:#5A2A00;--c2:#E89A2E">
+            <div class="scene" aria-hidden="true"><div class="energy-rays"></div><div class="energy-sun"></div><div class="energy-line"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Мужское здоровье</b><small>6 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/men">Все товары раздела<span>6</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p" href="/oasis-ikigai/ru/shop/men?sub=hormones">Гормональный баланс<small>5</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/men?sub=hemoglobin">Повышение уровня гемоглобина<small>1</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="15" hidden>
+          <div class="goal goal--beauty goal--mini is-in cat__hero" style="--c1:#3E0F66;--c2:#A35CFF">
+            <div class="scene" aria-hidden="true"><div class="beauty-rip after"><i></i><i></i><i></i></div><div class="beauty-pearl"></div><div class="beauty-sheen"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Женское здоровье</b><small>3 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/women">Все товары раздела<span>3</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p" href="/oasis-ikigai/ru/shop/women?sub=hormones">Гормональный баланс<small>1</small></a><a class="cat__p" href="/oasis-ikigai/ru/shop/women?sub=hemoglobin">Повышение уровня гемоглобина<small>2</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="16" hidden>
+          <div class="goal goal--immunity goal--mini is-in cat__hero" style="--c1:#6A0A10;--c2:#FF6A4D">
+            <div class="scene" aria-hidden="true"><div class="imm-dots after"><i></i><i></i><i></i><i></i></div><div class="imm-sphere"></div><div class="imm-core"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Для сердечно-сосудистой системы</b><small>4 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/heart">Все товары раздела<span>4</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="17" hidden>
+          <div class="goal goal--eyes goal--mini is-in cat__hero" style="--c1:#1C1A6E;--c2:#6E8CFF">
+            <div class="scene" aria-hidden="true"><div class="halo eye-halo"></div><div class="eye-ring"></div><div class="eye-iris"></div><div class="eye-pupil"></div><div class="eye-glint"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Для памяти и работы мозга</b><small>2 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/brain">Все товары раздела<span>2</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="18" hidden>
+          <div class="goal goal--balance goal--mini is-in cat__hero" style="--c1:#2F3E48;--c2:#9FC2D6">
+            <div class="scene" aria-hidden="true"><div class="bal-line"></div><div class="bal-pivot"></div><div class="bal-orbit"><div class="bal-x"><div class="bal-y"><div class="bal-orb"></div></div></div><div class="bal-x b2"><div class="bal-y b2"><div class="bal-orb o2"></div></div></div></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Комплекс для суставов, связок и костей</b><small>6 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/joints">Все товары раздела<span>6</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="19" hidden>
+          <div class="goal goal--energy goal--mini is-in cat__hero" style="--c1:#9A5A00;--c2:#FFD84D">
+            <div class="scene" aria-hidden="true"><div class="energy-rays"></div><div class="energy-sun"></div><div class="energy-line"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Для детей</b><small>0 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/kids">Все товары раздела<span>0</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="20" hidden>
+          <div class="goal goal--detox goal--mini is-in cat__hero" style="--c1:#00504A;--c2:#3EE6C4">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Контроль калорий и веса</b><small>3 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/weight">Все товары раздела<span>3</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="21" hidden>
+          <div class="goal goal--detox goal--mini is-in cat__hero" style="--c1:#103A78;--c2:#5AA8FF">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>От отёков и варикоза</b><small>2 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/edema">Все товары раздела<span>2</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="22" hidden>
+          <div class="goal goal--balance goal--mini is-in cat__hero" style="--c1:#3A2470;--c2:#A08CFF">
+            <div class="scene" aria-hidden="true"><div class="bal-line"></div><div class="bal-pivot"></div><div class="bal-orbit"><div class="bal-x"><div class="bal-y"><div class="bal-orb"></div></div></div><div class="bal-x b2"><div class="bal-y b2"><div class="bal-orb o2"></div></div></div></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Уровень сахара и холестерина</b><small>4 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/sugar">Все товары раздела<span>4</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="23" hidden>
+          <div class="goal goal--longevity goal--mini is-in cat__hero" style="--c1:#3E5200;--c2:#C3E04A">
+            <div class="scene" aria-hidden="true"><div class="halo long-halo"></div><div class="long-ground"></div><svg class="long-sprout" viewBox="0 0 100 130"><path class="stem" pathLength="1" d="M50 128 C50 104 46 86 52 64 C56 50 54 40 52 30"/><path class="leaf l1" d="M51 66 C38 66 26 58 20 44 C34 44 46 50 51 66Z"/><path class="leaf l2" d="M53 44 C60 30 74 24 88 26 C82 40 68 46 53 44Z"/></svg></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Пищеварение и микрофлора кишечника</b><small>4 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/digestion">Все товары раздела<span>4</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="24" hidden>
+          <div class="goal goal--detox goal--mini is-in cat__hero">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Детокс</b><small>3 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/detox">Все товары раздела<span>3</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="25" hidden>
+          <div class="goal goal--energy goal--mini is-in cat__hero">
+            <div class="scene" aria-hidden="true"><div class="energy-rays"></div><div class="energy-sun"></div><div class="energy-line"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Энергия</b><small>15 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/energy">Все товары раздела<span>15</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="26" hidden>
+          <div class="goal goal--vitamins goal--mini is-in cat__hero" style="--c1:#6E3A00;--c2:#F2B33D">
+            <div class="scene" aria-hidden="true"><div class="vit-shadow"></div><div class="vit-gr after"><i></i><i></i><i></i></div><div class="vit-cap"><i></i></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Защита печени и антипохмелье</b><small>0 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/liver">Все товары раздела<span>0</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="27" hidden>
+          <div class="goal goal--detox goal--mini is-in cat__hero" style="--c1:#0A3E66;--c2:#4FC2F2">
+            <div class="scene" aria-hidden="true"><div class="det-water"></div><svg class="det-wave" viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14 C25 4 50 4 75 14 S125 24 150 14 S200 4 225 14 S275 24 300 14 S350 4 375 14 S400 20 400 14"/></svg><div class="det-bub after"><i></i><i></i><i></i><i></i><i></i></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Почки и мочевыводящая система</b><small>1 товар</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/kidneys">Все товары раздела<span>1</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="28" hidden>
+          <div class="goal goal--energy goal--mini is-in cat__hero" style="--c1:#8A1E00;--c2:#FF7A3D">
+            <div class="scene" aria-hidden="true"><div class="energy-rays"></div><div class="energy-sun"></div><div class="energy-line"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Для спорта</b><small>4 товара</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/sport">Все товары раздела<span>4</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                      <p class="cat__h">Подкатегории</p>
+            <div class="cat__pills">
+              <a class="cat__p cat__p--0" href="/oasis-ikigai/ru/shop/sport?sub=water-salt">Нормализация водно-солевого баланса<small>0</small></a>            </div>
+                  </section>
+              <section class="cat__s" data-cat-s="29" hidden>
+          <div class="goal goal--immunity goal--mini is-in cat__hero" style="--c1:#4A1A6A;--c2:#B47BFF">
+            <div class="scene" aria-hidden="true"><div class="imm-dots after"><i></i><i></i><i></i><i></i></div><div class="imm-sphere"></div><div class="imm-core"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Средства от насморка и аллергии</b><small>1 товар</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/allergy">Все товары раздела<span>1</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="30" hidden>
+          <div class="goal goal--beauty goal--mini is-in cat__hero" style="--c1:#00563A;--c2:#4DE39A">
+            <div class="scene" aria-hidden="true"><div class="beauty-rip after"><i></i><i></i><i></i></div><div class="beauty-pearl"></div><div class="beauty-sheen"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Средства от акне и кератоза</b><small>6 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/acne">Все товары раздела<span>6</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+              <section class="cat__s" data-cat-s="31" hidden>
+          <div class="goal goal--sleep goal--mini is-in cat__hero">
+            <div class="scene" aria-hidden="true"><div class="halo sleep-halo"></div><div class="sleep-mist"></div><div class="sleep-stars"><i></i><i></i><i></i><i></i><i></i></div><div class="sleep-moon"></div></div>            <button class="cat__back" type="button" data-cat-back><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>Каталог</button>
+            <b>Сон</b><small>5 товаров</small>
+          </div>
+          <a class="cat__all" href="/oasis-ikigai/ru/shop/sleep">Все товары раздела<span>5</span><svg class="cat__chev" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+                  </section>
+          </div>
+  </div>
+</div>
+
 <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Меню" data-menu hidden>
   <div class="menu__top">
     <a class="logo" href="/oasis-ikigai/ru/"><b>OASIS IKIGAI</b></a>
@@ -83,7 +488,7 @@
   <nav class="menu__langs" aria-label="Язык">
     <a href="/oasis-ikigai/privacy" hreflang="uk" lang="uk" data-lang-link="uk">Українська</a><a href="/oasis-ikigai/ru/privacy" hreflang="ru" lang="ru" data-lang-link="ru" aria-current="true">Русский<svg class="icon" width="18" height="18" aria-hidden="true" focusable="false"><use href="#i-check"/></svg></a><a href="/oasis-ikigai/en/privacy" hreflang="en" lang="en" data-lang-link="en">English</a>  </nav>
   <nav class="menu__nav">
-          <a href="/oasis-ikigai/ru/shop" style="--i:0"><span class="menu__label">Каталог</span><span class="menu__jp" lang="ja" aria-hidden="true">目録</span></a>
+          <a href="/oasis-ikigai/ru/shop" style="--i:0" data-cat-open><span class="menu__label">Каталог</span><span class="menu__jp" lang="ja" aria-hidden="true">目録</span></a>
           <a href="/oasis-ikigai/ru/brands" style="--i:1"><span class="menu__label">Бренды</span><span class="menu__jp" lang="ja" aria-hidden="true">銘柄</span></a>
           <a href="/oasis-ikigai/ru/journal" style="--i:2"><span class="menu__label">Журнал</span><span class="menu__jp" lang="ja" aria-hidden="true">読み物</span></a>
           <a href="/oasis-ikigai/ru/shop#ikigai" style="--i:3"><span class="menu__label">Подбор</span><span class="menu__jp" lang="ja" aria-hidden="true">生き甲斐</span></a>
